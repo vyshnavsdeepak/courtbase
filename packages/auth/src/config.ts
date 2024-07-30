@@ -33,7 +33,13 @@ export const authConfig = {
       }
     : {}),
   secret: env.AUTH_SECRET,
-  providers: [Google],
+  providers: [
+    Google({
+      clientId: env.GOOGLE_CLIENT_ID,
+      clientSecret: env.GOOGLE_CLIENT_SECRET,
+      checks: ["state"],
+    }),
+  ],
   callbacks: {
     session: (opts) => {
       if (!("user" in opts))
