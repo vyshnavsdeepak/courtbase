@@ -1,14 +1,12 @@
-import type { AppRouter } from "@court-base/api";
 import { cache } from "react";
 import { headers } from "next/headers";
-import { createCaller, createTRPCContext } from "@court-base/api";
-import { auth } from "@court-base/auth";
 import { createHydrationHelpers } from "@trpc/react-query/rsc";
 
-
+import type { AppRouter } from "@court-base/api";
+import { createCaller, createTRPCContext } from "@court-base/api";
+import { auth } from "@court-base/auth";
 
 import { createQueryClient } from "./query-client";
-
 
 /**
  * This wraps the `createTRPCContext` helper and provides the required context for the tRPC API when

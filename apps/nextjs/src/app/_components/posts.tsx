@@ -17,7 +17,6 @@ import { toast } from "@court-base/ui/toast";
 
 import { api } from "~/trpc/react";
 
-
 export function CreatePostForm() {
   const form = useForm({
     schema: CreatePostSchema,

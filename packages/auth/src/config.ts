@@ -1,9 +1,14 @@
-import type { DefaultSession, NextAuthConfig, Session as NextAuthSession } from "next-auth";
+import type {
+  DefaultSession,
+  NextAuthConfig,
+  Session as NextAuthSession,
+} from "next-auth";
 import { skipCSRFCheck } from "@auth/core";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
+import Google from "next-auth/providers/google";
+
 import { db } from "@court-base/db/client";
 import { Account, Session, User } from "@court-base/db/schema";
-import Google from "next-auth/providers/google";
 
 import { env } from "../env";
 

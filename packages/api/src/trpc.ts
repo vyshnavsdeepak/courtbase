@@ -1,4 +1,3 @@
-;
 /**
  * YOU PROBABLY DON'T NEED TO EDIT THIS FILE, UNLESS:
  * 1. You want to modify request context (see Part 1)
@@ -7,16 +6,13 @@
  * tl;dr - this is where all the tRPC server stuff is created and plugged in.
  * The pieces you will need to use are documented accordingly near the end
  */
-import type { Session } from "@court-base/auth";
-import { auth, validateToken } from "@court-base/auth";
-import { db } from "@court-base/db/client";
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
 
-
-
-
+import type { Session } from "@court-base/auth";
+import { auth, validateToken } from "@court-base/auth";
+import { db } from "@court-base/db/client";
 
 /**
  * Isomorphic Session getter for API requests

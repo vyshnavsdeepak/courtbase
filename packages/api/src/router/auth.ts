@@ -1,10 +1,8 @@
 import type { TRPCRouterRecord } from "@trpc/server";
+
 import { invalidateSessionToken } from "@court-base/auth";
 
-
-
 import { protectedProcedure, publicProcedure } from "../trpc";
-
 
 export const authRouter = {
   getSession: publicProcedure.query(({ ctx }) => {

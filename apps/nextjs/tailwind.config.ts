@@ -1,10 +1,7 @@
 import type { Config } from "tailwindcss";
-import baseConfig from "@court-base/tailwind-config/web";
 import { fontFamily } from "tailwindcss/defaultTheme";
 
-
-
-
+import baseConfig from "@court-base/tailwind-config/web";
 
 export default {
   // We need to append the path to the UI package to the content array so that
