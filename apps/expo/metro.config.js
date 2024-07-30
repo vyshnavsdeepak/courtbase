@@ -41,6 +41,20 @@ function withMonorepoPaths(config) {
     path.resolve(workspaceRoot, "node_modules"),
   ];
 
+  const ALIASES = {
+    tslib: path.resolve(workspaceRoot, "node_modules/tslib/tslib.es6.js"),
+  };
+
+  config.resolver.resolveRequest = (context, moduleName, platform) => {
+    // Ensure you call the default resolver.
+    return context.resolveRequest(
+      context,
+      // Use an alias if one exists.
+      ALIASES[moduleName] ?? moduleName,
+      platform,
+    );
+  };
+
   return config;
 }
 

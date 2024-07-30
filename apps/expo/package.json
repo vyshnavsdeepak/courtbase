@@ -43,19 +43,20 @@
     "superjson": "2.2.1"
   },
   "devDependencies": {
+    "@babel/core": "^7.24.7",
+    "@babel/preset-env": "^7.24.7",
+    "@babel/runtime": "^7.24.7",
     "@court-base/api": "workspace:*",
     "@court-base/eslint-config": "workspace:*",
     "@court-base/prettier-config": "workspace:*",
     "@court-base/tailwind-config": "workspace:*",
     "@court-base/tsconfig": "workspace:*",
-    "@babel/core": "^7.24.7",
-    "@babel/preset-env": "^7.24.7",
-    "@babel/runtime": "^7.24.7",
     "@types/babel__core": "^7.20.5",
     "@types/react": "catalog:react18",
     "eslint": "catalog:",
     "prettier": "catalog:",
     "tailwindcss": "^3.4.4",
+    "tslib": "^2.6.3",
     "typescript": "catalog:"
   },
   "prettier": "@court-base/prettier-config"
