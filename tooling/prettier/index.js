@@ -1,5 +1,9 @@
 import { fileURLToPath } from "url";
 
+
+
+
+
 /** @typedef {import("prettier").Config} PrettierConfig */
 /** @typedef {import("prettier-plugin-tailwindcss").PluginOptions} TailwindConfig */
 /** @typedef {import("@ianvs/prettier-plugin-sort-imports").PluginConfig} SortImportsConfig */
@@ -21,8 +25,8 @@ const config = {
     "^(expo(.*)$)|^(expo$)",
     "<THIRD_PARTY_MODULES>",
     "",
-    "<TYPES>^@acme",
-    "^@acme/(.*)$",
+    "<TYPES>^@court-base",
+    "^@court-base/(.*)$",
     "",
     "<TYPES>^[.|..|~]",
     "^~/",

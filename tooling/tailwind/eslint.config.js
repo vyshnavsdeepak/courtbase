@@ -1,6 +1,11 @@
+;
 // FIXME: This kinda stinks...
 /// <reference types="../../tooling/eslint/types.d.ts" />
 
-import baseConfig from "@acme/eslint-config/base";
+import baseConfig from "@court-base/eslint-config/base";
+
+
+
+
 
 export default [...baseConfig];

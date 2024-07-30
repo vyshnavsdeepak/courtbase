@@ -1,16 +1,12 @@
-import type {
-  DefaultSession,
-  NextAuthConfig,
-  Session as NextAuthSession,
-} from "next-auth";
+import type { DefaultSession, NextAuthConfig, Session as NextAuthSession } from "next-auth";
 import { skipCSRFCheck } from "@auth/core";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
+import { db } from "@court-base/db/client";
+import { Account, Session, User } from "@court-base/db/schema";
 import Discord from "next-auth/providers/discord";
 
-import { db } from "@acme/db/client";
-import { Account, Session, User } from "@acme/db/schema";
-
 import { env } from "../env";
+
 
 declare module "next-auth" {
   interface Session {
