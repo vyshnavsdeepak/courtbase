@@ -8,7 +8,7 @@ import { handlers, isSecureContext } from "@court-base/auth";
 
 export const runtime = "edge";
 
-const EXPO_COOKIE_NAME = "__acme-expo-redirect-state";
+const EXPO_COOKIE_NAME = "__courtbase-expo-redirect-state";
 const AUTH_COOKIE_PATTERN = /authjs\.session-token=([^;]+)/;
 
 /**
