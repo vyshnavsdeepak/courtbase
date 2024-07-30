@@ -16,7 +16,14 @@
     "dev": "tsc",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint",
-    "typecheck": "tsc --noEmit --emitDeclarationOnly false"
+    "typecheck": "tsc --noEmit --emitDeclarationOnly false",
+    "lint-staged": "lint-staged"
+  },
+  "lint-staged": {
+    "*.{ts}": [
+      "eslint --fix",
+      "prettier --check --ignore-path ../../.gitignore --write"
+    ]
   },
   "dependencies": {
     "@court-base/auth": "workspace:*",
