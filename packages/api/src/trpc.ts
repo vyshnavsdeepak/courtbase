@@ -12,7 +12,7 @@ import { ZodError } from "zod";
 
 import type { Session } from "@court-base/auth";
 import { auth, validateToken } from "@court-base/auth";
-import { db } from "@court-base/db/client";
+import { kysely } from "@court-base/db";
 
 /**
  * Isomorphic Session getter for API requests
@@ -49,7 +49,7 @@ export const createTRPCContext = async (opts: {
 
   return {
     session,
-    db,
+    kysely,
     token: authToken,
   };
 };

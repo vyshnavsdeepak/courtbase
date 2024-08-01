@@ -1,14 +1,15 @@
+import type { Database } from "@auth/kysely-adapter";
+import type { Kysely } from "kysely";
 import type {
   DefaultSession,
   NextAuthConfig,
   Session as NextAuthSession,
 } from "next-auth";
 import { skipCSRFCheck } from "@auth/core";
-import { DrizzleAdapter } from "@auth/drizzle-adapter";
+import { KyselyAdapter } from "@auth/kysely-adapter";
 import Google from "next-auth/providers/google";
 
-import { db } from "@court-base/db/client";
-import { Account, Session, User } from "@court-base/db/schema";
+import { kysely } from "@court-base/db";
 
 import { env } from "../env";
 
@@ -20,11 +21,7 @@ declare module "next-auth" {
   }
 }
 
-const adapter = DrizzleAdapter(db, {
-  usersTable: User,
-  accountsTable: Account,
-  sessionsTable: Session,
-});
+const adapter = KyselyAdapter(kysely as unknown as Kysely<Database>);
 
 export const isSecureContext = env.NODE_ENV !== "development";
 

@@ -1,25 +1,21 @@
 "use client";
 
 import type { RouterOutputs } from "@court-base/api";
-import { CreatePostSchema } from "@court-base/db/schema";
+import { PostModel } from "@court-base/db/models";
 import { cn } from "@court-base/ui";
 import { Button } from "@court-base/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-  useForm,
-} from "@court-base/ui/form";
+import { Form, FormControl, FormField, FormItem, FormMessage, useForm } from "@court-base/ui/form";
 import { Input } from "@court-base/ui/input";
 import { toast } from "@court-base/ui/toast";
 
+
+
 import { api } from "~/trpc/react";
+
 
 export function CreatePostForm() {
   const form = useForm({
-    schema: CreatePostSchema,
+    schema: PostModel.pick({ content: true, title: true }),
     defaultValues: {
       content: "",
       title: "",

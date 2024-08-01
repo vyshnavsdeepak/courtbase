@@ -57,7 +57,7 @@ packages
   ├─ auth
   |   └─ Authentication using next-auth.
   ├─ db
-  |   └─ Typesafe db calls using Drizzle & Supabase
+  |   └─ Typesafe db calls using Prisma & Supabase
   └─ ui
       └─ Start of a UI package for the webapp using shadcn-ui
 tooling
@@ -90,7 +90,7 @@ pnpm i
 # There is an `.env.example` in the root directory you can use for reference
 cp .env.example .env
 
-# Push the Drizzle schema to the database
+# Push the Prisma schema to the database
 pnpm db:push
 ```
 
