@@ -1,15 +1,12 @@
 import * as z from "zod";
 
-import {
-  CompleteCase,
-  CompleteUser,
-  RelatedCaseModel,
-  RelatedUserModel,
-} from "./index";
+import type { CompleteCase, CompleteUser } from "./index";
+import { RelatedCaseModel, RelatedUserModel } from "./index";
 
 export const OrganizationModel = z.object({
   id: z.string(),
   name: z.string(),
+  slug: z.string(),
 });
 
 export interface CompleteOrganization

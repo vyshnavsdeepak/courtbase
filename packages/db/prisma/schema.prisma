@@ -81,6 +81,8 @@ model VerificationToken {
 model Organization {
   id    String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name  String @db.VarChar(255)
+  slug  String @unique
+
   users User[]
 
   cases Case[] @relation(map: "case_organization_organization_id_fk")

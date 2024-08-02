@@ -7,6 +7,10 @@
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
+    },
+    "./models": {
+      "types": "./dist/models.d.ts",
+      "default": "./dist/models.js"
     }
   },
   "license": "MIT",
