@@ -15,7 +15,7 @@ export default async function Sidebar() {
     return null;
   }
   return (
-    <aside className="w-64 p-4 border-r border-secondary">
+    <aside className="hidden md:block w-72 py-4 px-2 mx-auto">
       <div className="flex items-center mb-6">
         <AccountDropdown user={{
           name: session.user.name,

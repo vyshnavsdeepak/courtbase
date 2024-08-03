@@ -14,7 +14,7 @@ export default function WorkspaceLayout({
   return (
       <div className="flex h-screen overflow-hidden">
         <Sidebar />
-        <main className="w-full pt-16 bg-secondary text-secondary-foreground">{children}</main>
+        <main className="w-full">{children}</main>
       </div>
   );
 }
