@@ -6,7 +6,7 @@ export type Generated<T> =
     : ColumnType<T, T | undefined, T>;
 export type Timestamp = ColumnType<Date, Date | string, Date | string>;
 
-export interface Account {
+export type Account = {
   userId: string;
   type: string;
   provider: string;
@@ -18,8 +18,8 @@ export interface Account {
   scope: string | null;
   id_token: string | null;
   session_state: string | null;
-}
-export interface Case {
+};
+export type Case = {
   id: Generated<string>;
   crn: string;
   title: string;
@@ -27,41 +27,41 @@ export interface Case {
   created_at: Generated<Timestamp>;
   updatedAt: Timestamp | null;
   organizationId: string;
-}
-export interface Organization {
+};
+export type Organization = {
   id: Generated<string>;
   name: string;
   slug: string;
-}
-export interface OrganizationToUser {
+};
+export type OrganizationToUser = {
   A: string;
   B: string;
-}
-export interface Post {
+};
+export type Post = {
   id: Generated<string>;
   title: string;
   content: string;
   created_at: Generated<Timestamp>;
   updatedAt: Timestamp | null;
-}
-export interface Session {
+};
+export type Session = {
   sessionToken: string;
   userId: string;
   expires: Timestamp;
-}
-export interface User {
+};
+export type User = {
   id: Generated<string>;
   name: string | null;
   email: string;
   emailVerified: Timestamp | null;
   image: string | null;
-}
-export interface VerificationToken {
+};
+export type VerificationToken = {
   token: string;
   identifier: string;
   expires: Timestamp;
-}
-export interface DB {
+};
+export type DB = {
   _OrganizationToUser: OrganizationToUser;
   Account: Account;
   Case: Case;
@@ -70,4 +70,4 @@ export interface DB {
   Session: Session;
   User: User;
   VerificationToken: VerificationToken;
-}
+};

@@ -1,7 +1,11 @@
 import * as z from "zod";
 
-import type { CompleteCase, CompleteUser } from "./index";
-import { RelatedCaseModel, RelatedUserModel } from "./index";
+import {
+  CompleteCase,
+  CompleteUser,
+  RelatedCaseModel,
+  RelatedUserModel,
+} from "./index";
 
 export const OrganizationModel = z.object({
   id: z.string(),
