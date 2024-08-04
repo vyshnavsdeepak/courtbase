@@ -15,3 +15,8 @@ export const OrganizationCreateModel = OrganizationModel.pick({
     .min(3, "URL must be at least 3 characters long")
     .max(255, "URL must be at most 255 characters long"),
 });
+
+export const MemberRole = {
+  OWNER: "OWNER",
+  ADVOCATE: "ADVOCATE",
+} as const;

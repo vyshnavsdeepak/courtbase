@@ -6,13 +6,15 @@ import { usePathname } from "next/navigation";
 import { cn } from "@court-base/ui";
 import { Icons } from "@court-base/ui/icons";
 import { SidebarLink } from "../types";
+import {useOrg} from "~/app/_contexts/org-context";
 interface DashboardNavProps {
   workspaceLinks: SidebarLink[];
 }
 
 export function DashboardNav({ workspaceLinks }: DashboardNavProps) {
   const path = usePathname();
-  const workspaceUrl = "/workspacename";
+  const { orgSlug } = useOrg();
+  const workspaceUrl = `/${orgSlug}`;
 
   return (
     <nav className="space-y-4">

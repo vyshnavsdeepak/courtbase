@@ -84,7 +84,9 @@ export default function UserAuthForm() {
         </div>
       </div>
       <GoogleSignInButton onClick={async ()=> {
-        await signIn("google");
+        await signIn("google", {
+          callbackUrl: callbackUrl ?? "/dashboard",
+        });
       }}/>
     </>
   );

@@ -11,6 +11,10 @@
     "./models": {
       "types": "./dist/models.d.ts",
       "default": "./dist/models.js"
+    },
+    "./constants": {
+      "types": "./dist/constants.d.ts",
+      "default": "./dist/constants.js"
     }
   },
   "license": "MIT",

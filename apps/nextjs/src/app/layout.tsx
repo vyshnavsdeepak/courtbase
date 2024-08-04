@@ -5,6 +5,7 @@ import { GeistSans } from "geist/font/sans";
 import { cn } from "@court-base/ui";
 import { ThemeProvider, ThemeToggle } from "@court-base/ui/theme";
 import { Toaster } from "@court-base/ui/toast";
+import { OrgProvider } from "~/app/_contexts/org-context";
 
 import { TRPCReactProvider } from "~/trpc/react";
 
@@ -46,7 +47,9 @@ export default function RootLayout(props: { children: React.ReactNode }) {
         )}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <OrgProvider>
           <TRPCReactProvider>{props.children}</TRPCReactProvider>
+          </OrgProvider>
           <div className="absolute bottom-4 right-4">
             <ThemeToggle />
           </div>

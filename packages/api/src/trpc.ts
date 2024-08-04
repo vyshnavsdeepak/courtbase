@@ -14,6 +14,8 @@ import type { Session } from "@court-base/auth";
 import { auth, validateToken } from "@court-base/auth";
 import { kysely } from "@court-base/db";
 
+import { headerKeys } from "./constants";
+
 /**
  * Isomorphic Session getter for API requests
  * - Expo requests will have a session token in the Authorization header
@@ -23,6 +25,27 @@ const isomorphicGetSession = async (headers: Headers) => {
   const authToken = headers.get("Authorization") ?? null;
   if (authToken) return validateToken(authToken);
   return auth();
+};
+
+const extractOrgIdFromHeaders = (headers: Headers) => {
+  return headers.get(headerKeys.orgId) ?? null;
+};
+
+const getUserRoleInOrg = async (
+  userId: string,
+  workspaceId: string,
+): Promise<string | null> => {
+  const result = await kysely
+    .selectFrom("OrganizationMembers")
+    .select("role")
+    .where("userId", "=", userId)
+    .where("organizationId", "=", workspaceId)
+    .executeTakeFirst();
+
+  // Assert type of result explicitly
+  const role = (result as { role?: string }).role;
+
+  return role ?? null;
 };
 
 /**
@@ -47,8 +70,11 @@ export const createTRPCContext = async (opts: {
   const source = opts.headers.get("x-trpc-source") ?? "unknown";
   console.log(">>> tRPC Request from", source, "by", session?.user);
 
+  const orgId = extractOrgIdFromHeaders(opts.headers);
+
   return {
     session,
+    orgId,
     kysely,
     token: authToken,
   };
@@ -140,6 +166,32 @@ export const protectedProcedure = t.procedure
       ctx: {
         // infers the `session` as non-nullable
         session: { ...ctx.session, user: ctx.session.user },
+      },
+    });
+  });
+
+// orgProtectedProcedure is a procedure on top of protectedProcedure that checks if the user is a member of the organization
+export const orgProtectedProcedure = t.procedure
+  .use(timingMiddleware)
+  .use(async ({ ctx, next }) => {
+    if (!ctx.session?.user) {
+      throw new TRPCError({ code: "UNAUTHORIZED" });
+    }
+    const orgId = ctx.orgId;
+
+    if (!orgId) {
+      throw new TRPCError({ code: "FORBIDDEN" });
+    }
+    const userRole = await getUserRoleInOrg(ctx.session.user.id, orgId);
+    if (!userRole) {
+      throw new TRPCError({ code: "FORBIDDEN" });
+    }
+    return next({
+      ctx: {
+        // infers the `session` as non-nullable
+        session: { ...ctx.session, user: ctx.session.user },
+        orgId,
+        userRole,
       },
     });
   });
