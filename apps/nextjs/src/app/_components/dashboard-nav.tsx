@@ -7,6 +7,7 @@ import { cn } from "@court-base/ui";
 import { Icons } from "@court-base/ui/icons";
 import { SidebarLink } from "../types";
 import {useOrg} from "~/app/_contexts/org-context";
+import {getOrgDashboardPath} from "~/utils";
 interface DashboardNavProps {
   workspaceLinks: SidebarLink[];
 }
@@ -14,7 +15,7 @@ interface DashboardNavProps {
 export function DashboardNav({ workspaceLinks }: DashboardNavProps) {
   const path = usePathname();
   const { orgSlug } = useOrg();
-  const workspaceUrl = `/${orgSlug}`;
+  const workspaceUrl = getOrgDashboardPath(orgSlug);
 
   return (
     <nav className="space-y-4">

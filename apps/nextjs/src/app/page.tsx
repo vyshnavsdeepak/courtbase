@@ -4,6 +4,7 @@ import Link from "next/link";
 import { api, HydrateClient } from "~/trpc/server";
 import { auth } from "@court-base/auth";
 import { AuthShowcase } from "./_components/auth-showcase";
+import {getOrgDashboardPath} from "~/utils";
 
 export const runtime = "edge";
 
@@ -24,7 +25,7 @@ export default async function HomePage() {
 
   if (orgs.length === 1) {
     // Redirect to the single organization
-    return redirect(`/${orgs[0].slug}`);
+    return redirect(getOrgDashboardPath(orgs[0].slug));
   };
 
   if (orgs.length > 1) {
@@ -33,7 +34,7 @@ export default async function HomePage() {
         <ul>
           {orgs.map((org) => (
               <li key={org.id}>
-                <Link href={`/${org.slug}`} className="underline">{org.name}</Link>
+                <Link href={getOrgDashboardPath(org.slug)} className="underline">{org.name}</Link>
               </li>
           ))}
         </ul>

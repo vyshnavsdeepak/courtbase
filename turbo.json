@@ -10,7 +10,6 @@
       "outputs": ["node_modules/.cache/tsbuildinfo.json", "dist/**"]
     },
     "dev": {
-      "dependsOn": ["^db:generate"],
       "cache": false,
       "persistent": false
     },

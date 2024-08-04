@@ -53,7 +53,7 @@ function CardWithForm() {
       setLoading(false);
       form.reset();
       await utils.organization.invalidate();
-      router.push(`/${data.slug}`);
+      router.push(`/x/${data.slug}`);
     },
     onError: (err) => {
       setLoading(false);
@@ -122,12 +122,12 @@ function CardWithForm() {
                             <FormControl>
                               <div className="relative">
                                 <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3 text-sm">
-                                  courtbase.app/
+                                  courtbase.app/x/
                                 </div>
                                 <Input
                                     id="workspace_slug"
                                     {...field}
-                                    className="block ps-28"
+                                    className="block ps-32"
                                 />
                               </div>
                             </FormControl>

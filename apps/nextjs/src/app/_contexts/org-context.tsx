@@ -3,6 +3,7 @@
 import { createContext, useContext } from 'react';
 import React from 'react';
 import { usePathname } from 'next/navigation';
+import { useMemo } from 'react';
 
 interface OrgContextType {
   orgSlug: string | null;
@@ -14,12 +15,11 @@ const OrgContext = createContext<OrgContextType>({
 export const OrgProvider = ({ children }: {
   children: React.ReactNode;
 }) => {
-  const pathname = usePathname()
-
-  // Extract the organization name from the URL
-  const pathParts = pathname.split('/');
-  const orgSlug = pathParts[1] ?? '';
-
+  const pathname = usePathname();
+  const orgSlug = useMemo(() => {
+    const segments = pathname.split('/');
+    return segments.includes('x') ? segments[segments.indexOf('x') + 1] : null;
+  }, [pathname]);
   return (
     <OrgContext.Provider value={{ orgSlug }}>
       {children}

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Sidebar from "../../_components/sidebar";
+import Sidebar from "../../../_components/sidebar";
 
 export const metadata: Metadata = {
   title: "Next Shadcn Dashboard Starter",
