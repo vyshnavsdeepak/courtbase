@@ -19,7 +19,7 @@ export const OrgProvider = ({ children }: {
   const orgSlug = useMemo(() => {
     const segments = pathname.split('/');
     return segments.includes('x') ? segments[segments.indexOf('x') + 1] : null;
-  }, [pathname]);
+  }, [pathname]) ?? null;
   return (
     <OrgContext.Provider value={{ orgSlug }}>
       {children}

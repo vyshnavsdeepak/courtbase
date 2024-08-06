@@ -17,13 +17,12 @@ export default async function HomePage() {
   }
 
   const orgs = await api.organization.getAllByUser();
-  console.log(JSON.stringify(orgs, null, 2));
   if (orgs.length === 0) {
     // Redirect to create organization page if no organizations found
     return redirect("/join");
   }
 
-  if (orgs.length === 1) {
+  if (orgs.length === 1 && orgs[0]) {
     // Redirect to the single organization
     return redirect(getOrgDashboardPath(orgs[0].slug));
   };

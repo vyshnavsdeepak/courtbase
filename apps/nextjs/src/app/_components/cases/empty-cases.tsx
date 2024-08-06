@@ -1,6 +1,7 @@
 import React from "react";
 import { Icons } from "@court-base/ui/icons";
 import { Button } from "@court-base/ui/button";
+import CaseImportDialogButton from "~/app/_components/cases/case-import-dialog-button";
 
 export default function EmptyCases() {
   return (<div className="flex flex-col items-center justify-center h-full">
@@ -9,7 +10,7 @@ export default function EmptyCases() {
     <p className="mt-2 text-center text-gray-400">Start by clicking the "Add New Case" button to enter your legal case details. This is your first step in managing your cases efficiently.</p>
     <div className="mt-6 space-x-4">
       <Button>Add New Case</Button>
-      <Button variant="secondary">Import Case</Button>
+      <CaseImportDialogButton />
     </div>
   </div>);
 }

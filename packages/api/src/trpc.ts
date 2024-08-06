@@ -33,19 +33,21 @@ const extractOrgIdFromHeaders = (headers: Headers) => {
 
 const getUserRoleInOrg = async (
   userId: string,
-  workspaceId: string,
+  orgSlug: string,
 ): Promise<string | null> => {
   const result = await kysely
-    .selectFrom("OrganizationMembers")
-    .select("role")
-    .where("userId", "=", userId)
-    .where("organizationId", "=", workspaceId)
-    .executeTakeFirst();
+    .selectFrom("Organization")
+    .innerJoin(
+      "OrganizationMembers",
+      "Organization.id",
+      "OrganizationMembers.organizationId",
+    )
+    .select(["OrganizationMembers.role"])
+    .where("Organization.slug", "=", orgSlug)
+    .where("OrganizationMembers.userId", "=", userId)
+    .executeTakeFirstOrThrow();
 
-  // Assert type of result explicitly
-  const role = (result as { role?: string }).role;
-
-  return role ?? null;
+  return result.role;
 };
 
 /**
@@ -178,7 +180,6 @@ export const orgProtectedProcedure = t.procedure
       throw new TRPCError({ code: "UNAUTHORIZED" });
     }
     const orgId = ctx.orgId;
-
     if (!orgId) {
       throw new TRPCError({ code: "FORBIDDEN" });
     }

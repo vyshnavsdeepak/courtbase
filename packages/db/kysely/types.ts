@@ -28,6 +28,20 @@ export type Case = {
   updatedAt: Timestamp | null;
   organizationId: string;
 };
+export type CourtComplex = {
+  id: Generated<string>;
+  name: string;
+  courtCodes: string[];
+  stateCode: string;
+  districtCode: string;
+  created_at: Generated<Timestamp>;
+  updatedAt: Timestamp | null;
+};
+export type District = {
+  name: string;
+  stateCode: string;
+  districtCode: string;
+};
 export type Organization = {
   id: Generated<string>;
   name: string;
@@ -50,6 +64,10 @@ export type Session = {
   userId: string;
   expires: Timestamp;
 };
+export type State = {
+  stateCode: string;
+  name: string;
+};
 export type User = {
   id: Generated<string>;
   name: string | null;
@@ -65,10 +83,13 @@ export type VerificationToken = {
 export type DB = {
   Account: Account;
   Case: Case;
+  CourtComplex: CourtComplex;
+  District: District;
   Organization: Organization;
   OrganizationMembers: OrganizationMembers;
   Post: Post;
   Session: Session;
+  State: State;
   User: User;
   VerificationToken: VerificationToken;
 };
