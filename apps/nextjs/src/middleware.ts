@@ -1,9 +1,18 @@
-export { auth as middleware } from "@court-base/auth";
+import { auth } from "@court-base/auth";
+import { NextResponse } from "next/server";
 
-// Or like this if you need to do something here.
-// export default auth((req) => {
-//   console.log(req.auth) //  { session: { user: { ... } } }
-// })
+const protectedPaths = ["/x", "/join"];
+
+export default auth((req) => {
+  const path = req.nextUrl.pathname;
+  if (protectedPaths.some((protectedPath) => path.startsWith(protectedPath))) {
+    if (!req.auth) {
+      const url = req.nextUrl.clone();
+      url.pathname = '/login';
+      return NextResponse.redirect(url);
+    }
+  }
+});
 
 // Read more: https://nextjs.org/docs/app/building-your-application/routing/middleware#matcher
 export const config = {
