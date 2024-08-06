@@ -4,6 +4,7 @@ import { Button } from "@court-base/ui/button";
 import React, { useState } from "react";
 import { Combobox } from "@court-base/ui/combobox";
 import { api } from "~/trpc/react";
+import { MultiCombobox } from "@court-base/ui/multi-combobox";
 
 const lawyersData = [
     {
@@ -72,7 +73,7 @@ function CaseImportDialog() {
                 onSelect={(value) => setSelectedDistrictCode(value)}
                 disabled={!selectedStateCode}
             />
-            <Combobox
+            <MultiCombobox
                 placeholder="Select Court"
                 items={courtComplexes.map(court => ({ value: court.id, label: court.name }))}
                 disabled={!selectedDistrictCode}
