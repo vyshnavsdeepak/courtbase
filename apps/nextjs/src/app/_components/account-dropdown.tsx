@@ -2,7 +2,9 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from "@court-base/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@court-base/ui/dropdown-menu";
-import { type User } from "@auth/core/types";
+import type {User} from "@auth/core/types";
+import { signOut } from "next-auth/react"
+
 export default function AccountDropdown({
   user,
 }: {
@@ -20,7 +22,7 @@ export default function AccountDropdown({
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
-        <DropdownMenuItem onClick={() => alert("Logout clicked")}>Logout</DropdownMenuItem>
+        <DropdownMenuItem onClick={() =>signOut()}>Logout</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

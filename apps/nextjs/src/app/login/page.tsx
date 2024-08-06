@@ -1,8 +1,9 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import Link from "next/link";
 import UserAuthForm from "../_components/forms/user-auth-form";
 import { buttonVariants } from "@court-base/ui/button";
 import { cn } from "@court-base/ui"
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "Authentication",
@@ -53,14 +54,13 @@ export default function AuthenticationPage() {
         <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
           <div className="flex flex-col space-y-2 text-center">
             <h1 className="text-2xl font-semibold tracking-tight">
-              Create an account
+              Create an account or sign in
             </h1>
-            <p className="text-sm text-muted-foreground">
-              Enter your email below to create your account
-            </p>
           </div>
+          <Suspense>
           <UserAuthForm />
-          <p className="px-8 text-center text-sm text-muted-foreground">
+          </Suspense>
+          {/* <p className="px-8 text-center text-sm text-muted-foreground">
             By clicking continue, you agree to our{" "}
             <Link
               href="/terms"
@@ -76,7 +76,7 @@ export default function AuthenticationPage() {
               Privacy Policy
             </Link>
             .
-          </p>
+          </p> */}
         </div>
       </div>
     </div>
