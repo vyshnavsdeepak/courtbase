@@ -12,6 +12,7 @@ import { TRPCReactProvider } from "~/trpc/react";
 import "~/app/globals.css";
 
 import { env } from "~/env";
+import PageLoadProgress from "./_contexts/page-load-progress-provider";
 
 export const metadata: Metadata = {
   metadataBase: new URL(
@@ -52,7 +53,12 @@ export default function RootLayout(props: { children: React.ReactNode }) {
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <OrgProvider>
-          <TRPCReactProvider>{props.children}</TRPCReactProvider>
+          <TRPCReactProvider>
+            <PageLoadProgress>
+
+            {props.children}
+            </PageLoadProgress>
+            </TRPCReactProvider>
           </OrgProvider>
           <div className="absolute bottom-4 right-4">
             <ThemeToggle />
