@@ -50,8 +50,6 @@ function CardWithForm() {
   const utils = api.useUtils();
   const createOrganization = api.organization.create.useMutation({
     onSuccess: async (data) => {
-      setLoading(false);
-      form.reset();
       await utils.organization.invalidate();
       router.push(`/x/${data.slug}`);
     },
