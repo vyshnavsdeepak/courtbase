@@ -3,8 +3,8 @@ import Sidebar from "../../../_components/sidebar";
 import { SidebarProvider } from "~/app/_contexts/sidebar-context";
 
 export const metadata: Metadata = {
-  title: "Next Shadcn Dashboard Starter",
-  description: "Basic dashboard with Next.js and Shadcn",
+  title: "Court Base",
+  description: "Simple solution for efficient and effective case management.",
 };
 
 export default function WorkspaceLayout({

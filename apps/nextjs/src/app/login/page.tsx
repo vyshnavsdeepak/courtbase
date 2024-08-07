@@ -6,8 +6,8 @@ import { cn } from "@court-base/ui"
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
-  title: "Authentication",
-  description: "Authentication forms built using the components.",
+  title: "Login - Court Base",
+  description: "Simple solution for efficient and effective case management.",
 };
 
 export default function AuthenticationPage() {
