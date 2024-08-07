@@ -13,7 +13,14 @@
     "dev": "tsc",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "lint-staged": "lint-staged"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --check --ignore-path ../../.gitignore --write"
+    ]
   },
   "devDependencies": {
     "@court-base/eslint-config": "workspace:*",
