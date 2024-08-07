@@ -1,6 +1,6 @@
-export default function CasesLayout({ children }: { childresn: React.ReactNode }) {
+export default function CasesLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="h-full m-2 bg-shade border-accent">
+    <div className="min-h-full bg-shade border-accent flex flex-col">
       {children}
     </div>
   );

@@ -13,11 +13,13 @@ const lawyersData = [
     },
 ];
 
-export default function CaseImportDialogButton() {
+export default function CaseImportDialogButton(props: {
+    children: React.ReactNode;
+}) {
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button variant="outline">🪄 Import Cases (No magic!)</Button>
+                {props.children}
             </DialogTrigger>
             <DialogContent className="sm:max-w-[600px]">
             <CaseImportDialog />
