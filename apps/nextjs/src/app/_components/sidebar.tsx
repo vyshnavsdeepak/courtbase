@@ -1,11 +1,11 @@
 "use client";
-import { DashboardNav } from "./dashboard-nav";
-import AccountDropdown from "./account-dropdown";
+
+import { useEffect, useRef } from "react";
 
 import { workspaceLinks } from "../_constants/data";
 import { useSidebar } from "../_contexts/sidebar-context";
+import { DashboardNav } from "./dashboard-nav";
 import SidebarToggle from "./sidebar-toggle";
-import { useEffect, useRef } from "react";
 
 export default function Sidebar() {
   const { isSidebarOpen, toggleSidebar } = useSidebar();
@@ -13,22 +13,28 @@ export default function Sidebar() {
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node)) {
+      if (
+        sidebarRef.current &&
+        !sidebarRef.current.contains(event.target as Node)
+      ) {
         toggleSidebar(false);
       }
     }
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [toggleSidebar]);
 
   return (
-    <aside ref={sidebarRef}
-    className={`block w-72 py-4 px-2 bg-background min-h-full mx-auto absolute lg:relative lg:translate-x-0 transition-transform duration-300 ${
-    isSidebarOpen? 'translate-x-0' : '-translate-x-full'}`}>
+    <aside
+      ref={sidebarRef}
+      className={`absolute mx-auto block min-h-full w-72 bg-background px-2 py-4 transition-transform duration-300 lg:relative lg:translate-x-0 ${
+        isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+      }`}
+    >
       <SidebarToggle className="md:hidden" />
-      <div className="flex items-center mb-6">
+      <div className="mb-6 flex items-center">
         {/* <AccountDropdown user={{
           name: session.user.name,
           image: session.user.image,

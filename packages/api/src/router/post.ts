@@ -22,7 +22,7 @@ export const postRouter = {
         .selectFrom("Post")
         .selectAll()
         .where("id", "=", input.id)
-        .execute();
+        .executeTakeFirst();
     }),
 
   create: protectedProcedure

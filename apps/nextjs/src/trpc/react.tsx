@@ -8,11 +8,11 @@ import { createTRPCReact } from "@trpc/react-query";
 import SuperJSON from "superjson";
 
 import type { AppRouter } from "@court-base/api";
+import { headerKeys } from "@court-base/api/constants";
 
+import { useOrg } from "~/app/_contexts/org-context";
 import { env } from "~/env";
 import { createQueryClient } from "./query-client";
-import { useOrg } from "~/app/_contexts/org-context";
-import { headerKeys } from "@court-base/api/constants";
 
 let clientQueryClientSingleton: QueryClient | undefined = undefined;
 const getQueryClient = () => {

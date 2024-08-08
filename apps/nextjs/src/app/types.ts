@@ -1,4 +1,4 @@
-import { Icons } from "@court-base/ui/icons";
+import type { Icons } from "@court-base/ui/icons";
 
 interface SidebarLink {
   label: string;
@@ -7,4 +7,4 @@ interface SidebarLink {
   subLinks?: { label: string; href: string }[];
 }
 
-export type { SidebarLink }
+export type { SidebarLink };

@@ -5,8 +5,8 @@ import { GeistSans } from "geist/font/sans";
 import { cn } from "@court-base/ui";
 import { ThemeProvider, ThemeToggle } from "@court-base/ui/theme";
 import { Toaster } from "@court-base/ui/toast";
-import { OrgProvider } from "~/app/_contexts/org-context";
 
+import { OrgProvider } from "~/app/_contexts/org-context";
 import { TRPCReactProvider } from "~/trpc/react";
 
 import "~/app/globals.css";
@@ -38,7 +38,7 @@ export const viewport: Viewport = {
   userScalable: false,
   maximumScale: 1,
   initialScale: 1,
-    width: "device-width",
+  width: "device-width",
 };
 
 export default function RootLayout(props: { children: React.ReactNode }) {
@@ -53,11 +53,8 @@ export default function RootLayout(props: { children: React.ReactNode }) {
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <OrgProvider>
-          <TRPCReactProvider>
-            <PageLoadProgress>
-
-            {props.children}
-            </PageLoadProgress>
+            <TRPCReactProvider>
+              <PageLoadProgress>{props.children}</PageLoadProgress>
             </TRPCReactProvider>
           </OrgProvider>
           <div className="absolute bottom-4 right-4">

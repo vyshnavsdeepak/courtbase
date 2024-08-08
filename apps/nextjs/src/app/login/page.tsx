@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import UserAuthForm from "../_components/forms/user-auth-form";
-import { buttonVariants } from "@court-base/ui/button";
-import { cn } from "@court-base/ui"
 import { Suspense } from "react";
+import Link from "next/link";
+
+import { cn } from "@court-base/ui";
+import { buttonVariants } from "@court-base/ui/button";
+
+import UserAuthForm from "../_components/forms/user-auth-form";
 
 export const metadata: Metadata = {
   title: "Login - Court Base",
@@ -17,7 +19,7 @@ export default function AuthenticationPage() {
         href="/examples/authentication"
         className={cn(
           buttonVariants({ variant: "ghost" }),
-          "absolute right-4 hidden top-4 md:right-8 md:top-8",
+          "absolute right-4 top-4 hidden md:right-8 md:top-8",
         )}
       >
         Login
@@ -50,7 +52,7 @@ export default function AuthenticationPage() {
           </blockquote>
         </div>
       </div>
-      <div className="p-4 lg:p-8 h-full flex items-center">
+      <div className="flex h-full items-center p-4 lg:p-8">
         <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
           <div className="flex flex-col space-y-2 text-center">
             <h1 className="text-2xl font-semibold tracking-tight">
@@ -58,7 +60,7 @@ export default function AuthenticationPage() {
             </h1>
           </div>
           <Suspense>
-          <UserAuthForm />
+            <UserAuthForm />
           </Suspense>
           {/* <p className="px-8 text-center text-sm text-muted-foreground">
             By clicking continue, you agree to our{" "}

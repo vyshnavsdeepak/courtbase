@@ -1,7 +1,8 @@
 "use client";
 
-import { signIn } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
+import { signIn } from "next-auth/react";
+
 import GoogleSignInButton from "@court-base/ui/google-signin-button";
 
 export default function UserAuthForm() {
@@ -10,11 +11,13 @@ export default function UserAuthForm() {
 
   return (
     <>
-      <GoogleSignInButton onClick={async ()=> {
-        await signIn("google", {
-          callbackUrl: callbackUrl ?? "/",
-        });
-      }}/>
+      <GoogleSignInButton
+        onClick={async () => {
+          await signIn("google", {
+            callbackUrl: callbackUrl ?? "/",
+          });
+        }}
+      />
     </>
   );
 }

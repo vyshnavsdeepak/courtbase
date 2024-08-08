@@ -1,5 +1,6 @@
-import { auth } from "@court-base/auth";
 import { NextResponse } from "next/server";
+
+import { auth } from "@court-base/auth";
 
 const protectedPaths = ["/x", "/join"];
 
@@ -8,7 +9,7 @@ export default auth((req) => {
   if (protectedPaths.some((protectedPath) => path.startsWith(protectedPath))) {
     if (!req.auth) {
       const url = req.nextUrl.clone();
-      url.pathname = '/login';
+      url.pathname = "/login";
       return NextResponse.redirect(url);
     }
   }

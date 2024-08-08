@@ -1,8 +1,9 @@
-'use client';
-import { AppProgressBar as ProgressBar } from 'next-nprogress-bar';
-import React from 'react';
-const PageLoadProgress = (props: { children: React.ReactNode }) => {
+"use client";
 
+import React from "react";
+import { AppProgressBar as ProgressBar } from "next-nprogress-bar";
+
+const PageLoadProgress = (props: { children: React.ReactNode }) => {
   return (
     <>
       {props.children}

@@ -32,8 +32,8 @@ const config = {
         destination: "/x/:workspace/cases/all",
         permanent: true,
       },
-    ]
-  }
+    ];
+  },
 };
 
 export default config;

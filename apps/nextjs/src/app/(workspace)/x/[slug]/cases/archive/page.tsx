@@ -1,5 +1,3 @@
 export default function CasesPage() {
-  return <div>
-    Archived Cases
-  </div>
+  return <div>Archived Cases</div>;
 }

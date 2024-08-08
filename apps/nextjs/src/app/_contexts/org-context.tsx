@@ -1,7 +1,7 @@
 "use client";
 
-import React, { createContext, useContext, useMemo } from 'react';
-import { usePathname } from 'next/navigation';
+import React, { createContext, useContext, useMemo } from "react";
+import { usePathname } from "next/navigation";
 
 interface OrgContextType {
   orgSlug: string | null;
@@ -9,18 +9,21 @@ interface OrgContextType {
 
 const OrgContext = createContext<OrgContextType>({ orgSlug: null });
 
-export const OrgProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const OrgProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const pathname = usePathname();
 
-  const orgSlug = useMemo(() => {
-    const segments = pathname.split('/');
-    return segments.includes('x') ? segments[segments.indexOf('x') + 1] : null;
-  }, [pathname]) ?? null;
+  const orgSlug =
+    useMemo(() => {
+      const segments = pathname.split("/");
+      return segments.includes("x")
+        ? segments[segments.indexOf("x") + 1]
+        : null;
+    }, [pathname]) ?? null;
 
   return (
-    <OrgContext.Provider value={{ orgSlug }}>
-      {children}
-    </OrgContext.Provider>
+    <OrgContext.Provider value={{ orgSlug }}>{children}</OrgContext.Provider>
   );
 };
 
@@ -30,7 +33,7 @@ export const useOrg = () => {
   return {
     nonNull: () => {
       if (!context.orgSlug) {
-        throw new Error('orgSlug is null');
+        throw new Error("orgSlug is null");
       }
       return context.orgSlug;
     },

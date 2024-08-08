@@ -1,8 +1,11 @@
-export default function CasesLayout({ children }: { children: React.ReactNode }) {
+export default function CasesLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <div className="min-h-full bg-shade border-accent flex flex-col">
+    <div className="flex min-h-full flex-col border-accent bg-shade">
       {children}
     </div>
   );
-
 }
