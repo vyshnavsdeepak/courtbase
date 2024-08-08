@@ -6,7 +6,7 @@
       "dependsOn": ["^topo"]
     },
     "build": {
-      "dependsOn": ["^build", "^db:generate"],
+      "dependsOn": ["^build"],
       "outputs": ["node_modules/.cache/tsbuildinfo.json", "dist/**"]
     },
     "dev": {
@@ -25,7 +25,7 @@
       "cache": false
     },
     "typecheck": {
-      "dependsOn": ["^topo", "^build", "^db:generate"],
+      "dependsOn": ["^topo", "^build"],
       "outputs": ["node_modules/.cache/tsbuildinfo.json"]
     },
     "clean": {
