@@ -115,6 +115,7 @@ model District {
   districtCode String         @db.VarChar(2) // this districtCode is unique in state only, thus having a composite key with stateCode
   state        State          @relation(fields: [stateCode], references: [stateCode], onDelete: NoAction, onUpdate: NoAction, map: "district_state_stateCode_fk")
   CourtComplex CourtComplex[]
+  Court        Court[]        @relation(map: "court_district_stateCode_districtCode_fk")
 
   @@id([stateCode, districtCode], map: "district_stateCode_districtCode_pk")
 }
@@ -122,10 +123,22 @@ model District {
 model CourtComplex {
   id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name         String    @db.VarChar(255)
-  courtCodes   String[]
   stateCode    String
   districtCode String
   district     District  @relation(fields: [stateCode, districtCode], references: [stateCode, districtCode], onDelete: NoAction, onUpdate: NoAction, map: "courtComplex_stateCode_districtCode_fk")
   created_at   DateTime  @default(now()) @db.Timestamp(6)
   updatedAt    DateTime? @db.Timestamptz(6)
+
+  Court Court[] @relation(map: "court_complexId_courtComplex_id_fk")
+}
+
+model Court {
+  id           String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  courtCode    String       @db.VarChar(3) // court code is unique in a district
+  name         String       @db.VarChar(255)
+  complexId    String       @db.Uuid
+  stateCode    String       @db.VarChar(2)
+  districtCode String       @db.VarChar(2)
+  district     District     @relation(fields: [stateCode, districtCode], references: [stateCode, districtCode], onDelete: NoAction, onUpdate: NoAction, map: "court_district_stateCode_districtCode_fk")
+  complex      CourtComplex @relation(fields: [complexId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "court_complexId_courtComplex_id_fk")
 }

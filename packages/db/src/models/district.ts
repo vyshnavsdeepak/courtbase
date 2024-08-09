@@ -1,7 +1,15 @@
 import * as z from "zod";
 
-import type { CompleteCourtComplex, CompleteState } from "./index";
-import { RelatedCourtComplexModel, RelatedStateModel } from "./index";
+import type {
+  CompleteCourt,
+  CompleteCourtComplex,
+  CompleteState,
+} from "./index";
+import {
+  RelatedCourtComplexModel,
+  RelatedCourtModel,
+  RelatedStateModel,
+} from "./index";
 
 export const DistrictModel = z.object({
   name: z.string(),
@@ -12,6 +20,7 @@ export const DistrictModel = z.object({
 export interface CompleteDistrict extends z.infer<typeof DistrictModel> {
   state: CompleteState;
   CourtComplex: CompleteCourtComplex[];
+  Court: CompleteCourt[];
 }
 
 /**
@@ -23,5 +32,6 @@ export const RelatedDistrictModel: z.ZodSchema<CompleteDistrict> = z.lazy(() =>
   DistrictModel.extend({
     state: RelatedStateModel,
     CourtComplex: RelatedCourtComplexModel.array(),
+    Court: RelatedCourtModel.array(),
   }),
 );
