@@ -12,6 +12,7 @@
     "db:push": "turbo -F @court-base/db push",
     "db:studio": "turbo -F @court-base/db studio",
     "db:generate": "turbo -F @court-base/db db:generate",
+    "db:migrate": "turbo -F @court-base/db db:migrate",
     "dev": "turbo watch dev",
     "dev:next": "turbo watch dev -F @court-base/nextjs...",
     "format": "turbo run format --continue -- --cache --cache-location node_modules/.cache/.prettiercache",
