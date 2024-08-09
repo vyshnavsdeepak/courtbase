@@ -1,16 +1,21 @@
 import { kysely } from "@court-base/db";
 
-const state = {
+interface Court {
+  courtName: string;
+  courtCode: string;
+}
+
+const stateData = {
   name: "Kerala",
   code: "4",
 };
 
-const district = {
+const districtData = {
   name: "Kannur",
   code: "3",
 };
 
-const CourtComplexToCourtsMap = {
+const CourtComplexToCourtsMap: Record<string, string[]> = {
   "Gramnyayalaya Irikkur": ["25"],
   "JFCM, FTSC Mattannur": ["21", "35"],
   "DISTRICT COURT THALASSERRY": [
@@ -34,38 +39,148 @@ const CourtComplexToCourtsMap = {
   "Gramanyayalaya , Chokli": ["28"],
 };
 
+const courts: Court[] = [
+  { courtName: "Gramnyayalaya Irikkur", courtCode: "25" },
+  { courtName: "J F C M, Mattannur", courtCode: "21" },
+  { courtName: "Fast Track Special Court, Mattannur", courtCode: "35" },
+  { courtName: "District Court, Thalassery", courtCode: "1" },
+  { courtName: "Sub Court, Thalassery", courtCode: "2" },
+  { courtName: "Munsiff Court, Thalassery", courtCode: "3" },
+  {
+    courtName: "Chief Judicial Magistrate Court, Thalassery",
+    courtCode: "4",
+  },
+  {
+    courtName: "Addl. Chief Judicial Magistrate Court, Thalassery",
+    courtCode: "5",
+  },
+  {
+    courtName: "Judicial First Class Magistrate Court, Thalassery",
+    courtCode: "6",
+  },
+  {
+    courtName: "Motor Accidents Claims Tribunal,  Thalassery",
+    courtCode: "7",
+  },
+  { courtName: "Commercial Court Thalassery", courtCode: "26" },
+  {
+    courtName: "Fast Track special Court POCSO ,Thalassery",
+    courtCode: "29",
+  },
+  { courtName: "Juvenile Justice Board,Thalassery", courtCode: "34" },
+  { courtName: "Munsiff Court, Taliparamba", courtCode: "18" },
+  {
+    courtName: "Judicial First Class Magistrate Court, Taliparamba",
+    courtCode: "19",
+  },
+  { courtName: "MACT, Taliparamba", courtCode: "22" },
+  {
+    courtName: "Fast Track special Court POCSO ,Taliparamba",
+    courtCode: "30",
+  },
+  { courtName: "Principal Munsiffs Court, Kannur", courtCode: "8" },
+  {
+    courtName: "Judicial First Class Magistrate Court 3 Kannur",
+    courtCode: "9",
+  },
+  {
+    courtName: "Judicial First Class Magistrate Court 2 Kannur",
+    courtCode: "10",
+  },
+  {
+    courtName: "Judicial First Class Magistrate Court 1 Kannur",
+    courtCode: "11",
+  },
+  { courtName: "Additional Munsiffs Court Kannur", courtCode: "12" },
+  { courtName: "Sub Court, Kannur", courtCode: "20" },
+  { courtName: "Family Court,Kannur", courtCode: "23" },
+  { courtName: "Commercial Court Kannur", courtCode: "31" },
+  {
+    courtName: "Fast Track special Cour-POCSO, Kannur",
+    courtCode: "33",
+  },
+  { courtName: "Sub Court, Payyannur", courtCode: "15" },
+  { courtName: "Munsiff Court, Payyannur", courtCode: "16" },
+  {
+    courtName: "Judicial First Class Magistrate Court, Payyannur",
+    courtCode: "17",
+  },
+  { courtName: "Commercial Court, Payyannur", courtCode: "32" },
+  { courtName: "Family Court, Thalassery", courtCode: "24" },
+  { courtName: "Munsiffss Court Kuthuparamba", courtCode: "13" },
+  {
+    courtName: "Juditial First Class Magistrate Court Kuthuparamba",
+    courtCode: "14",
+  },
+  { courtName: "Gramnyayalaya, Iritty at Payam", courtCode: "27" },
+  { courtName: "Gramnyayalaya, Panoor  at Chokli", courtCode: "28" },
+];
+
+const courtByCode: Record<string, string> = courts.reduce(
+  (acc, court) => {
+    acc[court.courtCode] = court.courtName;
+    return acc;
+  },
+  {} as Record<string, string>,
+);
+
+const courtComplexes = Object.keys(CourtComplexToCourtsMap);
+
 async function seed() {
   try {
     await kysely
       .insertInto("State")
       .values({
-        name: state.name,
-        stateCode: state.code, // state code is unique to India
+        name: stateData.name,
+        stateCode: stateData.code, // state code is unique to India
       })
       .execute();
 
     await kysely
       .insertInto("District")
       .values({
-        name: district.name,
-        districtCode: district.code,
-        stateCode: state.code,
+        name: districtData.name,
+        stateCode: stateData.code,
+        districtCode: districtData.code,
       })
       .execute();
 
-    const courtComplexArr = Object.entries(CourtComplexToCourtsMap).map(
-      ([complexName, courtCodes]) => ({
-        name: complexName,
-        courtCodes,
-        stateCode: state.code,
-        districtCode: district.code,
-      }),
-    );
+    const insertedComplexes = await kysely
+      .insertInto("CourtComplex")
+      .values(
+        courtComplexes.map((name) => ({
+          name,
+          stateCode: stateData.code,
+          districtCode: districtData.code,
+        })),
+      )
+      .returning(["id", "name"])
+      .execute();
 
-    await kysely.insertInto("CourtComplex").values(courtComplexArr).execute();
+    const complexToCourts = insertedComplexes.map((complex) => {
+      const courts = CourtComplexToCourtsMap[complex.name];
+      if (courts == undefined) {
+        throw new Error(`No courts found for complex ${complex.name}`);
+      }
 
-    console.log("Database seeded successfully.");
-  } catch (error) {
+      return courts.map((courtCode) => {
+        if (courtByCode[courtCode] == undefined) {
+          throw new Error(`No court found for code ${courtCode}`);
+        }
+
+        return {
+          courtCode,
+          name: courtByCode[courtCode],
+          complexId: complex.id,
+          stateCode: stateData.code,
+          districtCode: districtData.code,
+        };
+      });
+    });
+
+    const flatComplexToCourts = complexToCourts.flat();
+    await kysely.insertInto("Court").values(flatComplexToCourts).execute();
+  } catch (error: unknown) {
     console.error("Error seeding database:", error);
   } finally {
     await kysely.destroy();
