@@ -46,7 +46,7 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
             const headers = new Headers();
             headers.set("x-trpc-source", "nextjs-react");
             if (orgSlug) {
-              headers.set(headerKeys.orgId, orgSlug);
+              headers.set(headerKeys.orgSlug, orgSlug);
             }
             return headers;
           },

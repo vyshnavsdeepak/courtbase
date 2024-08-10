@@ -1,6 +1,7 @@
 import type { TRPCRouterRecord } from "@trpc/server";
 import { z } from "zod";
 
+import { CreateCaseImportTaskParamsSchema } from "../models";
 import { orgProtectedProcedure } from "../trpc";
 
 export const courtRouter = {
@@ -27,6 +28,22 @@ export const courtRouter = {
         .select(["id", "name"])
         .where("stateCode", "=", input.stateCode)
         .where("districtCode", "=", input.districtCode)
+        .execute();
+    }),
+  createCaseImportTask: orgProtectedProcedure
+    .input(CreateCaseImportTaskParamsSchema)
+    .mutation(async ({ ctx, input }) => {
+      await ctx.kysely
+        .insertInto("CaseImportTask")
+        .values(
+          input.courtComplexIds.map((courtComplexId) => ({
+            organizationId: ctx.orgId,
+            courtComplexId,
+            advocateName: input.advocate,
+            caseStatus: input.status,
+            created_by: ctx.session.user.id,
+          })),
+        )
         .execute();
     }),
 } satisfies TRPCRouterRecord;

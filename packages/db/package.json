@@ -19,6 +19,7 @@
     "dev": "tsc",
     "clean": "rm -rf .turbo dist node_modules",
     "runscript": "dotenv -e ../../.env -- tsx",
+    "db:format": "prisma format",
     "db:generate": "pnpm with-env prisma generate && eslint --fix src/models && prettier --check --ignore-path ../../.gitignore --write src/models",
     "db:migrate": "pnpm with-env prisma migrate dev && eslint --fix src/models && prettier --check --ignore-path ../../.gitignore --write src/models",
     "push": "pnpm with-env prisma db push --skip-generate",

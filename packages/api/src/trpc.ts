@@ -27,27 +27,31 @@ const isomorphicGetSession = async (headers: Headers) => {
   return auth();
 };
 
-const extractOrgIdFromHeaders = (headers: Headers) => {
-  return headers.get(headerKeys.orgId) ?? null;
+const extractOrgSlugFromHeaders = (headers: Headers) => {
+  return headers.get(headerKeys.orgSlug) ?? null;
 };
 
-const getUserRoleInOrg = async (
-  userId: string,
-  orgSlug: string,
-): Promise<string | null> => {
-  const result = await kysely
-    .selectFrom("Organization")
-    .innerJoin(
-      "OrganizationMembers",
-      "Organization.id",
-      "OrganizationMembers.organizationId",
-    )
-    .select(["OrganizationMembers.role"])
-    .where("Organization.slug", "=", orgSlug)
-    .where("OrganizationMembers.userId", "=", userId)
-    .executeTakeFirstOrThrow();
+const getUserInOrg = async (userId: string, orgSlug: string) => {
+  try {
+    const result = await kysely
+      .selectFrom("Organization")
+      .innerJoin(
+        "OrganizationMembers",
+        "Organization.id",
+        "OrganizationMembers.organizationId",
+      )
+      .select(["OrganizationMembers.role", "Organization.id"])
+      .where("Organization.slug", "=", orgSlug)
+      .where("OrganizationMembers.userId", "=", userId)
+      .executeTakeFirstOrThrow();
 
-  return result.role;
+    return {
+      role: result.role,
+      orgId: result.id,
+    };
+  } catch {
+    return null;
+  }
 };
 
 /**
@@ -72,11 +76,11 @@ export const createTRPCContext = async (opts: {
   const source = opts.headers.get("x-trpc-source") ?? "unknown";
   console.log(">>> tRPC Request from", source, "by", session?.user);
 
-  const orgId = extractOrgIdFromHeaders(opts.headers);
+  const orgSlug = extractOrgSlugFromHeaders(opts.headers);
 
   return {
     session,
-    orgId,
+    orgSlug,
     kysely,
     token: authToken,
   };
@@ -179,20 +183,20 @@ export const orgProtectedProcedure = t.procedure
     if (!ctx.session?.user) {
       throw new TRPCError({ code: "UNAUTHORIZED" });
     }
-    const orgId = ctx.orgId;
-    if (!orgId) {
+    const orgSlug = ctx.orgSlug;
+    if (!orgSlug) {
       throw new TRPCError({ code: "FORBIDDEN" });
     }
-    const userRole = await getUserRoleInOrg(ctx.session.user.id, orgId);
-    if (!userRole) {
+    const orgUser = await getUserInOrg(ctx.session.user.id, orgSlug);
+    if (!orgUser) {
       throw new TRPCError({ code: "FORBIDDEN" });
     }
     return next({
       ctx: {
         // infers the `session` as non-nullable
         session: { ...ctx.session, user: ctx.session.user },
-        orgId,
-        userRole,
+        userRole: orgUser.role,
+        orgId: orgUser.orgId,
       },
     });
   });

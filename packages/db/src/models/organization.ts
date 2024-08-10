@@ -1,7 +1,7 @@
 import * as z from "zod";
 
-import type { CompleteCase } from "./index";
-import { RelatedCaseModel } from "./index";
+import type { CompleteCase, CompleteCaseImportTask } from "./index";
+import { RelatedCaseImportTaskModel, RelatedCaseModel } from "./index";
 
 export const OrganizationModel = z.object({
   id: z.string(),
@@ -12,6 +12,7 @@ export const OrganizationModel = z.object({
 export interface CompleteOrganization
   extends z.infer<typeof OrganizationModel> {
   cases: CompleteCase[];
+  CaseImportTask: CompleteCaseImportTask[];
 }
 
 /**
@@ -23,5 +24,6 @@ export const RelatedOrganizationModel: z.ZodSchema<CompleteOrganization> =
   z.lazy(() =>
     OrganizationModel.extend({
       cases: RelatedCaseModel.array(),
+      CaseImportTask: RelatedCaseImportTaskModel.array(),
     }),
   );

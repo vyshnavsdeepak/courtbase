@@ -28,6 +28,16 @@ export type Case = {
   updatedAt: Timestamp | null;
   organizationId: string;
 };
+export type CaseImportTask = {
+  id: Generated<string>;
+  organizationId: string;
+  courtComplexId: string;
+  advocateName: string;
+  caseStatus: string;
+  created_by: string;
+  created_at: Generated<Timestamp>;
+  updatedAt: Timestamp | null;
+};
 export type Court = {
   id: Generated<string>;
   courtCode: string;
@@ -90,6 +100,7 @@ export type VerificationToken = {
 export type DB = {
   Account: Account;
   Case: Case;
+  CaseImportTask: CaseImportTask;
   Court: Court;
   CourtComplex: CourtComplex;
   District: District;

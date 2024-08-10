@@ -59,13 +59,14 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name          String?   @db.VarChar(255)
-  email         String    @db.VarChar(255)
-  emailVerified DateTime? @db.Timestamptz(6)
-  image         String?   @db.VarChar(255)
-  account       Account[]
-  session       Session[]
+  id             String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name           String?          @db.VarChar(255)
+  email          String           @db.VarChar(255)
+  emailVerified  DateTime?        @db.Timestamptz(6)
+  image          String?          @db.VarChar(255)
+  account        Account[]
+  session        Session[]
+  CaseImportTask CaseImportTask[]
 }
 
 model VerificationToken {
@@ -77,10 +78,11 @@ model VerificationToken {
 }
 
 model Organization {
-  id    String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name  String @db.VarChar(255)
-  slug  String @unique
-  cases Case[] @relation(map: "case_organization_organization_id_fk")
+  id             String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name           String           @db.VarChar(255)
+  slug           String           @unique
+  cases          Case[]           @relation(map: "case_organization_organization_id_fk")
+  CaseImportTask CaseImportTask[]
 }
 
 model OrganizationMembers {
@@ -130,6 +132,7 @@ model CourtComplex {
   updatedAt    DateTime? @db.Timestamptz(6)
 
   Court Court[] @relation(map: "court_complexId_courtComplex_id_fk")
+  CaseImportTask CaseImportTask[] @relation(map: "caseImportTask_courtComplexId_courtComplex_id_fk")
 }
 
 model Court {
@@ -141,4 +144,38 @@ model Court {
   districtCode String       @db.VarChar(2)
   district     District     @relation(fields: [stateCode, districtCode], references: [stateCode, districtCode], onDelete: NoAction, onUpdate: NoAction, map: "court_district_stateCode_districtCode_fk")
   complex      CourtComplex @relation(fields: [complexId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "court_complexId_courtComplex_id_fk")
+
+  @@unique([stateCode, districtCode, courtCode], map: "court_stateCode_districtCode_courtCode_unique")
 }
+
+model CaseImportTask {
+  id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  organizationId String    @db.Uuid
+  courtComplexId String    @db.Uuid
+  // courtIds array field shall be added later if import task is to be done for selected courts
+  advocateName   String    @db.VarChar(255)
+  caseStatus     String    @db.VarChar(255)
+  created_by     String    @db.Uuid
+  created_at     DateTime  @default(now()) @db.Timestamp(6)
+  updatedAt      DateTime? @db.Timestamptz(6)
+
+  courtComplex CourtComplex @relation(fields: [courtComplexId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "caseImportTask_courtComplexId_courtComplex_id_fk")
+  user       User         @relation(fields: [created_by], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "caseImportTask_created_by_user_id_fk")
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "caseImportTask_organizationId_organization_id_fk")
+
+  // CaseImportTaskLog CaseImportTaskLog[] @relation(map: "caseImportTaskLog_taskId_caseImportTask_id_fk")
+}
+
+// model CaseImportTaskLog {
+//   id             String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+//   taskId         String       @db.Uuid
+//   courtCode      String       @db.VarChar(3)
+//   // status enum : [PENDING, IN_PROGRESS, COMPLETED, FAILED]
+//   status         String       @db.VarChar(255)
+//   message        String       @db.VarChar(255)
+//   data           Json         @db.Json
+//   created_at     DateTime     @default(now()) @db.Timestamp(6)
+//   updatedAt      DateTime?    @db.Timestamptz(6)
+
+//   task CaseImportTask @relation(fields: [taskId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "caseImportTaskLog_taskId_caseImportTask_id_fk")
+// }

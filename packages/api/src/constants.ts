@@ -1,3 +1,3 @@
 export const headerKeys = {
-  orgId: "X-org-id",
+  orgSlug: "X-org-id",
 };
