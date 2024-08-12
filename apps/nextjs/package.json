@@ -21,6 +21,7 @@
     ]
   },
   "dependencies": {
+    "@court-base/event-funnel": "workspace:*",
     "@court-base/api": "workspace:*",
     "@court-base/auth": "workspace:*",
     "@court-base/db": "workspace:*",

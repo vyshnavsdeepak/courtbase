@@ -1,0 +1,45 @@
+{
+  "name": "@court-base/event-funnel",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "exports": {
+    "./handler": {
+      "types": "./dist/route-handler.d.ts",
+      "default": "./dist/route-handler.js"
+    },
+    ".": {
+      "types": "./dist/lib/inngest.d.ts",
+      "default": "./dist/lib/inngest.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf .turbo dist node_modules",
+    "dev": "tsc",
+    "format": "prettier --check . --ignore-path ../../.gitignore",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit --emitDeclarationOnly false",
+    "lint-staged": "lint-staged"
+  },
+  "lint-staged": {
+    "*.{ts}": [
+      "eslint --fix",
+      "prettier --check --ignore-path ../../.gitignore --write"
+    ]
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "inngest": "^3.22.2"
+  },
+  "devDependencies": {
+    "@court-base/eslint-config": "workspace:*",
+    "@court-base/prettier-config": "workspace:*",
+    "@court-base/tsconfig": "workspace:*",
+    "eslint": "catalog:",
+    "prettier": "catalog:",
+    "typescript": "catalog:"
+  }
+}
