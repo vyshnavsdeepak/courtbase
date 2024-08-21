@@ -1,6 +1,8 @@
 import type { TRPCRouterRecord } from "@trpc/server";
 import { z } from "zod";
 
+import { inngest } from "@court-base/event-funnel";
+
 import { CreateCaseImportTaskParamsSchema } from "../models";
 import { orgProtectedProcedure } from "../trpc";
 
@@ -33,17 +35,54 @@ export const courtRouter = {
   createCaseImportTask: orgProtectedProcedure
     .input(CreateCaseImportTaskParamsSchema)
     .mutation(async ({ ctx, input }) => {
-      await ctx.kysely
+      const courtComplexIds = input.courtComplexIds;
+      const userId = ctx.session.user.id;
+      const orgId = ctx.orgId;
+      const advocate = input.advocate;
+
+      const { id } = await ctx.kysely
         .insertInto("CaseImportTask")
-        .values(
-          input.courtComplexIds.map((courtComplexId) => ({
-            organizationId: ctx.orgId,
-            courtComplexId,
-            advocateName: input.advocate,
-            caseStatus: input.status,
-            created_by: ctx.session.user.id,
-          })),
-        )
-        .execute();
+        .values({
+          organizationId: orgId,
+          courtComplexIds: {
+            complexes: courtComplexIds,
+          },
+          advocateName: advocate,
+          caseStatus: input.status,
+          taskStatus: "PENDING",
+          created_by: userId,
+        })
+        .returning("id")
+        .executeTakeFirstOrThrow()
+        .catch((e) => {
+          console.error(e);
+          throw new Error("Failed to create case import task. (E-3)");
+        });
+
+      const event = await inngest
+        .send({
+          id,
+          name: "app/import-by-court-complex",
+          data: {
+            payload: {
+              advocate,
+              status: input.status,
+              courtComplexIds,
+            },
+            identity: {
+              userId,
+              orgId,
+            },
+          },
+        })
+        .catch(() => {
+          throw new Error("Failed to queue case import task. (E-1)");
+        });
+
+      const taskId = event.ids[0];
+      if (!taskId) {
+        // one id will always be returned as we are sending one event
+        throw new Error("Failed to queue case import task. (E-2)");
+      }
     }),
 } satisfies TRPCRouterRecord;

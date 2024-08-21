@@ -6,6 +6,7 @@ export * from "./verificationtoken";
 export * from "./organization";
 export * from "./organizationmembers";
 export * from "./case";
+export * from "./advocatecase";
 export * from "./state";
 export * from "./district";
 export * from "./courtcomplex";

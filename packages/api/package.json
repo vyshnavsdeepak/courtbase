@@ -37,6 +37,7 @@
     "@court-base/auth": "workspace:*",
     "@court-base/db": "workspace:*",
     "@court-base/validators": "workspace:*",
+    "@court-base/event-funnel": "workspace:*",
     "@trpc/server": "catalog:",
     "superjson": "2.2.1",
     "zod": "catalog:"

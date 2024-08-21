@@ -9,7 +9,7 @@ interface CaseByAdvocateNameEncryptedResult extends Record<string, string> {
   caseNos: string;
 }
 
-interface Case {
+interface CaseRaw {
   cino: string;
   case_no: string;
   case_no2: number;
@@ -31,6 +31,48 @@ interface Case {
   ladv_name2: string;
   type_name: string;
   petnameadArr: string;
+}
+
+interface Case {
+  crn: string;
+  caseNo: {
+    typeName: string;
+    number: number;
+    year: number;
+  };
+  petitioner: string;
+  petitionerLawyers: string;
+  respondent: string;
+  respondentLawyers: string;
+  typeName: string;
+  dateOfDecision: string | null;
+  title: string;
+  rawData: CaseRaw;
+}
+
+function transformCase(rawCase: CaseRaw): Case {
+  let title;
+  if (rawCase.petnameadArr.startsWith("XXXXXXX")) {
+    title = rawCase.pet_name + " Vs " + rawCase.res_name;
+  } else {
+    title = rawCase.petnameadArr.replace(/<br\/> Vs <br\/>/g, " Vs ");
+  }
+  return {
+    crn: rawCase.cino,
+    caseNo: {
+      typeName: rawCase.type_name,
+      number: rawCase.case_no2,
+      year: rawCase.reg_year,
+    },
+    petitioner: rawCase.pet_name,
+    petitionerLawyers: rawCase.adv_name1,
+    respondent: rawCase.res_name,
+    respondentLawyers: rawCase.adv_name2,
+    typeName: rawCase.type_name,
+    title,
+    dateOfDecision: rawCase.date_of_decision,
+    rawData: rawCase, // Storing the raw data for reference
+  };
 }
 
 export interface CaseByAdvocateNameResult {
@@ -93,10 +135,12 @@ export async function getCasesByAdvocateName(params: CaseByAdvocateNameParams) {
     reqParams,
   )) as CaseByAdvocateNameEncryptedResult;
 
+  const rawCases = decodeResponse<CaseRaw[]>(res.caseNos);
+
   const decryptedRes: CaseByAdvocateNameResult = {
     courtCode: decodeResponse<string>(res.court_code),
     establishmentName: decodeResponse<string>(res.establishment_name),
-    caseNos: decodeResponse<Case[]>(res.caseNos),
+    caseNos: rawCases.map(transformCase),
   };
 
   return decryptedRes;

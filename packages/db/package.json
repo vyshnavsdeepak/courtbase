@@ -11,6 +11,14 @@
     "./models": {
       "types": "./dist/src/models/index.d.ts",
       "default": "./dist/src/models/index.js"
+    },
+    "./types": {
+      "types": "./dist/kysely/types.d.ts",
+      "default": "./dist/kysely/types.js"
+    },
+    "./enums": {
+      "types": "./dist/kysely/enums.d.ts",
+      "default": "./dist/kysely/enums.js"
     }
   },
   "license": "MIT",

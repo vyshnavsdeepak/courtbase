@@ -85,24 +85,76 @@ model Organization {
   CaseImportTask CaseImportTask[]
 }
 
+enum OrgDesignation {
+  ADVOCATE
+  STAFF
+}
+
 model OrganizationMembers {
-  organizationId String @db.Uuid
-  userId         String @db.Uuid
-  role           String @db.VarChar(255)
+  organizationId String          @db.Uuid
+  userId         String          @db.Uuid
+  role           String          @db.VarChar(255) // OWBER, ADMIN, MEMBER
+  designation    OrgDesignation?
+  AdvocateCase   AdvocateCase[]  @relation(map: "advocateCase_advocateId_organizationId_fk")
 
   @@id([organizationId, userId], map: "organizationMembers_organizationId_userId_pk")
 }
 
+enum AdvocateCaseSide {
+  PETITIONER
+  RESPONDENT
+  UNKNOWN
+}
+
 model Case {
-  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  crn         String    @db.VarChar(255)
-  title       String    @db.VarChar(255)
-  description String
-  created_at  DateTime  @default(now()) @db.Timestamp(6)
-  updatedAt   DateTime? @db.Timestamptz(6)
+  id                String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  crn               String    @db.VarChar(16)
+  courtId           String    @db.Uuid
+  typeName          String    @db.VarChar(50) // eg. OP, OS, CC, MC
+  number            String    @db.VarChar(4) // eg. 232
+  regYear           String    @db.VarChar(4) // eg. 2021
+  // typeName/number/regYear is unique in a court = eg. OP/232/2021
+  title             String    @db.VarChar(255)
+  description       String?   @db.VarChar(255)
+  petitioner        String    @db.VarChar(255)
+  petitionerLawyers String    @db.VarChar(255)
+  respondent        String    @db.VarChar(255)
+  respondentLawyers String    @db.VarChar(255)
+  dateOfDecision    DateTime? @db.Date
+  nextHearingDate   DateTime? @db.Date
+
+  // side - petitioner/respondent
+  side             AdvocateCaseSide
+  extraPetitioners String?          @db.VarChar(255)
+  extraRespondents String?          @db.VarChar(255)
+  extraParties     String?          @db.VarChar(255)
+
+  rawData    Json      @db.Json
+  created_at DateTime  @default(now()) @db.Timestamp(6)
+  updatedAt  DateTime? @default(dbgenerated("CURRENT_TIMESTAMP")) @db.Timestamptz(6)
 
   organizationId String       @db.Uuid
-  Organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "case_organization_organization_id_fk")
+  Organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "eCourtCase_organization_organization_id_fk")
+
+  Court Court @relation(fields: [courtId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "eCourtCase_courtId_court_id_fk")
+
+  // to lookup case by case number of type OP/232/2021, we need to have a unique constraint on typeName, caseNo, caseRegYear per court per organization
+  @@unique([organizationId, typeName, number, regYear, courtId], map: "case_organization_typeName_number_regYear_courtId_unique")
+  @@unique([organizationId, crn], map: "case_organization_organization_id_fk")
+}
+
+model AdvocateCase {
+  id             String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  caseId         String @db.Uuid
+  advocateId     String @db.Uuid
+  organizationId String @db.Uuid // Added this field to link with OrganizationMembers
+
+  createdAt DateTime  @default(now()) @db.Timestamp(6)
+  updatedAt DateTime? @db.Timestamptz(6)
+
+  Advocate OrganizationMembers @relation(fields: [advocateId, organizationId], references: [userId, organizationId], onDelete: NoAction, onUpdate: NoAction, map: "advocateCase_advocateId_organizationId_fk")
+
+  @@unique([caseId, advocateId], map: "advocateCase_caseId_advocateId_unique")
 }
 
 model State {
@@ -131,7 +183,7 @@ model CourtComplex {
   created_at   DateTime  @default(now()) @db.Timestamp(6)
   updatedAt    DateTime? @db.Timestamptz(6)
 
-  Court Court[] @relation(map: "court_complexId_courtComplex_id_fk")
+  Court          Court[]          @relation(map: "court_complexId_courtComplex_id_fk")
   CaseImportTask CaseImportTask[] @relation(map: "caseImportTask_courtComplexId_courtComplex_id_fk")
 }
 
@@ -144,38 +196,33 @@ model Court {
   districtCode String       @db.VarChar(2)
   district     District     @relation(fields: [stateCode, districtCode], references: [stateCode, districtCode], onDelete: NoAction, onUpdate: NoAction, map: "court_district_stateCode_districtCode_fk")
   complex      CourtComplex @relation(fields: [complexId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "court_complexId_courtComplex_id_fk")
+  cases        Case[]       @relation(map: "Case_courtId_court_id_fk")
 
   @@unique([stateCode, districtCode, courtCode], map: "court_stateCode_districtCode_courtCode_unique")
 }
 
-model CaseImportTask {
-  id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  organizationId String    @db.Uuid
-  courtComplexId String    @db.Uuid
-  // courtIds array field shall be added later if import task is to be done for selected courts
-  advocateName   String    @db.VarChar(255)
-  caseStatus     String    @db.VarChar(255)
-  created_by     String    @db.Uuid
-  created_at     DateTime  @default(now()) @db.Timestamp(6)
-  updatedAt      DateTime? @db.Timestamptz(6)
-
-  courtComplex CourtComplex @relation(fields: [courtComplexId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "caseImportTask_courtComplexId_courtComplex_id_fk")
-  user       User         @relation(fields: [created_by], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "caseImportTask_created_by_user_id_fk")
-  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "caseImportTask_organizationId_organization_id_fk")
-
-  // CaseImportTaskLog CaseImportTaskLog[] @relation(map: "caseImportTaskLog_taskId_caseImportTask_id_fk")
+enum CaseImportTaskStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  FAILED
 }
 
-// model CaseImportTaskLog {
-//   id             String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-//   taskId         String       @db.Uuid
-//   courtCode      String       @db.VarChar(3)
-//   // status enum : [PENDING, IN_PROGRESS, COMPLETED, FAILED]
-//   status         String       @db.VarChar(255)
-//   message        String       @db.VarChar(255)
-//   data           Json         @db.Json
-//   created_at     DateTime     @default(now()) @db.Timestamp(6)
-//   updatedAt      DateTime?    @db.Timestamptz(6)
+model CaseImportTask {
+  id              String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  organizationId  String               @db.Uuid
+  // courtComplexIds json is { complexes: string[] }
+  courtComplexIds Json?
+  advocateName    String               @db.VarChar(255)
+  caseStatus      String
+  taskStatus      CaseImportTaskStatus @default(PENDING)
+  taskMeta        Json?
+  created_by      String               @db.Uuid
+  created_at      DateTime             @default(now()) @db.Timestamp(6)
+  updatedAt       DateTime?            @db.Timestamptz(6)
 
-//   task CaseImportTask @relation(fields: [taskId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "caseImportTaskLog_taskId_caseImportTask_id_fk")
-// }
+  user           User          @relation(fields: [created_by], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "caseImportTask_created_by_user_id_fk")
+  organization   Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "caseImportTask_organizationId_organization_id_fk")
+  CourtComplex   CourtComplex? @relation(fields: [courtComplexId], references: [id])
+  courtComplexId String?       @db.Uuid
+}
