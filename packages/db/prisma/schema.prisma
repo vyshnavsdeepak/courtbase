@@ -90,10 +90,16 @@ enum OrgDesignation {
   STAFF
 }
 
+enum OrgRole {
+  OWNER
+  ADMIN
+  MEMBER
+}
+
 model OrganizationMembers {
   organizationId String          @db.Uuid
   userId         String          @db.Uuid
-  role           String          @db.VarChar(255) // OWBER, ADMIN, MEMBER
+  role           OrgRole         @default(MEMBER)
   designation    OrgDesignation?
   AdvocateCase   AdvocateCase[]  @relation(map: "advocateCase_advocateId_organizationId_fk")
 

@@ -4,6 +4,7 @@ import type {
   AdvocateCaseSide,
   CaseImportTaskStatus,
   OrgDesignation,
+  OrgRole,
 } from "./enums";
 
 export type Generated<T> =
@@ -99,7 +100,7 @@ export type Organization = {
 export type OrganizationMembers = {
   organizationId: string;
   userId: string;
-  role: string;
+  role: Generated<OrgRole>;
   designation: OrgDesignation | null;
 };
 export type Post = {

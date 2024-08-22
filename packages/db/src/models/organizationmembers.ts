@@ -1,4 +1,4 @@
-import { OrgDesignation } from "@prisma/client";
+import { OrgDesignation, OrgRole } from "@prisma/client";
 import * as z from "zod";
 
 import type { CompleteAdvocateCase } from "./index";
@@ -7,7 +7,7 @@ import { RelatedAdvocateCaseModel } from "./index";
 export const OrganizationMembersModel = z.object({
   organizationId: z.string(),
   userId: z.string(),
-  role: z.string(),
+  role: z.nativeEnum(OrgRole),
   designation: z.nativeEnum(OrgDesignation).nullish(),
 });
 

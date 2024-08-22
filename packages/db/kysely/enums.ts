@@ -4,6 +4,12 @@ export const OrgDesignation = {
 } as const;
 export type OrgDesignation =
   (typeof OrgDesignation)[keyof typeof OrgDesignation];
+export const OrgRole = {
+  OWNER: "OWNER",
+  ADMIN: "ADMIN",
+  MEMBER: "MEMBER",
+} as const;
+export type OrgRole = (typeof OrgRole)[keyof typeof OrgRole];
 export const AdvocateCaseSide = {
   PETITIONER: "PETITIONER",
   RESPONDENT: "RESPONDENT",
