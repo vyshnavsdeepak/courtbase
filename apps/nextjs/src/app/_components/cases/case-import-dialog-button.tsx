@@ -35,8 +35,9 @@ const lawyersData = [
 export default function CaseImportDialogButton(props: {
   children: React.ReactNode;
 }) {
+  const [open, setOpen] = useState(false);
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{props.children}</DialogTrigger>
       <DialogContent
         className="sm:max-w-[600px]"
@@ -45,7 +46,7 @@ export default function CaseImportDialogButton(props: {
           e.preventDefault();
         }}
       >
-        <CaseImportDialog />
+        <CaseImportDialog close={() => setOpen(false)} />
       </DialogContent>
     </Dialog>
   );
@@ -53,7 +54,7 @@ export default function CaseImportDialogButton(props: {
 
 type FormData = z.infer<typeof CreateCaseImportTaskParamsSchema>;
 
-function CaseImportDialog() {
+function CaseImportDialog({ close }: { close: () => void }) {
   const {
     control,
     handleSubmit,
@@ -103,6 +104,7 @@ function CaseImportDialog() {
       onSuccess: () => {
         console.log("Case import task created successfully");
         toast.info("Case import task created successfully");
+        close();
       },
       onError: (err) => {
         console.error("Failed to create case import task", err);
