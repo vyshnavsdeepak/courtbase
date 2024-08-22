@@ -33,7 +33,7 @@
   "dependencies": {
     "@court-base/db": "workspace:*",
     "@court-base/ecourt": "workspace:*",
-    "inngest": "^3.22.2"
+    "inngest": "^3.22.5"
   },
   "devDependencies": {
     "@court-base/eslint-config": "workspace:*",

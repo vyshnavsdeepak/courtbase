@@ -28,11 +28,11 @@
   },
   "devDependencies": {
     "@court-base/prettier-config": "workspace:*",
-    "@turbo/gen": "^2.0.11",
-    "husky": "^9.1.4",
-    "lint-staged": "^15.2.7",
+    "@turbo/gen": "^2.0.14",
+    "husky": "^9.1.5",
+    "lint-staged": "^15.2.9",
     "prettier": "catalog:",
-    "turbo": "^2.0.11",
+    "turbo": "^2.0.14",
     "typescript": "catalog:"
   },
   "prettier": "@court-base/prettier-config"

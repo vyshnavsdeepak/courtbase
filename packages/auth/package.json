@@ -29,7 +29,7 @@
     "@auth/kysely-adapter": "^1.4.2",
     "@court-base/db": "workspace:*",
     "@t3-oss/env-nextjs": "^0.10.1",
-    "next": "^14.2.4",
+    "next": "^14.2.6",
     "next-auth": "5.0.0-beta.19",
     "react": "catalog:react18",
     "react-dom": "catalog:react18",
