@@ -49,7 +49,7 @@ export const organizationRouter = {
         .values({
           organizationId: org.id,
           userId: ctx.session.user.id,
-          role: MemberRole.OWNER,
+          role: MemberRole.enum.OWNER,
         })
         .executeTakeFirstOrThrow();
 
