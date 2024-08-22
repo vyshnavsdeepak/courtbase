@@ -118,7 +118,7 @@ export const importCaseByCourtComplex = inngest.createFunction(
       },
     );
 
-    const dbSaveResult = await step.run("save-case-to-db", () => {
+    const dbSaveResult = await step.run("save-case-to-db", async () => {
       return kysely
         .insertInto("Case")
         .values(
@@ -144,6 +144,19 @@ export const importCaseByCourtComplex = inngest.createFunction(
             organizationId: identity.orgId,
           })),
         )
+        .onConflict((conflict) =>
+          conflict.columns(["crn", "organizationId"]).doUpdateSet((eb) => ({
+            updatedAt: new Date(),
+            petitioner: eb.ref("excluded.petitioner"),
+            petitionerLawyers: eb.ref("excluded.petitionerLawyers"),
+            respondent: eb.ref("excluded.respondent"),
+            respondentLawyers: eb.ref("excluded.respondentLawyers"),
+            extraPetitioners: eb.ref("excluded.extraPetitioners"),
+            extraRespondents: eb.ref("excluded.extraRespondents"),
+            extraParties: eb.ref("excluded.extraParties"),
+            rawData: eb.ref("excluded.rawData"),
+          })),
+        )
         .returning("id")
         .execute();
     });
@@ -158,6 +171,7 @@ export const importCaseByCourtComplex = inngest.createFunction(
             organizationId: identity.orgId,
           })),
         )
+        .onConflict((c) => c.doNothing())
         .execute();
     });
 

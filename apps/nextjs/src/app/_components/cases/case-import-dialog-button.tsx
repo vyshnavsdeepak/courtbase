@@ -26,6 +26,10 @@ const lawyersData = [
     value: "Deepak Madathil",
     label: "Deepak Madathil",
   },
+  {
+    value: "Sreeja Prashanth",
+    label: "Sreeja Prashanth",
+  },
 ];
 
 export default function CaseImportDialogButton(props: {
