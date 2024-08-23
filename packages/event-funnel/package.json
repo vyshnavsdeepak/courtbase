@@ -5,11 +5,11 @@
   "exports": {
     "./handler": {
       "types": "./dist/route-handler.d.ts",
-      "default": "./dist/route-handler.js"
+      "default": "./src/route-handler.ts"
     },
     ".": {
       "types": "./dist/lib/inngest.d.ts",
-      "default": "./dist/lib/inngest.js"
+      "default": "./src/lib/inngest.ts"
     }
   },
   "scripts": {
