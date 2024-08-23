@@ -28,7 +28,7 @@
     "clean": "rm -rf .turbo dist node_modules",
     "runscript": "dotenv -e ../../.env -- tsx",
     "db:format": "prisma format",
-    "db:generate": "pnpm with-env prisma generate && eslint --fix src/models && prettier --check --ignore-path ../../.gitignore --write src/models",
+    "db:generate": "pnpm with-env prisma generate && prettier --check --ignore-path ../../.gitignore --write src/models",
     "db:migrate": "pnpm with-env prisma migrate dev && eslint --fix src/models && prettier --check --ignore-path ../../.gitignore --write src/models",
     "push": "pnpm with-env prisma db push --skip-generate",
     "pull": "pnpm with-env prisma db pull",
@@ -65,7 +65,7 @@
     "prettier": "catalog:",
     "prisma": "^5.18.0",
     "typescript": "catalog:",
-    "zod-prisma": "^0.5.4"
+    "zod-prisma-types": "^3.1.8"
   },
   "prettier": "@court-base/prettier-config"
 }
