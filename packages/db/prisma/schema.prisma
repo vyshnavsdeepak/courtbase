@@ -34,7 +34,6 @@ generator zod {
   writeNullishInModelTypes         = true // default is false
 }
 
-
 model Account {
   userId            String  @db.Uuid
   type              String  @db.VarChar(255)
