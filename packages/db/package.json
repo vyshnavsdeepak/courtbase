@@ -23,7 +23,7 @@
   },
   "license": "MIT",
   "scripts": {
-    "build": "pnpm run db:generate && tsc",
+    "build": "tsc",
     "dev": "tsc",
     "clean": "rm -rf .turbo dist node_modules",
     "runscript": "dotenv -e ../../.env -- tsx",

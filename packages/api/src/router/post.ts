@@ -1,7 +1,7 @@
 import type { TRPCRouterRecord } from "@trpc/server";
 import { z } from "zod";
 
-import { PostModel } from "@court-base/db/models";
+import { PostSchema } from "@court-base/db/models";
 
 import { protectedProcedure, publicProcedure } from "../trpc";
 
@@ -27,7 +27,7 @@ export const postRouter = {
 
   create: protectedProcedure
     .input(
-      PostModel.pick({
+      PostSchema.pick({
         title: true,
         content: true,
       }),

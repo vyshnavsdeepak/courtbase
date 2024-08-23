@@ -1,9 +1,9 @@
 import { z } from "zod";
 
 import { OrgRole } from "@court-base/db/enums";
-import { OrganizationModel } from "@court-base/db/models";
+import { OrganizationSchema } from "@court-base/db/models";
 
-export const OrganizationCreateModel = OrganizationModel.pick({
+export const OrganizationCreateModel = OrganizationSchema.pick({
   name: true,
   slug: true,
 }).extend({

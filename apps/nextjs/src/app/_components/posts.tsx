@@ -1,7 +1,7 @@
 "use client";
 
 import type { RouterOutputs } from "@court-base/api";
-import { PostModel } from "@court-base/db/models";
+import { PostSchema } from "@court-base/db/models";
 import { cn } from "@court-base/ui";
 import { Button } from "@court-base/ui/button";
 import {
@@ -19,7 +19,7 @@ import { api } from "~/trpc/react";
 
 export function CreatePostForm() {
   const form = useForm({
-    schema: PostModel.pick({ content: true, title: true }),
+    schema: PostSchema.pick({ content: true, title: true }),
     defaultValues: {
       content: "",
       title: "",
