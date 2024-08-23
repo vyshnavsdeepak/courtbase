@@ -1,7 +1,6 @@
 import { z } from "zod";
 
-import { OrgRole } from "@court-base/db/enums";
-import { OrganizationSchema } from "@court-base/db/models";
+import { OrganizationSchema, OrgRoleSchema } from "@court-base/db/models";
 
 export const OrganizationCreateModel = OrganizationSchema.pick({
   name: true,
@@ -17,7 +16,7 @@ export const OrganizationCreateModel = OrganizationSchema.pick({
     .max(255, "URL must be at most 255 characters long"),
 });
 
-export const MemberRole = z.nativeEnum(OrgRole);
+export const MemberRole = OrgRoleSchema;
 
 export const CreateCaseImportTaskParamsSchema = z.object({
   courtComplexIds: z.array(z.string(), {

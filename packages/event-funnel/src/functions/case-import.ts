@@ -1,4 +1,4 @@
-import type { AdvocateCaseSide } from "@court-base/db/enums";
+import type { AdvocateCaseSideType } from "@court-base/db/models";
 import type { CaseByAdvocateNameParams } from "@court-base/ecourt/types";
 
 import { inngest } from "../lib/inngest";
@@ -95,7 +95,7 @@ export const importCaseByCourtComplex = inngest.createFunction(
       (
         c,
       ): typeof c & {
-        side: AdvocateCaseSide;
+        side: AdvocateCaseSideType;
         extraPetitioners?: string | null;
         extraRespondents?: string | null;
         extraParties?: string | null;

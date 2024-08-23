@@ -25,7 +25,7 @@
   "scripts": {
     "build": "pnpm run db:generate && tsc",
     "dev": "tsc",
-    "clean": "rm -rf .turbo dist node_modules",
+    "clean": "rm -rf .prisma .turbo dist node_modules",
     "runscript": "dotenv -e ../../.env -- tsx",
     "db:format": "prisma format",
     "db:generate": "pnpm with-env prisma generate && prettier --check --ignore-path ../../.gitignore --write src/models",
