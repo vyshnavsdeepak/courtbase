@@ -35,7 +35,7 @@
     "studio": "pnpm with-env prisma studio --port 5556",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint",
-    "typecheck": "tsc --noEmit --emitDeclarationOnly false",
+    "typecheck": "pnpm run db:generate && tsc --noEmit --emitDeclarationOnly false",
     "with-env": "dotenv -e ../../.env --",
     "lint-staged": "lint-staged"
   },
