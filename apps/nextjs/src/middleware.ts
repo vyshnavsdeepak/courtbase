@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 
+import { headerKeys } from "@court-base/api/constants";
 import { auth } from "@court-base/auth";
 
 const protectedPaths = ["/x", "/join"];
@@ -11,6 +12,20 @@ export default auth((req) => {
       const url = req.nextUrl.clone();
       url.pathname = "/login";
       return NextResponse.redirect(url);
+    }
+
+    const segments = path.split("/");
+    if (segments.includes("x")) {
+      const orgSlug = segments[segments.indexOf("x") + 1];
+      if (orgSlug) {
+        const headers = new Headers(req.headers);
+        headers.set(headerKeys.orgSlug, orgSlug);
+        return NextResponse.next({
+          request: {
+            headers,
+          },
+        });
+      }
     }
   }
 });
