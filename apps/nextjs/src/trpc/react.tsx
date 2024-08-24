@@ -8,7 +8,9 @@ import { createTRPCReact } from "@trpc/react-query";
 import SuperJSON from "superjson";
 
 import type { AppRouter } from "@court-base/api";
+import { headerKeys } from "@court-base/api/constants";
 
+import { useOrg } from "~/app/_contexts/org-context";
 import { env } from "~/env";
 import { createQueryClient } from "./query-client";
 
@@ -27,6 +29,7 @@ export const api = createTRPCReact<AppRouter>();
 
 export function TRPCReactProvider(props: { children: React.ReactNode }) {
   const queryClient = getQueryClient();
+  const { orgSlug } = useOrg();
 
   const [trpcClient] = useState(() =>
     api.createClient({
@@ -42,6 +45,9 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
           headers() {
             const headers = new Headers();
             headers.set("x-trpc-source", "nextjs-react");
+            if (orgSlug) {
+              headers.set(headerKeys.orgSlug, orgSlug);
+            }
             return headers;
           },
         }),
