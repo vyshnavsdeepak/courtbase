@@ -185,11 +185,14 @@ export const orgProtectedProcedure = t.procedure
     }
     const orgSlug = ctx.orgSlug;
     if (!orgSlug) {
-      throw new TRPCError({ code: "FORBIDDEN" });
+      throw new TRPCError({ code: "FORBIDDEN", message: "No org slug" });
     }
     const orgUser = await getUserInOrg(ctx.session.user.id, orgSlug);
     if (!orgUser) {
-      throw new TRPCError({ code: "FORBIDDEN" });
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: "Not a member of the org",
+      });
     }
     return next({
       ctx: {

@@ -1,7 +1,7 @@
 "use client";
 
 import type { QueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { loggerLink, unstable_httpBatchStreamLink } from "@trpc/client";
 import { createTRPCReact } from "@trpc/react-query";
@@ -31,7 +31,7 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
   const queryClient = getQueryClient();
   const { orgSlug } = useOrg();
 
-  const [trpcClient] = useState(() =>
+  const createTrpcClient = (orgSlug: string | null) =>
     api.createClient({
       links: [
         loggerLink({
@@ -52,8 +52,13 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
           },
         }),
       ],
-    }),
-  );
+    });
+
+  const [trpcClient, setTrpcClient] = useState(() => createTrpcClient(orgSlug));
+
+  useEffect(() => {
+    setTrpcClient(createTrpcClient(orgSlug));
+  }, [orgSlug]);
 
   return (
     <QueryClientProvider client={queryClient}>
