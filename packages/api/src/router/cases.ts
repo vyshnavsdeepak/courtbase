@@ -1,61 +1,97 @@
 import type { TRPCRouterRecord } from "@trpc/server";
-import { z } from "zod";
+import type { z } from "zod";
 
-import type { Case } from "@court-base/db/types";
-
+import type { AllCaseResponseSchema } from "../schemas/cases";
+import { AllCaseRequestSchema } from "../schemas/cases";
+// import type { Case } from "@court-base/db/types";
 import { orgProtectedProcedure } from "../trpc";
 
-type CaseField = keyof Case;
-const CaseAvailableSorts: [CaseField, ...CaseField[]] = [
-  "id",
-  "nextHearingDate",
-]; // Add any other valid keys here
+// type CaseField = keyof Case;
+// const CaseAvailableSorts: [CaseField, ...CaseField[]] = [
+//   "nextHearingDate",
+// ]; // Add any other valid keys here
 
-const AllCaseRequestSchema = z.object({
-  offset: z.number().default(0),
-  limit: z.number().default(100),
-  filters: z
-    .object({
-      advocateId: z.string().optional(),
-    })
-    .optional(),
-  sort: z
-    .object({
-      field: z.enum(CaseAvailableSorts).optional(), // Use a tuple type to ensure non-empty array
-      direction: z.enum(["asc", "desc"]),
-    })
-    .optional(),
-});
-
-export const casesRouter = {
+const casesRouter = {
   all: orgProtectedProcedure
     .input(AllCaseRequestSchema)
-    .query(({ ctx, input }) => {
-      const { offset, limit, filters, sort } = input;
+    .query(async ({ ctx, input }) => {
+      const {
+        // page, per_page, filters,
+        sort,
+      } = input;
       const orgId = ctx.orgId;
+      // const limit = per_page;
+      // const offset = (page - 1) * limit;
 
       const query = ctx.kysely
         .selectFrom("Case")
-        .selectAll()
-        .where("organizationId", "=", orgId)
-        .$if(typeof filters?.advocateId !== "undefined", (query) => {
-          if (!filters?.advocateId) {
-            throw new Error("Invalid advocateId");
-          }
-          return query
-            .innerJoin("AdvocateCase", "Case.id", "AdvocateCase.caseId")
-            .where("AdvocateCase.advocateId", "=", filters.advocateId);
-        })
+        .leftJoin("AdvocateCase", "Case.id", "AdvocateCase.caseId")
+        .leftJoin("Court", "Case.courtId", "Court.id")
+        .leftJoin("User", "AdvocateCase.advocateId", "User.id")
+        .select([
+          "Case.id",
+          "AdvocateCase.advocateId as advocateId",
+          "User.name as advocateName",
+          "crn",
+          "Case.courtId",
+          "Court.name as courtName",
+          "typeName",
+          "number",
+          "regYear",
+          "title",
+          "petitioner",
+          "respondent",
+          "dateOfDecision",
+          "nextHearingDate",
+          "side",
+          "extraPetitioners",
+          "extraRespondents",
+          "extraParties",
+          "Case.updatedAt as updatedAt",
+        ])
+        .where("Case.organizationId", "=", orgId)
         .$if(typeof sort?.field !== "undefined", (query) => {
           if (!sort?.field) {
             throw new Error("Invalid sort field or direction");
           }
           return query.orderBy(sort.field, sort.direction);
-        })
-        .limit(limit)
-        .offset(offset)
-        .execute();
+        });
+      // .limit(limit)
+      // .offset(offset);
 
-      return query;
+      // const pageCount = await ctx.kysely
+      //   .selectFrom("Case")
+      //   .select((eb) => eb.fn.count("id").as("count"))
+      //   .where("organizationId", "=", orgId)
+      //   .executeTakeFirstOrThrow()
+      //   .catch((e) => {
+      //     console.error(e);
+      //     throw new Error("Failed to count cases. (E-1)");
+      //   });
+
+      // https://github.com/kysely-org/kysely/issues/1115
+      // Then, use this schema to validate the result of your query
+      const result: z.infer<typeof AllCaseResponseSchema>[] =
+        await query.execute();
+      return {
+        data: result,
+      };
     }),
+  count: orgProtectedProcedure.query(async ({ ctx }) => {
+    const orgId = ctx.orgId;
+
+    const result = await ctx.kysely
+      .selectFrom("Case")
+      .select((eb) => eb.fn.count("id").as("count"))
+      .where("organizationId", "=", orgId)
+      .executeTakeFirstOrThrow()
+      .catch((e) => {
+        console.error(e);
+        throw new Error("Failed to count cases. (E-1)");
+      });
+
+    return result.count as number;
+  }),
 } satisfies TRPCRouterRecord;
+
+export { casesRouter };

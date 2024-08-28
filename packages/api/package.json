@@ -15,6 +15,10 @@
     "./constants": {
       "types": "./dist/constants.d.ts",
       "default": "./src/constants.ts"
+    },
+    "./schemas/*": {
+      "types": "./dist/schemas/*.d.ts",
+      "default": "./src/schemas/*.ts"
     }
   },
   "license": "MIT",

@@ -7,4 +7,6 @@ interface SidebarLink {
   subLinks?: { label: string; href: string }[];
 }
 
-export type { SidebarLink };
+type SearchParams = Record<string, string | string[] | undefined>;
+
+export type { SidebarLink, SearchParams };
