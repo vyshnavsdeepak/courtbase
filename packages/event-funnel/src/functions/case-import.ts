@@ -217,7 +217,7 @@ export const importCaseByCourtComplexOnCron = inngest.createFunction(
   },
   {
     // every day 5:30 AM IST
-    cron: "TZ=Asia/Kolkata 0 30 5 * * *",
+    cron: "TZ=Asia/Kolkata 30 5 * * *",
   },
   async ({ step, kysely }) => {
     const caseImportTasks = await step.run("get-case-import-tasks", () => {
@@ -248,6 +248,7 @@ export const importCaseByCourtComplexOnCron = inngest.createFunction(
           return; // Skip this task
         }
         await step.sendEvent(`cron/event/case-import-task/${task.id}`, {
+          id: task.id,
           name: "app/import-by-court-complex",
           data: {
             payload: {
