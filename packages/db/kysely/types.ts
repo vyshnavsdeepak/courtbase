@@ -55,7 +55,7 @@ export type Case = {
   extraParties: string | null;
   rawData: unknown;
   created_at: Generated<Timestamp>;
-  updatedAt: Generated<Timestamp | null>;
+  updatedAt: Timestamp | null;
   organizationId: string;
 };
 export type CaseImportTask = {
