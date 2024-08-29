@@ -1,6 +1,7 @@
 import type { AdvocateCaseSideType } from "@court-base/db/models";
 import type { CaseByAdvocateNameParams } from "@court-base/ecourt/types";
 
+import type { eCourtAPICallReturn } from "./ecourt";
 import { inngest } from "../lib/inngest";
 import { ecourtAPI } from "./ecourt";
 
@@ -63,9 +64,11 @@ export const importCaseByCourtComplex = inngest.createFunction(
         },
       });
 
+      const resBody = res.body as eCourtAPICallReturn["import-by-court"];
+
       return {
         event: res.event,
-        cases: res.body.caseNos,
+        cases: resBody.caseNos,
         court: {
           courtCode,
           stateCode,
@@ -181,6 +184,13 @@ export const importCaseByCourtComplex = inngest.createFunction(
         .set("taskStatus", "COMPLETED")
         .where("id", "=", eventId)
         .execute();
+    });
+
+    await step.sendEvent("fetch-next-hearing-dates", {
+      name: "app/refresh-ecourt-cases",
+      data: {
+        caseNos: allCases.map((c) => c.crn),
+      },
     });
     return { event, body: allCases };
   },

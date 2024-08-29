@@ -13,9 +13,9 @@ const getHeaders = () => {
   };
 };
 
-const baseUrl = "https://app.ecourts.gov.in/ecourt_mobile_encrypted_DC/";
+const baseUrl = "https://app.ecourts.gov.in/ecourt_mobile_encrypted_DC";
 
-type Endpoint = "/searchByAdvocateName.php";
+type Endpoint = "/searchByAdvocateName.php" | "/caseHistoryWebService.php";
 
 type RequestData = Record<string, string>;
 
@@ -70,5 +70,13 @@ const makeRequest = (endpoint: Endpoint, data: RequestData) => {
       });
   });
 };
+
+// (async function () {
+//   const data = {
+//     cino: "KLKN120004672016"
+//   }
+//   const res = await makeRequest("/caseHistoryWebService.php", data);
+//   console.log(res);
+// })();
 
 export { makeRequest };

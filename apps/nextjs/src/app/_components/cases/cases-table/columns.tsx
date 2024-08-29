@@ -45,6 +45,11 @@ export const columns: ColumnDef<CaseTableRows>[] = [
   {
     accessorKey: "nextHearingDate",
     header: "Next Hearing Date",
+    cell: ({ row }) => {
+      return row.original.nextHearingDate
+        ? new Date(row.original.nextHearingDate).toLocaleDateString()
+        : null;
+    },
   },
   {
     accessorKey: "advocateId",

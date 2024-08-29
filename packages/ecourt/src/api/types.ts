@@ -11,3 +11,9 @@ export const CaseByAdvocateNameParamsSchema = z.object({
 export type CaseByAdvocateNameParams = z.infer<
   typeof CaseByAdvocateNameParamsSchema
 >;
+
+export const CaseHistoryParamsSchema = z.object({
+  cino: z.string(),
+});
+
+export type CaseHistoryParams = z.infer<typeof CaseHistoryParamsSchema>;
