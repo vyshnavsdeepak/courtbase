@@ -21,17 +21,6 @@ import { toast } from "@court-base/ui/toast";
 
 import { api } from "~/trpc/react";
 
-const lawyersData = [
-  {
-    value: "Deepak Madathil",
-    label: "Deepak Madathil",
-  },
-  {
-    value: "Sreeja Prashanth",
-    label: "Sreeja Prashanth",
-  },
-];
-
 export default function CaseImportDialogButton(props: {
   children: React.ReactNode;
 }) {
@@ -71,6 +60,12 @@ function CaseImportDialog({ close }: { close: () => void }) {
   const [selectedDistrictCode, setSelectedDistrictCode] = useState<
     string | null
   >(null);
+
+  const { data: advocatesSource, isLoading: advocatesLoading } =
+    api.organization.getAdvocates.useQuery();
+  const advocates = advocatesLoading
+    ? [{ name: "Loading...", id: "" }]
+    : (advocatesSource ?? [{ name: "No advocates found", id: "" }]);
 
   const { data: statesSource, isLoading: statesLoading } =
     api.court.states.useQuery();
@@ -132,13 +127,16 @@ function CaseImportDialog({ close }: { close: () => void }) {
       <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4 py-4">
         <div className="grid grid-cols-2 gap-4">
           <Controller
-            name="advocate"
+            name="advocateId"
             control={control}
             render={({ field }) => (
               <>
                 <Combobox
                   placeholder="Select an advocate"
-                  items={lawyersData}
+                  items={advocates.map((advocate) => ({
+                    value: advocate.id,
+                    label: advocate.name,
+                  }))}
                   onSelect={field.onChange}
                 />
               </>

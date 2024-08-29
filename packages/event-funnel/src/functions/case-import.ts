@@ -8,12 +8,11 @@ import { ecourtAPI } from "./ecourt";
 export interface ImportByCourtComplexParams {
   data: {
     payload: {
-      advocate: string;
+      advocateId: string;
       status: CaseByAdvocateNameParams["status"];
       courtComplexIds: string[];
     };
     identity: {
-      userId: string;
       orgId: string;
     };
   };
@@ -38,11 +37,29 @@ export const importCaseByCourtComplex = inngest.createFunction(
 
     const payload = event.data.payload;
     const identity = event.data.identity;
-    const courts = await kysely
-      .selectFrom("Court")
-      .select(["id", "courtCode", "stateCode", "districtCode"])
-      .where("complexId", "in", payload.courtComplexIds)
-      .execute();
+    const [courts, advocate] = await Promise.all([
+      kysely
+        .selectFrom("Court")
+        .select(["id", "courtCode", "stateCode", "districtCode"])
+        .where("complexId", "in", payload.courtComplexIds)
+        .execute(),
+      kysely
+        .selectFrom("User")
+        .select("name")
+        .where("id", "=", payload.advocateId)
+        .executeTakeFirstOrThrow(),
+    ]);
+
+    let advocateName = advocate.name;
+    if (!advocateName) {
+      throw new Error("Advocate name not set");
+    }
+
+    // for debug
+    if (advocateName === "Vyshnav S Deepak") {
+      console.log("[DEBUG] Changing advocate name to Deepak Madathil");
+      advocateName = "Deepak Madathil";
+    }
 
     const apiResPromise = courts.map(async (court) => {
       const courtCode = court.courtCode;
@@ -55,7 +72,7 @@ export const importCaseByCourtComplex = inngest.createFunction(
         data: {
           function: "import-by-court",
           payload: {
-            advocate: payload.advocate,
+            advocate: advocateName,
             status: payload.status,
             courtCode: court.courtCode,
             stateCode: court.stateCode,
@@ -104,8 +121,6 @@ export const importCaseByCourtComplex = inngest.createFunction(
         extraParties?: string | null;
       } => {
         const extraParties = caseToExtraPartyMap.get(c.crn)?.join(", ") ?? null;
-
-        const advocateName = payload.advocate.toLowerCase();
         const petitionerLawyer = c.petitionerLawyers.toLowerCase();
         const respondentLawyer = c.respondentLawyers.toLowerCase();
 
@@ -169,7 +184,7 @@ export const importCaseByCourtComplex = inngest.createFunction(
         .insertInto("AdvocateCase")
         .values(
           dbSaveResult.map(({ id }) => ({
-            advocateId: identity.userId, // TODO: modify this after we have advocateId
+            advocateId: payload.advocateId,
             caseId: id,
             organizationId: identity.orgId,
           })),
@@ -193,5 +208,59 @@ export const importCaseByCourtComplex = inngest.createFunction(
       },
     });
     return { event, body: allCases };
+  },
+);
+
+export const importCaseByCourtComplexOnCron = inngest.createFunction(
+  {
+    id: "case-import-by-court-complex-on-cron",
+  },
+  {
+    // every day 5:30 AM IST
+    cron: "TZ=Asia/Kolkata 0 30 5 * * *",
+  },
+  async ({ step, kysely }) => {
+    const caseImportTasks = await step.run("get-case-import-tasks", () => {
+      return kysely
+        .selectFrom("CaseImportTask")
+        .select([
+          "id",
+          "advocateId",
+          "courtComplexIds",
+          "caseStatus",
+          "organizationId",
+        ])
+        .execute();
+    });
+
+    await Promise.all(
+      caseImportTasks.map(async (task) => {
+        const complexIdsJson = task.courtComplexIds as {
+          complexes?: string[];
+        } | null;
+        if (!complexIdsJson || !("complexes" in complexIdsJson)) {
+          console.warn(`Invalid courtComplexIds for task ${task.id}`);
+          return; // Skip this task
+        }
+        const courtComplexIds = complexIdsJson.complexes;
+        if (!courtComplexIds || courtComplexIds.length === 0) {
+          console.warn(`No court complex IDs found for task ${task.id}`);
+          return; // Skip this task
+        }
+        await step.sendEvent(`cron/event/case-import-task/${task.id}`, {
+          name: "app/import-by-court-complex",
+          data: {
+            payload: {
+              advocateId: task.advocateId,
+              status: task.caseStatus as CaseByAdvocateNameParams["status"],
+              courtComplexIds: courtComplexIds,
+            },
+            identity: {
+              orgId: task.organizationId,
+            },
+          },
+        });
+      }),
+    );
   },
 );

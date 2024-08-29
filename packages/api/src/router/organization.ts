@@ -2,7 +2,11 @@ import type { TRPCRouterRecord } from "@trpc/server";
 import { z } from "zod";
 
 import { MemberRole, OrganizationCreateModel } from "../models";
-import { protectedProcedure, publicProcedure } from "../trpc";
+import {
+  orgProtectedProcedure,
+  protectedProcedure,
+  publicProcedure,
+} from "../trpc";
 
 export const organizationRouter = {
   byId: publicProcedure
@@ -55,4 +59,15 @@ export const organizationRouter = {
 
       return org;
     }),
+  getAdvocates: orgProtectedProcedure.query(async ({ ctx }) => {
+    return ctx.kysely
+      .selectFrom("OrganizationMembers")
+      .innerJoin("User", "OrganizationMembers.userId", "User.id")
+      .where("OrganizationMembers.designation", "=", "ADVOCATE")
+      .where("OrganizationMembers.organizationId", "=", ctx.orgId)
+      .select(["User.id as id", "User.name as name"])
+      .execute()
+      .then((results) => results.filter((result) => result.name != null))
+      .then((results) => results as { id: string; name: string }[]);
+  }),
 } satisfies TRPCRouterRecord;

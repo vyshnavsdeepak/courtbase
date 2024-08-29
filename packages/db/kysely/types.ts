@@ -62,7 +62,7 @@ export type CaseImportTask = {
   id: Generated<string>;
   organizationId: string;
   courtComplexIds: unknown | null;
-  advocateName: string;
+  advocateId: string;
   caseStatus: string;
   taskStatus: Generated<CaseImportTaskStatus>;
   taskMeta: unknown | null;

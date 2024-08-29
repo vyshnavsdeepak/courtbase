@@ -22,7 +22,7 @@ export const CreateCaseImportTaskParamsSchema = z.object({
   courtComplexIds: z.array(z.string(), {
     message: "Please select at least one court complex",
   }),
-  advocate: z.string({
+  advocateId: z.string({
     message: "Please enter the advocate name",
   }),
   status: z.union([z.literal("Pending"), z.literal("Disposed")]),

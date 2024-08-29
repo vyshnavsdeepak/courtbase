@@ -1,6 +1,9 @@
 import { serve } from "inngest/next";
 
-import { importCaseByCourtComplex } from "./functions/case-import";
+import {
+  importCaseByCourtComplex,
+  importCaseByCourtComplexOnCron,
+} from "./functions/case-import";
 import { ecourtAPI } from "./functions/ecourt";
 import { helloWorld } from "./functions/hello-world";
 import { refreshEcourtCases } from "./functions/refresh-ecourt-cases";
@@ -12,6 +15,7 @@ export const { GET, POST, PUT } = serve({
     helloWorld,
     ecourtAPI,
     importCaseByCourtComplex,
+    importCaseByCourtComplexOnCron,
     refreshEcourtCases,
   ],
 });

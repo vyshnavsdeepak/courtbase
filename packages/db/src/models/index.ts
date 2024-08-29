@@ -182,7 +182,7 @@ export const CaseImportTaskScalarFieldEnumSchema = z.enum([
   "id",
   "organizationId",
   "courtComplexIds",
-  "advocateName",
+  "advocateId",
   "caseStatus",
   "taskStatus",
   "taskMeta",
@@ -429,6 +429,7 @@ export type OrganizationMembers = z.infer<typeof OrganizationMembersSchema>;
 
 export type OrganizationMembersRelations = {
   AdvocateCase: AdvocateCaseWithRelations[];
+  CaseImportTask: CaseImportTaskWithRelations[];
 };
 
 export type OrganizationMembersWithRelations = z.infer<
@@ -440,6 +441,7 @@ export const OrganizationMembersWithRelationsSchema: z.ZodType<OrganizationMembe
   OrganizationMembersSchema.merge(
     z.object({
       AdvocateCase: z.lazy(() => AdvocateCaseWithRelationsSchema).array(),
+      CaseImportTask: z.lazy(() => CaseImportTaskWithRelationsSchema).array(),
     }),
   );
 
@@ -664,7 +666,7 @@ export const CaseImportTaskSchema = z.object({
   id: z.string(),
   organizationId: z.string(),
   courtComplexIds: JsonValueSchema.nullable(),
-  advocateName: z.string(),
+  advocateId: z.string(),
   caseStatus: z.string(),
   taskMeta: JsonValueSchema.nullable(),
   created_by: z.string(),
@@ -679,6 +681,7 @@ export type CaseImportTask = z.infer<typeof CaseImportTaskSchema>;
 //------------------------------------------------------
 
 export type CaseImportTaskRelations = {
+  advocate: OrganizationMembersWithRelations;
   user: UserWithRelations;
   organization: OrganizationWithRelations;
   CourtComplex?: CourtComplexWithRelations | null;
@@ -695,6 +698,7 @@ export type CaseImportTaskWithRelations = Omit<
 export const CaseImportTaskWithRelationsSchema: z.ZodType<CaseImportTaskWithRelations> =
   CaseImportTaskSchema.merge(
     z.object({
+      advocate: z.lazy(() => OrganizationMembersWithRelationsSchema),
       user: z.lazy(() => UserWithRelationsSchema),
       organization: z.lazy(() => OrganizationWithRelationsSchema),
       CourtComplex: z.lazy(() => CourtComplexWithRelationsSchema).nullish(),

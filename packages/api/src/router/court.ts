@@ -38,7 +38,18 @@ export const courtRouter = {
       const courtComplexIds = input.courtComplexIds;
       const userId = ctx.session.user.id;
       const orgId = ctx.orgId;
-      const advocate = input.advocate;
+      const advocateId = input.advocateId;
+
+      const advocate = await ctx.kysely
+        .selectFrom("User")
+        .select(["name"])
+        .where("id", "=", advocateId)
+        .executeTakeFirstOrThrow();
+
+      const advocateName = advocate.name;
+      if (!advocateName) {
+        throw new Error("Advocate name not found. (E-2)");
+      }
 
       const { id } = await ctx.kysely
         .insertInto("CaseImportTask")
@@ -47,7 +58,7 @@ export const courtRouter = {
           courtComplexIds: {
             complexes: courtComplexIds,
           },
-          advocateName: advocate,
+          advocateId,
           caseStatus: input.status,
           taskStatus: "PENDING",
           created_by: userId,
@@ -65,12 +76,11 @@ export const courtRouter = {
           name: "app/import-by-court-complex",
           data: {
             payload: {
-              advocate,
+              advocateId,
               status: input.status,
               courtComplexIds,
             },
             identity: {
-              userId,
               orgId,
             },
           },
