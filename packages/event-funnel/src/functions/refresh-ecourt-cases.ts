@@ -51,11 +51,13 @@ export const refreshEcourtCases = inngest.createFunction(
     );
 
     await step.run("db-update-case-refresh", async () => {
+      const updatedAt = new Date();
       const updatePromises = apiResponse.map(async (apiResponse) => {
         return kysely
           .updateTable("Case")
           .set({
             nextHearingDate: apiResponse.nextHearingDate,
+            updatedAt,
           })
           .where("crn", "=", apiResponse.crn)
           .execute();
