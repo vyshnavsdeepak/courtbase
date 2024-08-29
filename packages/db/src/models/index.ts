@@ -482,6 +482,7 @@ export type Case = z.infer<typeof CaseSchema>;
 export type CaseRelations = {
   Organization: OrganizationWithRelations;
   Court: CourtWithRelations;
+  AdvocateCase: AdvocateCaseWithRelations[];
 };
 
 export type CaseWithRelations = z.infer<typeof CaseSchema> & CaseRelations;
@@ -491,6 +492,7 @@ export const CaseWithRelationsSchema: z.ZodType<CaseWithRelations> =
     z.object({
       Organization: z.lazy(() => OrganizationWithRelationsSchema),
       Court: z.lazy(() => CourtWithRelationsSchema),
+      AdvocateCase: z.lazy(() => AdvocateCaseWithRelationsSchema).array(),
     }),
   );
 
@@ -513,6 +515,7 @@ export type AdvocateCase = z.infer<typeof AdvocateCaseSchema>;
 //------------------------------------------------------
 
 export type AdvocateCaseRelations = {
+  Case: CaseWithRelations;
   Advocate: OrganizationMembersWithRelations;
 };
 
@@ -522,6 +525,7 @@ export type AdvocateCaseWithRelations = z.infer<typeof AdvocateCaseSchema> &
 export const AdvocateCaseWithRelationsSchema: z.ZodType<AdvocateCaseWithRelations> =
   AdvocateCaseSchema.merge(
     z.object({
+      Case: z.lazy(() => CaseWithRelationsSchema),
       Advocate: z.lazy(() => OrganizationMembersWithRelationsSchema),
     }),
   );
