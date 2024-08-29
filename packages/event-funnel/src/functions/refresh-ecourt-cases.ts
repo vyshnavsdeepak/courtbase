@@ -44,26 +44,21 @@ export const refreshEcourtCases = inngest.createFunction(
           },
         });
 
-        const body = res.body as unknown as eCourtAPICallReturn["refresh-case"];
-
-        return body;
+        await step.run(`db/update-case/${cino}`, async () => {
+          const body =
+            res.body as unknown as eCourtAPICallReturn["refresh-case"];
+          await kysely
+            .updateTable("Case")
+            .set({
+              nextHearingDate: body.nextHearingDate,
+              updatedAt: new Date(),
+            })
+            .where("crn", "=", cino)
+            .execute();
+          return body;
+        });
       }),
     );
-
-    await step.run("db-update-case-refresh", async () => {
-      const updatedAt = new Date();
-      const updatePromises = apiResponse.map(async (apiResponse) => {
-        return kysely
-          .updateTable("Case")
-          .set({
-            nextHearingDate: apiResponse.nextHearingDate,
-            updatedAt,
-          })
-          .where("crn", "=", apiResponse.crn)
-          .execute();
-      });
-      await Promise.all(updatePromises);
-    });
 
     return {
       event,
