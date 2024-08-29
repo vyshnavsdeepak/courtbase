@@ -50,6 +50,7 @@ const casesRouter = {
           "Case.updatedAt as updatedAt",
         ])
         .where("Case.organizationId", "=", orgId)
+        .orderBy("nextHearingDate", "desc")
         .$if(typeof sort?.field !== "undefined", (query) => {
           if (!sort?.field) {
             throw new Error("Invalid sort field or direction");
