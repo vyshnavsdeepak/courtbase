@@ -18,7 +18,7 @@ export const refreshEcourtCases = inngest.createFunction(
       event: "app/refresh-ecourt-cases",
     },
     {
-      cron: "TZ=Asia/Kolkata 0 17 * * *",
+      cron: "TZ=Asia/Kolkata 0 21 * * *",
     },
   ],
   async ({ event, step, kysely }) => {
