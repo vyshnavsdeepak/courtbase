@@ -57,8 +57,8 @@ const casesRouter = {
           }
           const { startDate, endDate } = getDateRangeFilter(dateSpan);
           return query
-            .where("nextHearingDate", ">=", startDate.toDate())
-            .where("nextHearingDate", "<=", endDate.toDate());
+            .where("nextHearingDate", ">=", startDate)
+            .where("nextHearingDate", "<=", endDate);
         })
         .orderBy("nextHearingDate", "asc")
         .$if(typeof sort?.field !== "undefined", (query) => {

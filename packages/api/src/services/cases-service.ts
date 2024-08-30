@@ -2,43 +2,44 @@ import moment from "moment";
 
 import type { DateSpan } from "../schemas/cases";
 
+const IST_OFFSET = 330; // IST offset in minutes
+
 export function getDateRangeFilter(span: DateSpan) {
-  // client is in IST
-  const ist = moment().utcOffset(330);
-  const today = ist.startOf("day");
+  const today = moment().utcOffset(IST_OFFSET).startOf("day");
+
+  const startOfPeriod = today.clone();
+  const endOfPeriod = today.clone();
 
   switch (span) {
     case "today":
-      return {
-        startDate: today,
-        endDate: today,
-      };
+      // No additional calculation needed
+      break;
     case "tomorrow":
-      return {
-        startDate: today.clone().add(1, "day"),
-        endDate: today.clone().add(1, "day"),
-      };
+      startOfPeriod.add(1, "day");
+      endOfPeriod.add(1, "day");
+      break;
     case "thisWeek":
-      return {
-        startDate: today.clone().startOf("week"),
-        endDate: today.clone().endOf("week"),
-      };
+      startOfPeriod.startOf("week");
+      endOfPeriod.endOf("week");
+      break;
     case "nextWeek":
-      return {
-        startDate: today.clone().add(1, "week").startOf("week"),
-        endDate: today.clone().add(1, "week").endOf("week"),
-      };
+      startOfPeriod.add(1, "week").startOf("week");
+      endOfPeriod.add(1, "week").endOf("week");
+      break;
     case "thisMonth":
-      return {
-        startDate: today.clone().startOf("month"),
-        endDate: today.clone().endOf("month"),
-      };
+      startOfPeriod.startOf("month");
+      endOfPeriod.endOf("month");
+      break;
     case "nextMonth":
-      return {
-        startDate: today.clone().add(1, "month").startOf("month"),
-        endDate: today.clone().add(1, "month").endOf("month"),
-      };
+      startOfPeriod.add(1, "month").startOf("month");
+      endOfPeriod.add(1, "month").endOf("month");
+      break;
     default:
       throw new Error("Invalid date span");
   }
+
+  return {
+    startDate: new Date(startOfPeriod.format("YYYY-MM-DD")), // Fixes UTC issue
+    endDate: new Date(endOfPeriod.format("YYYY-MM-DD")),
+  };
 }
