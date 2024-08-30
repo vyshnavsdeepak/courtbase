@@ -287,6 +287,9 @@ importers:
       next-nprogress-bar:
         specifier: ^2.3.13
         version: 2.3.13
+      qs:
+        specifier: ^6.13.0
+        version: 6.13.0
       react:
         specifier: catalog:react18
         version: 18.3.1
@@ -357,6 +360,9 @@ importers:
       '@trpc/server':
         specifier: 'catalog:'
         version: 11.0.0-rc.466
+      moment:
+        specifier: ^2.30.1
+        version: 2.30.1
       superjson:
         specifier: 2.2.1
         version: 2.2.1
@@ -690,7 +696,7 @@ importers:
         version: 7.35.0(eslint@9.7.0)
       eslint-plugin-react-hooks:
         specifier: rc
-        version: 5.1.0-rc-7771d3a7-20240827(eslint@9.7.0)
+        version: 5.1.0-rc-a19a8ab4-20240829(eslint@9.7.0)
       eslint-plugin-turbo:
         specifier: ^2.0.14
         version: 2.0.14(eslint@9.7.0)
@@ -4745,8 +4751,8 @@ packages:
     peerDependencies:
       eslint: ^3 || ^4 || ^5 || ^6 || ^7 || ^8
 
-  eslint-plugin-react-hooks@5.1.0-rc-7771d3a7-20240827:
-    resolution: {integrity: sha512-SY8Fq2Qz7Bb7xJnv2siIUFzOEf/BahfvIbxHxpY4ud1OGiCpm0d+6mSxGn0CegCCbj82SvIHCrM5LHgAgADW2g==}
+  eslint-plugin-react-hooks@5.1.0-rc-a19a8ab4-20240829:
+    resolution: {integrity: sha512-lWHTnMQqgAvQ4S5VVyXSxdNnfqbSiH4VAb7hbN1scbQaB9DmXkE2r1EOi2RigeA3x994TOcrFb73l1UZD4PvXQ==}
     engines: {node: '>=10'}
     peerDependencies:
       eslint: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0-0 || ^9.0.0
@@ -7277,6 +7283,10 @@ packages:
   qrcode-terminal@0.11.0:
     resolution: {integrity: sha512-Uu7ii+FQy4Qf82G4xu7ShHhjhGahEpCWc3x8UavY3CTcWV+ufmmCtwkr7ZKsX42jdL0kr1B5FKUeqJvAn51jzQ==}
     hasBin: true
+
+  qs@6.13.0:
+    resolution: {integrity: sha512-+38qI9SOr8tfZ4QmJNplMUxqjbe7LKvvZgWdExBOmd+egZTtjLB67Gu0HRX3u/XOq7UU2Nx6nsjvS16Z9uwfpg==}
+    engines: {node: '>=0.6'}
 
   query-string@7.1.3:
     resolution: {integrity: sha512-hh2WYhq4fi8+b+/2Kg9CEge4fDPvHS534aOOvOZeQ3+Vf2mCFsaFBYj0i+iXcAq6I9Vzp5fjMFBlONvayDC1qg==}
@@ -13714,7 +13724,7 @@ snapshots:
       safe-regex-test: 1.0.3
       string.prototype.includes: 2.0.0
 
-  eslint-plugin-react-hooks@5.1.0-rc-7771d3a7-20240827(eslint@9.7.0):
+  eslint-plugin-react-hooks@5.1.0-rc-a19a8ab4-20240829(eslint@9.7.0):
     dependencies:
       eslint: 9.7.0
 
@@ -16567,6 +16577,10 @@ snapshots:
   punycode@2.3.1: {}
 
   qrcode-terminal@0.11.0: {}
+
+  qs@6.13.0:
+    dependencies:
+      side-channel: 1.0.6
 
   query-string@7.1.3:
     dependencies:

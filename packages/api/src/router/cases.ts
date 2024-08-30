@@ -3,6 +3,7 @@ import type { z } from "zod";
 
 import type { AllCaseResponseSchema } from "../schemas/cases";
 import { AllCaseRequestSchema } from "../schemas/cases";
+import { getDateRangeFilter } from "../services/cases-service";
 // import type { Case } from "@court-base/db/types";
 import { orgProtectedProcedure } from "../trpc";
 
@@ -22,7 +23,7 @@ const casesRouter = {
       const orgId = ctx.orgId;
       // const limit = per_page;
       // const offset = (page - 1) * limit;
-
+      const dateSpan = input.filters?.dateSpan;
       const query = ctx.kysely
         .selectFrom("Case")
         .leftJoin("AdvocateCase", "Case.id", "AdvocateCase.caseId")
@@ -50,6 +51,15 @@ const casesRouter = {
           "Case.updatedAt as updatedAt",
         ])
         .where("Case.organizationId", "=", orgId)
+        .$if(typeof dateSpan !== "undefined", (query) => {
+          if (!dateSpan) {
+            throw new Error("[Never]Invalid date span");
+          }
+          const { startDate, endDate } = getDateRangeFilter(dateSpan);
+          return query
+            .where("nextHearingDate", ">=", startDate.toDate())
+            .where("nextHearingDate", "<=", endDate.toDate());
+        })
         .orderBy("nextHearingDate", "asc")
         .$if(typeof sort?.field !== "undefined", (query) => {
           if (!sort?.field) {

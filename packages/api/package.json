@@ -40,9 +40,10 @@
   "dependencies": {
     "@court-base/auth": "workspace:*",
     "@court-base/db": "workspace:*",
-    "@court-base/validators": "workspace:*",
     "@court-base/event-funnel": "workspace:*",
+    "@court-base/validators": "workspace:*",
     "@trpc/server": "catalog:",
+    "moment": "^2.30.1",
     "superjson": "2.2.1",
     "zod": "catalog:"
   },
