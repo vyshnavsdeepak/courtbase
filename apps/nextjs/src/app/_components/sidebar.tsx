@@ -29,7 +29,7 @@ export default function Sidebar() {
   return (
     <aside
       ref={sidebarRef}
-      className={`z-99 absolute mx-auto block min-h-full w-72 bg-background px-2 py-4 transition-transform duration-300 lg:relative lg:translate-x-0 ${
+      className={`z-20 absolute mx-auto block min-h-full w-72 bg-background px-2 py-4 transition-transform duration-300 lg:relative lg:translate-x-0 ${
         isSidebarOpen ? "translate-x-0" : "-translate-x-full"
       }`}
     >
