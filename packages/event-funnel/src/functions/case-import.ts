@@ -175,7 +175,7 @@ export const importCaseByCourtComplex = inngest.createFunction(
             rawData: eb.ref("excluded.rawData"),
           })),
         )
-        .returning("id")
+        .returning(["id", "crn", "nextHearingDate"])
         .execute();
     });
 
@@ -201,10 +201,16 @@ export const importCaseByCourtComplex = inngest.createFunction(
         .execute();
     });
 
+    // For ongoing case imports, we keep getting the same cases over and over again along with the new ones.
+    // To avoid unnecessary API calls, we filter out the cases that already have a nextHearingDate.
+    const casesWithoutNextHearingDate = dbSaveResult.filter(
+      (c) => c.nextHearingDate === null,
+    );
+
     await step.sendEvent("fetch-next-hearing-dates", {
       name: "app/refresh-ecourt-cases",
       data: {
-        caseNos: allCases.map((c) => c.crn),
+        caseNos: casesWithoutNextHearingDate.map((c) => c.crn),
       },
     });
     return { event, body: allCases };
