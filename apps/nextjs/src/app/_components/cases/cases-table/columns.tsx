@@ -61,6 +61,10 @@ export const columns: ColumnDef<CaseTableRows>[] = [
   },
   {
     header: "Last Updated",
-    cell: ({ row }) => <div>{moment(row.original.updatedAt).fromNow()}</div>,
+    cell: ({ row }) => (
+      <div className="text-sm text-muted-foreground" suppressHydrationWarning>
+        {moment(row.original.updatedAt).fromNow()}
+      </div>
+    ),
   },
 ];
