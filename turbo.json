@@ -60,6 +60,7 @@
     "PORT"
   ],
   "globalPassThroughEnv": [
+    "NEXT_RUNTIME",
     "NODE_ENV",
     "CI",
     "VERCEL",

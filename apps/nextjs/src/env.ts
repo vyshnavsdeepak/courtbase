@@ -11,6 +11,7 @@ export const env = createEnv({
     NODE_ENV: z
       .enum(["development", "production", "test"])
       .default("development"),
+    NEXT_RUNTIME: z.enum(["nodejs", "edge"]).default("nodejs"),
   },
   /**
    * Specify your server-side environment variables schema here.
