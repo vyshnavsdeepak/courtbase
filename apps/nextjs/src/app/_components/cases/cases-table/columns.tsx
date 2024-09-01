@@ -46,10 +46,14 @@ export const columns: ColumnDef<CaseTableRows>[] = [
   },
   {
     accessorKey: "nextHearingDate",
-    header: "Next Hearing Date",
+    header: () => <div className="text-right">Next Hearing Date</div>,
     cell: ({ row }) => {
       if (!row.original.nextHearingDate) return null;
-      return moment(row.original.nextHearingDate).format("DD-MM-YYYY");
+      return (
+        <div className="text-right">
+          {moment(row.original.nextHearingDate).format("DD-MM-YYYY")}
+        </div>
+      );
     },
   },
   {
