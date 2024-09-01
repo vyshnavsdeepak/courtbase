@@ -4,10 +4,12 @@ import React from "react";
 import type { CasesResponseTypeComplete } from "@court-base/api/schemas/cases";
 import { AllCaseRequestSchema } from "@court-base/api/schemas/cases";
 import { DataTableSkeleton } from "@court-base/ui/data-table/data-table-skeleton";
+import { Skeleton } from "@court-base/ui/skeleton";
 
 import type { SearchParams } from "~/app/types";
 import { CaseTable } from "~/app/_components/cases/cases-table";
 import { columns } from "~/app/_components/cases/cases-table/columns";
+import { DatePickerWithPresets } from "~/app/_components/cases/cases-table/date-range-picker";
 import EmptyCases from "~/app/_components/cases/empty-cases";
 import SidebarToggle from "~/app/_components/sidebar-toggle";
 import { api } from "~/trpc/server";
@@ -22,15 +24,10 @@ function CasesTableSuspense({
   casesPromise: Promise<CasesResponseTypeComplete>;
 }) {
   return (
-    <>
-      {/* <React.Suspense fallback={<Skeleton className="h-7 w-52" />}>
-    <DateRangePicker
-      triggerSize="sm"
-      triggerClassName="ml-auto w-56 sm:w-60"
-      align="end"
-      portal={false}
-      />
-  </React.Suspense> */}
+    <div className="mt-2 flex flex-col gap-4">
+      <React.Suspense fallback={<Skeleton className="h-7 w-52" />}>
+        <DatePickerWithPresets />
+      </React.Suspense>
       <React.Suspense
         fallback={
           <DataTableSkeleton
@@ -48,7 +45,7 @@ function CasesTableSuspense({
          */}
         <CasesTableFormatter casesPromise={casesPromise} />
       </React.Suspense>
-    </>
+    </div>
   );
 }
 

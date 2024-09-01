@@ -1,12 +1,7 @@
 "use client";
 
-import type { ColumnDef } from "@tanstack/react-table";
 import React from "react";
-import {
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
+import { flexRender } from "@tanstack/react-table";
 
 import {
   Table,
@@ -17,20 +12,14 @@ import {
   TableRow,
 } from "@court-base/ui/table";
 
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
-}
+import type { DataTableProps } from "./types";
+import { useCasesTable } from "./useCasesTableHook";
 
 export function CaseTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-  });
+  const { table } = useCasesTable({ columns, data });
 
   return (
     <div className="rounded-md border">
