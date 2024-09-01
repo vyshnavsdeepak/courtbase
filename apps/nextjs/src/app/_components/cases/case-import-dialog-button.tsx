@@ -94,23 +94,22 @@ function CaseImportDialog({ close }: { close: () => void }) {
     ? [{ name: "Loading...", id: "" }]
     : (courtComplexesSource ?? [{ name: "No courts found", id: "" }]);
 
-  const { mutate: createCaseImportTask } =
-    api.court.createCaseImportTask.useMutation({
-      onSuccess: () => {
-        console.log("Case import task created successfully");
-        toast.info("Case import task created successfully");
-        close();
-      },
-      onError: (err) => {
-        console.error("Failed to create case import task", err);
-        const messages = err.data?.zodError?.formErrors;
-        if (messages) {
-          toast.error(messages.join("\n"));
-        } else {
-          toast.error("Failed to create case import task");
-        }
-      },
-    });
+  const { mutate: createCaseImportTask } = api.caseImport.create.useMutation({
+    onSuccess: () => {
+      console.log("Case import task created successfully");
+      toast.info("Case import task created successfully");
+      close();
+    },
+    onError: (err) => {
+      console.error("Failed to create case import task", err);
+      const messages = err.data?.zodError?.formErrors;
+      if (messages) {
+        toast.error(messages.join("\n"));
+      } else {
+        toast.error("Failed to create case import task");
+      }
+    },
+  });
 
   const onSubmit = (data: FormData) => {
     createCaseImportTask(data);

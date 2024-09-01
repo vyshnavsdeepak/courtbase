@@ -1,4 +1,5 @@
 import { authRouter } from "./router/auth";
+import { caseImportRouter } from "./router/case-import";
 import { casesRouter } from "./router/cases";
 import { courtRouter } from "./router/court";
 import { organizationRouter } from "./router/organization";
@@ -11,6 +12,7 @@ export const appRouter = createTRPCRouter({
   organization: organizationRouter,
   court: courtRouter,
   cases: casesRouter,
+  caseImport: caseImportRouter,
 });
 
 // export type definition of API
