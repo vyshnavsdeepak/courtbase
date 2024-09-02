@@ -24,6 +24,12 @@ type CaseTableRows = z.infer<typeof _CaseTableRowsSchema>;
 
 export const columns: ColumnDef<CaseTableRows>[] = [
   {
+    header: "#",
+    cell: ({ row }) => {
+      return row.index + 1;
+    },
+  },
+  {
     accessorKey: "crn",
     header: "CRN",
   },
