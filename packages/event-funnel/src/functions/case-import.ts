@@ -267,7 +267,7 @@ export const importCaseByCourtComplexOnCron = inngest.createFunction(
           console.warn(`No court complex IDs found for task ${task.id}`);
           return; // Skip this task
         }
-        await step.sendEvent(`cron/event/case-import-task/${task.id}`, {
+        await inngest.send({
           id: task.id,
           name: "app/import-by-court-complex",
           data: {
