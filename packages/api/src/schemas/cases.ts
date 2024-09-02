@@ -6,7 +6,7 @@ import type { Case } from "@court-base/db/types";
 type CaseField = keyof Case;
 const CaseAvailableSorts: [CaseField, ...CaseField[]] = ["nextHearingDate"]; // Add any other valid keys here
 
-export const zDateSpan = z.enum([
+export const zNextHearingDateSpan = z.enum([
   "today",
   "tomorrow",
   "thisWeek",
@@ -15,31 +15,21 @@ export const zDateSpan = z.enum([
   "nextMonth",
 ]);
 
-export type DateSpan = z.infer<typeof zDateSpan>;
+export const zNextHearingDateRange = z.object({
+  from: z.string().date(),
+  to: z.string().date().optional(),
+});
+
+export const zDateSpanOrNextHearingDate = zNextHearingDateSpan.or(
+  zNextHearingDateRange,
+);
+export type DateSpan = z.infer<typeof zNextHearingDateSpan>;
+export type NextHearingDate = z.infer<typeof zDateSpanOrNextHearingDate>;
 
 export const AllCaseRequestSchema = z.object({
   // page: z.number().int().positive().default(1),
   // per_page: z.number().int().positive().default(50),
-  filters: z
-    .object({
-      dateSpan: zDateSpan.optional(),
-      dateRange: z
-        .object({
-          startDate: z.date(),
-          endDate: z.date(),
-        })
-        .optional(),
-    })
-    .optional()
-    .refine(
-      (filters) => {
-        const { dateSpan, dateRange } = filters ?? {};
-        return !(dateSpan && dateRange);
-      },
-      {
-        message: "You must provide either dateSpan or dateRange, but not both.",
-      },
-    ),
+  nextHearingDate: zNextHearingDateSpan.or(zNextHearingDateRange).optional(),
   sort: z
     .object({
       field: z.enum(CaseAvailableSorts).optional(), // Use a tuple type to ensure non-empty array

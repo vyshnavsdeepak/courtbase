@@ -1,5 +1,5 @@
-import qs from "querystring";
 import React from "react";
+import qs from "qs";
 
 import type { CasesResponseTypeComplete } from "@court-base/api/schemas/cases";
 import { AllCaseRequestSchema } from "@court-base/api/schemas/cases";
@@ -60,23 +60,8 @@ function CasesTableFormatter({
 }
 
 export default async function CasesPage({ searchParams }: CasesPageProps) {
-  const filters = qs.parse(searchParams.filters as string);
-  const sort = qs.parse(searchParams.sort as string);
-  const paramsToParse: {
-    filters?: object;
-    sort?: object;
-  } = {};
-
-  // Conditionally add filters and sort if they are not empty objects
-  if (Object.keys(filters).length > 0) {
-    paramsToParse.filters = filters;
-  }
-
-  if (Object.keys(sort).length > 0) {
-    paramsToParse.sort = sort;
-  }
-
-  const caseReqParams = AllCaseRequestSchema.parse(paramsToParse);
+  const qsParams = qs.parse(searchParams);
+  const caseReqParams = AllCaseRequestSchema.parse(qsParams);
   const casesPromise = api.cases.all(caseReqParams);
   const casesCount = await api.cases.count();
 

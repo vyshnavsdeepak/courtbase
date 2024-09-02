@@ -1,6 +1,6 @@
 import moment from "moment";
 
-import type { DateSpan } from "../schemas/cases";
+import type { DateSpan, NextHearingDate } from "../schemas/cases";
 
 const IST_OFFSET = 330; // IST offset in minutes
 
@@ -41,5 +41,16 @@ export function getDateRangeFilter(span: DateSpan) {
   return {
     startDate: new Date(startOfPeriod.format("YYYY-MM-DD")), // Fixes UTC issue
     endDate: new Date(endOfPeriod.format("YYYY-MM-DD")),
+  };
+}
+
+export function getNextHearingDateFilter(date: NextHearingDate) {
+  if (typeof date === "string") {
+    return getDateRangeFilter(date);
+  }
+
+  return {
+    startDate: new Date(date.from),
+    endDate: date.to ? new Date(date.to) : undefined,
   };
 }

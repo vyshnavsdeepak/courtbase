@@ -8,7 +8,7 @@ import { format } from "date-fns";
 import qs from "qs";
 
 import type { DateSpan } from "@court-base/api/schemas/cases";
-import { zDateSpan } from "@court-base/api/schemas/cases";
+import { zNextHearingDateSpan as zDateSpan } from "@court-base/api/schemas/cases";
 import { getDateRangeFilter } from "@court-base/api/utils/cases-utils";
 import { cn } from "@court-base/ui";
 import { Button } from "@court-base/ui/button";
