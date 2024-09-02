@@ -1,10 +1,9 @@
-import React from "react";
+import { Suspense } from "react";
 import qs from "qs";
 
 import type { CasesResponseTypeComplete } from "@court-base/api/schemas/cases";
 import { AllCaseRequestSchema } from "@court-base/api/schemas/cases";
 import { DataTableSkeleton } from "@court-base/ui/data-table/data-table-skeleton";
-import { Skeleton } from "@court-base/ui/skeleton";
 
 import type { SearchParams } from "~/app/types";
 import { CaseTable } from "~/app/_components/cases/cases-table";
@@ -14,57 +13,32 @@ import EmptyCases from "~/app/_components/cases/empty-cases";
 import SidebarToggle from "~/app/_components/sidebar-toggle";
 import { api } from "~/trpc/server";
 
-interface CasesPageProps {
-  searchParams: SearchParams;
+interface CasesPageData {
+  casesData: CasesResponseTypeComplete;
+  casesCount: number;
 }
 
-function CasesTableSuspense({
-  casesPromise,
-}: {
-  casesPromise: Promise<CasesResponseTypeComplete>;
-}) {
-  return (
-    <div className="mt-2 flex flex-col gap-4">
-      <React.Suspense fallback={<Skeleton className="h-7 w-52" />}>
-        <DatePickerWithPresets />
-      </React.Suspense>
-      <React.Suspense
-        fallback={
-          <DataTableSkeleton
-            columnCount={5}
-            searchableColumnCount={1}
-            filterableColumnCount={2}
-            cellWidths={["10rem", "40rem", "12rem", "12rem", "8rem"]}
-            shrinkZero
-          />
-        }
-      >
-        {/**
-         * Passing promises and consuming them using React.use for triggering the suspense fallback.
-         * @see https://react.dev/reference/react/use
-         */}
-        <CasesTableFormatter casesPromise={casesPromise} />
-      </React.Suspense>
-    </div>
-  );
-}
-
-function CasesTableFormatter({
-  casesPromise,
-}: {
-  casesPromise: Promise<CasesResponseTypeComplete>;
-}) {
-  const cases = React.use(casesPromise);
-  const data = cases.data;
-  return <CaseTable columns={columns} data={data} />;
-}
-
-export default async function CasesPage({ searchParams }: CasesPageProps) {
+async function fetchCasesData(
+  searchParams: SearchParams,
+): Promise<CasesPageData> {
   const qsParams = qs.parse(searchParams);
   const caseReqParams = AllCaseRequestSchema.parse(qsParams);
-  const casesPromise = api.cases.all(caseReqParams);
-  const casesCount = await api.cases.count();
 
+  const [casesData, casesCount] = await Promise.all([
+    api.cases.all(caseReqParams),
+    api.cases.count(),
+  ]);
+
+  return { casesData, casesCount };
+}
+
+export default async function CasesPage({
+  searchParams,
+}: {
+  searchParams: SearchParams;
+}) {
+  const { casesData, casesCount } = await fetchCasesData(searchParams);
+  const key = qs.stringify(searchParams);
   return (
     <div className="flex h-full min-h-screen flex-col">
       <div className="flex flex-1 flex-col">
@@ -73,7 +47,23 @@ export default async function CasesPage({ searchParams }: CasesPageProps) {
         </div>
         <div className="flex flex-1">
           {casesCount > 0 ? (
-            <CasesTableSuspense casesPromise={casesPromise} />
+            <div className="mt-2 flex w-full flex-col gap-4">
+              <Suspense
+                key={key}
+                fallback={
+                  <DataTableSkeleton
+                    columnCount={5}
+                    searchableColumnCount={1}
+                    filterableColumnCount={2}
+                    cellWidths={["10rem", "40rem", "12rem", "12rem", "8rem"]}
+                    shrinkZero
+                  />
+                }
+              >
+                <DatePickerWithPresets />
+                <CaseTable columns={columns} data={casesData.data} />
+              </Suspense>
+            </div>
           ) : (
             <EmptyCases />
           )}
