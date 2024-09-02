@@ -28,7 +28,7 @@ export default function AccountDropdown({ user }: { user: User }) {
           </Avatar>
         </div>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56">
+      <DropdownMenuContent className="ml-1 w-56">
         <DropdownMenuItem onClick={() => signOut()}>Logout</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

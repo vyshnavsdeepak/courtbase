@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
+import { SessionProvider } from "next-auth/react";
 
 import { cn } from "@court-base/ui";
 import { ThemeProvider } from "@court-base/ui/theme";
@@ -52,12 +53,14 @@ export default function RootLayout(props: { children: React.ReactNode }) {
         )}
       >
         <ThemeProvider attribute="class" defaultTheme="dark">
-          <OrgProvider>
-            <TRPCReactProvider>
-              <PageLoadProgress>{props.children}</PageLoadProgress>
-            </TRPCReactProvider>
-          </OrgProvider>
-          <Toaster />
+          <SessionProvider>
+            <OrgProvider>
+              <TRPCReactProvider>
+                <PageLoadProgress>{props.children}</PageLoadProgress>
+              </TRPCReactProvider>
+            </OrgProvider>
+            <Toaster />
+          </SessionProvider>
         </ThemeProvider>
       </body>
     </html>

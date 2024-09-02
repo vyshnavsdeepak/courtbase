@@ -1,15 +1,18 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { useSession } from "next-auth/react";
 
 import { workspaceLinks } from "../_constants/data";
 import { useSidebar } from "../_contexts/sidebar-context";
+import AccountDropdown from "./account-dropdown";
 import { DashboardNav } from "./dashboard-nav";
 import SidebarToggle from "./sidebar-toggle";
 
 export default function Sidebar() {
   const { isSidebarOpen, toggleSidebar } = useSidebar();
   const sidebarRef = useRef<HTMLDivElement>(null);
+  const { data: session } = useSession();
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -34,13 +37,17 @@ export default function Sidebar() {
       }`}
     >
       <SidebarToggle className="md:hidden" />
-      <div className="mb-6 flex items-center">
-        {/* <AccountDropdown user={{
-          name: session.user.name,
-          image: session.user.image,
-        }} /> */}
+      <div className="flex h-full flex-col justify-between">
+        <DashboardNav workspaceLinks={workspaceLinks} />
+        <div className="flex items-center">
+          <AccountDropdown
+            user={{
+              name: session?.user.name,
+              image: session?.user.image,
+            }}
+          />
+        </div>
       </div>
-      <DashboardNav workspaceLinks={workspaceLinks} />
     </aside>
   );
 }
