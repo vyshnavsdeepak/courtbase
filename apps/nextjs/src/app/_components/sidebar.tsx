@@ -32,12 +32,14 @@ export default function Sidebar() {
   return (
     <aside
       ref={sidebarRef}
-      className={`absolute z-20 mx-auto block min-h-full w-72 bg-background px-2 py-4 transition-transform duration-300 lg:relative lg:translate-x-0 ${
+      className={`absolute bottom-0 top-0 z-20 mx-auto flex w-72 flex-col bg-background transition-transform duration-300 lg:relative lg:translate-x-0 ${
         isSidebarOpen ? "translate-x-0" : "-translate-x-full"
       }`}
     >
-      <SidebarToggle className="md:hidden" />
-      <div className="flex h-full flex-col justify-between">
+      <div className="flex">
+        <SidebarToggle className="md:hidden" />
+      </div>
+      <div className="mx-2 my-4 flex flex-1 flex-col justify-between">
         <DashboardNav workspaceLinks={workspaceLinks} />
         <div className="flex items-center">
           <AccountDropdown
