@@ -6,7 +6,7 @@ import type { Case } from "@court-base/db/types";
 type CaseField = keyof Case;
 const CaseAvailableSorts: [CaseField, ...CaseField[]] = ["nextHearingDate"]; // Add any other valid keys here
 
-const zDateSpan = z.enum([
+export const zDateSpan = z.enum([
   "today",
   "tomorrow",
   "thisWeek",
@@ -14,6 +14,7 @@ const zDateSpan = z.enum([
   "thisMonth",
   "nextMonth",
 ]);
+
 export type DateSpan = z.infer<typeof zDateSpan>;
 
 export const AllCaseRequestSchema = z.object({

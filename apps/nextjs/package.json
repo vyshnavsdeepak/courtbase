@@ -50,6 +50,7 @@
     "@court-base/tailwind-config": "workspace:*",
     "@court-base/tsconfig": "workspace:*",
     "@types/node": "^20.16.1",
+    "@types/qs": "^6.9.15",
     "@types/react": "catalog:react18",
     "@types/react-dom": "catalog:react18",
     "dotenv-cli": "^7.4.2",

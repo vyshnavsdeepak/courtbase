@@ -3,9 +3,9 @@ import type { z } from "zod";
 
 import type { AllCaseResponseSchema } from "../schemas/cases";
 import { AllCaseRequestSchema } from "../schemas/cases";
-import { getDateRangeFilter } from "../services/cases-service";
 // import type { Case } from "@court-base/db/types";
 import { orgProtectedProcedure } from "../trpc";
+import { getDateRangeFilter } from "../utils/cases-utils";
 
 // type CaseField = keyof Case;
 // const CaseAvailableSorts: [CaseField, ...CaseField[]] = [
