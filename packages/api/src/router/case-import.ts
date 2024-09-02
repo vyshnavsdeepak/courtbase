@@ -25,7 +25,7 @@ export const caseImportRouter = {
         throw new Error("Advocate name not found. (E-2)");
       }
 
-      const { id } = await ctx.kysely
+      const { id: caseImportTaskId } = await ctx.kysely
         .insertInto("CaseImportTask")
         .values({
           organizationId: orgId,
@@ -46,7 +46,6 @@ export const caseImportRouter = {
 
       const event = await inngest
         .send({
-          id,
           name: "app/import-by-court-complex",
           data: {
             payload: {
@@ -56,6 +55,9 @@ export const caseImportRouter = {
             },
             identity: {
               orgId,
+            },
+            tracking: {
+              caseImportTaskId,
             },
           },
         })

@@ -1,6 +1,7 @@
 import type { AdvocateCaseSideType } from "@court-base/db/models";
 import type { CaseByAdvocateNameParams } from "@court-base/ecourt/types";
 
+import type { SendEventType } from "../lib/inngest";
 import type { eCourtAPICallReturn } from "./ecourt";
 import { inngest } from "../lib/inngest";
 import { ecourtAPI } from "./ecourt";
@@ -15,6 +16,9 @@ export interface ImportByCourtComplexParams {
     identity: {
       orgId: string;
     };
+    tracking: {
+      caseImportTaskId: string;
+    };
   };
 }
 
@@ -25,7 +29,7 @@ export const importCaseByCourtComplex = inngest.createFunction(
     if (!event.id) {
       throw new Error("Missing event id in importCaseByCourtComplex");
     }
-    const eventId = event.id;
+    const eventId = event.data.tracking.caseImportTaskId;
 
     await step.run("mark-start-case-import-task", async () => {
       await kysely
@@ -253,8 +257,8 @@ export const importCaseByCourtComplexOnCron = inngest.createFunction(
         .execute();
     });
 
-    await Promise.all(
-      caseImportTasks.map(async (task) => {
+    const fanOutTasks = caseImportTasks
+      .map((task) => {
         const complexIdsJson = task.courtComplexIds as {
           complexes?: string[];
         } | null;
@@ -267,8 +271,8 @@ export const importCaseByCourtComplexOnCron = inngest.createFunction(
           console.warn(`No court complex IDs found for task ${task.id}`);
           return; // Skip this task
         }
-        await inngest.send({
-          id: task.id,
+
+        const payload: SendEventType = {
           name: "app/import-by-court-complex",
           data: {
             payload: {
@@ -279,9 +283,15 @@ export const importCaseByCourtComplexOnCron = inngest.createFunction(
             identity: {
               orgId: task.organizationId,
             },
+            tracking: {
+              caseImportTaskId: task.id,
+            },
           },
-        });
-      }),
-    );
+        };
+        return payload;
+      })
+      .filter((task) => task !== undefined);
+
+    await inngest.send(fanOutTasks);
   },
 );
