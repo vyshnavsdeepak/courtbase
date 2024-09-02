@@ -8,7 +8,7 @@ import { buttonVariants } from "@court-base/ui/button";
 import UserAuthForm from "../_components/forms/user-auth-form";
 
 export const metadata: Metadata = {
-  title: "Login - Court Base",
+  title: "Login - Courtbase",
   description: "Simple solution for efficient and effective case management.",
 };
 
@@ -39,16 +39,15 @@ export default function AuthenticationPage() {
           >
             <path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3" />
           </svg>
-          Logo
+          Courtbase
         </div>
         <div className="relative z-20 mt-auto">
           <blockquote className="space-y-2">
             <p className="text-lg">
-              &ldquo;This library has saved me countless hours of work and
-              helped me deliver stunning designs to my clients faster than ever
-              before.&rdquo;
+              Courtbase aims to simplify case management, making it easier for
+              lawyers to focus on what they do best: practicing law.
             </p>
-            <footer className="text-sm">Sofia Davis</footer>
+            <footer className="text-sm">Painterman Lab</footer>
           </blockquote>
         </div>
       </div>

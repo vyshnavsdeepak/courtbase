@@ -21,13 +21,13 @@ export const metadata: Metadata = {
       ? "https://courtbase.app"
       : "http://localhost:3000",
   ),
-  title: "Court Base",
+  title: "Courtbase",
   description: "",
   openGraph: {
-    title: "Court Base",
+    title: "Courtbase",
     description: "Simple solution for efficient and effective case management.",
     url: "https://courtbase.app",
-    siteName: "Court Base",
+    siteName: "Courtbase",
   },
 };
 

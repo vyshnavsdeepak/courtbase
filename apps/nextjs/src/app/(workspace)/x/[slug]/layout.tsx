@@ -4,7 +4,7 @@ import { SidebarProvider } from "~/app/_contexts/sidebar-context";
 import Sidebar from "../../../_components/sidebar";
 
 export const metadata: Metadata = {
-  title: "Court Base",
+  title: "Courtbase",
   description: "Simple solution for efficient and effective case management.",
 };
 

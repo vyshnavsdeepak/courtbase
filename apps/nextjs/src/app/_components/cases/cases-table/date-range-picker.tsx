@@ -142,7 +142,7 @@ export function DatePickerWithPresets() {
               format(date.from, "LLL dd, y")
             )
           ) : (
-            <span>Pick a date</span>
+            <span>Next Hearing Date</span>
           )}
         </Button>
       </PopoverTrigger>
