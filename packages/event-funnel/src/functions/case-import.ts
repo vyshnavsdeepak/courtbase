@@ -27,12 +27,13 @@ export const importCaseByCourtComplex = inngest.createFunction(
     }
     const eventId = event.id;
 
-    await step.run("mark-start-case-import-task", () => {
-      return kysely
+    await step.run("mark-start-case-import-task", async () => {
+      await kysely
         .updateTable("CaseImportTask")
         .set("taskStatus", "IN_PROGRESS")
         .where("id", "=", eventId)
         .execute();
+      return true;
     });
 
     const payload = event.data.payload;
@@ -137,6 +138,9 @@ export const importCaseByCourtComplex = inngest.createFunction(
     );
 
     const dbSaveResult = await step.run("save-case-to-db", async () => {
+      if (caseWithOurSide.length === 0) {
+        return [];
+      }
       return kysely
         .insertInto("Case")
         .values(
@@ -179,8 +183,11 @@ export const importCaseByCourtComplex = inngest.createFunction(
         .execute();
     });
 
-    await step.run("link-saved-cases-to-advocate", () => {
-      return kysely
+    await step.run("link-saved-cases-to-advocate", async () => {
+      if (dbSaveResult.length === 0) {
+        return { exitReason: "NO_CASES_TO_SAVE" };
+      }
+      await kysely
         .insertInto("AdvocateCase")
         .values(
           dbSaveResult.map(({ id }) => ({
@@ -191,6 +198,9 @@ export const importCaseByCourtComplex = inngest.createFunction(
         )
         .onConflict((c) => c.doNothing())
         .execute();
+      return {
+        success: true,
+      };
     });
 
     await step.run("mark-complete-case-import-task", () => {
@@ -200,6 +210,10 @@ export const importCaseByCourtComplex = inngest.createFunction(
         .where("id", "=", eventId)
         .execute();
     });
+
+    if (dbSaveResult.length === 0) {
+      return { exitReason: "NO_CASES_TO_SAVE", event, body: allCases };
+    }
 
     // For ongoing case imports, we keep getting the same cases over and over again along with the new ones.
     // To avoid unnecessary API calls, we filter out the cases that already have a nextHearingDate.
