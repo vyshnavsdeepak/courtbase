@@ -11,6 +11,9 @@ export default auth((req) => {
     if (!req.auth) {
       const url = req.nextUrl.clone();
       url.pathname = "/login";
+      url.search = "";
+      const callbackPath = req.nextUrl.toString();
+      url.searchParams.set("callbackUrl", callbackPath);
       return NextResponse.redirect(url);
     }
 
