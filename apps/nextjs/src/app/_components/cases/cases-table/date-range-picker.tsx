@@ -8,7 +8,10 @@ import { format } from "date-fns";
 import qs from "qs";
 
 import type { DateSpan } from "@court-base/api/schemas/cases";
-import { zNextHearingDateSpan as zDateSpan } from "@court-base/api/schemas/cases";
+import {
+  zNextHearingDateSpan as zDateSpan,
+  zNextHearingDateRange,
+} from "@court-base/api/schemas/cases";
 import { getDateRangeFilter } from "@court-base/api/utils/cases-utils";
 import { cn } from "@court-base/ui";
 import { Button } from "@court-base/ui/button";
@@ -31,6 +34,42 @@ export function DatePickerWithPresets() {
   const [dateSpan, setDateSpan] = React.useState<DateSpan | undefined>();
   const searchParams = useSearchParams();
   const router = useRouter();
+
+  const parseSearchParams = () => {
+    const params = qs.parse(searchParams.toString());
+    const nextHearingDate = params.nextHearingDate;
+    if (nextHearingDate) {
+      return { nextHearingDate };
+    }
+    return { dateRange: params.dateRange };
+  };
+
+  React.useEffect(() => {
+    const { nextHearingDate } = parseSearchParams();
+    if (typeof nextHearingDate === "string") {
+      const parsedDateSpan = zDateSpan.safeParse(nextHearingDate);
+      if (parsedDateSpan.success) {
+        setDateSpan(parsedDateSpan.data);
+        const dateRange = getDateRangeFilter(parsedDateSpan.data);
+        setDate({
+          from: dateRange.startDate,
+          to: dateRange.endDate,
+        });
+      }
+    } else if (nextHearingDate && typeof nextHearingDate === "object") {
+      const parsedDateRange = zNextHearingDateRange.safeParse(nextHearingDate);
+      if (parsedDateRange.success) {
+        setDate({
+          from: parsedDateRange.data.from
+            ? new Date(parsedDateRange.data.from)
+            : undefined,
+          to: parsedDateRange.data.to
+            ? new Date(parsedDateRange.data.to)
+            : undefined,
+        });
+      }
+    }
+  }, [searchParams]);
 
   const updateQueryParams = (params: {
     dateSpan?: DateSpan;
