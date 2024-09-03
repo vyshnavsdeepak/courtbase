@@ -85,9 +85,9 @@ model VerificationToken {
 }
 
 model Organization {
-  id   String
-  name String @db.VarChar(255)
-  slug String @unique
+  oldId String
+  name  String @db.VarChar(255)
+  slug  String @unique
 }
 
 enum OrgDesignation {

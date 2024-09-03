@@ -109,7 +109,11 @@ export const VerificationTokenScalarFieldEnumSchema = z.enum([
   "expires",
 ]);
 
-export const OrganizationScalarFieldEnumSchema = z.enum(["id", "name", "slug"]);
+export const OrganizationScalarFieldEnumSchema = z.enum([
+  "oldId",
+  "name",
+  "slug",
+]);
 
 export const OrganizationMembersScalarFieldEnumSchema = z.enum([
   "organizationId",
@@ -383,7 +387,7 @@ export type VerificationToken = z.infer<typeof VerificationTokenSchema>;
 /////////////////////////////////////////
 
 export const OrganizationSchema = z.object({
-  id: z.string(),
+  oldId: z.string(),
   name: z.string(),
   slug: z.string(),
 });
