@@ -32,8 +32,6 @@ const casesRouter = {
         .select([
           "Case.id",
           sql`ARRAY_AGG("User"."name")`.as("advocateNames"), // Aggregate advocate names
-          "AdvocateCase.advocateId as advocateId",
-          "User.name as advocateName",
           "crn",
           "Case.courtId",
           "Court.name as courtName",
@@ -51,12 +49,7 @@ const casesRouter = {
           "extraParties",
           "Case.updatedAt as updatedAt",
         ])
-        .groupBy([
-          "AdvocateCase.advocateId",
-          "Case.id",
-          "User.name",
-          "Court.name",
-        ])
+        .groupBy(["Case.id", "Court.name"])
         .where("Case.organizationId", "=", orgId)
         .$if(typeof nextHearingDate !== "undefined", (query) => {
           if (!nextHearingDate) {
