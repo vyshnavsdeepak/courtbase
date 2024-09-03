@@ -128,12 +128,12 @@ export const importCaseByCourtComplex = inngest.createFunction(
         const extraParties = caseToExtraPartyMap.get(c.crn)?.join(", ") ?? null;
         const petitionerLawyer = c.petitionerLawyers.toLowerCase();
         const respondentLawyer = c.respondentLawyers.toLowerCase();
-
-        if (petitionerLawyer.includes(advocateName)) {
+        const advocateNameLower = advocateName.toLowerCase();
+        if (petitionerLawyer.includes(advocateNameLower)) {
           return { ...c, side: "PETITIONER", extraPetitioners: extraParties };
         }
 
-        if (respondentLawyer.includes(advocateName)) {
+        if (respondentLawyer.includes(advocateNameLower)) {
           return { ...c, side: "RESPONDENT", extraRespondents: extraParties };
         }
 
