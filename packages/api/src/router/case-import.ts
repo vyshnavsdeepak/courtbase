@@ -15,9 +15,11 @@ export const caseImportRouter = {
       const advocateId = input.advocateId;
 
       const advocate = await ctx.kysely
-        .selectFrom("User")
-        .select(["name"])
-        .where("id", "=", advocateId)
+        .selectFrom("OrganizationMembers")
+        .leftJoin("User", "User.id", "OrganizationMembers.userId")
+        // TODO: Remove this join, as name is moved to OrganizationMembers table
+        .select(["User.name as name"])
+        .where("memberId", "=", advocateId)
         .executeTakeFirstOrThrow();
 
       const advocateName = advocate.name;
