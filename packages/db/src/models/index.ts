@@ -389,6 +389,31 @@ export const OrganizationSchema = z.object({
 
 export type Organization = z.infer<typeof OrganizationSchema>;
 
+// ORGANIZATION RELATION SCHEMA
+//------------------------------------------------------
+
+export type OrganizationRelations = {
+  OrganizationMembers: OrganizationMembersWithRelations[];
+  Case: CaseWithRelations[];
+  AdvocateCase: AdvocateCaseWithRelations[];
+  CaseImportTask: CaseImportTaskWithRelations[];
+};
+
+export type OrganizationWithRelations = z.infer<typeof OrganizationSchema> &
+  OrganizationRelations;
+
+export const OrganizationWithRelationsSchema: z.ZodType<OrganizationWithRelations> =
+  OrganizationSchema.merge(
+    z.object({
+      OrganizationMembers: z
+        .lazy(() => OrganizationMembersWithRelationsSchema)
+        .array(),
+      Case: z.lazy(() => CaseWithRelationsSchema).array(),
+      AdvocateCase: z.lazy(() => AdvocateCaseWithRelationsSchema).array(),
+      CaseImportTask: z.lazy(() => CaseImportTaskWithRelationsSchema).array(),
+    }),
+  );
+
 /////////////////////////////////////////
 // ORGANIZATION MEMBERS SCHEMA
 /////////////////////////////////////////
@@ -402,6 +427,29 @@ export const OrganizationMembersSchema = z.object({
 });
 
 export type OrganizationMembers = z.infer<typeof OrganizationMembersSchema>;
+
+// ORGANIZATION MEMBERS RELATION SCHEMA
+//------------------------------------------------------
+
+export type OrganizationMembersRelations = {
+  organization: OrganizationWithRelations;
+  AdvocateCase: AdvocateCaseWithRelations[];
+  CaseImportTask: CaseImportTaskWithRelations[];
+};
+
+export type OrganizationMembersWithRelations = z.infer<
+  typeof OrganizationMembersSchema
+> &
+  OrganizationMembersRelations;
+
+export const OrganizationMembersWithRelationsSchema: z.ZodType<OrganizationMembersWithRelations> =
+  OrganizationMembersSchema.merge(
+    z.object({
+      organization: z.lazy(() => OrganizationWithRelationsSchema),
+      AdvocateCase: z.lazy(() => AdvocateCaseWithRelationsSchema).array(),
+      CaseImportTask: z.lazy(() => CaseImportTaskWithRelationsSchema).array(),
+    }),
+  );
 
 /////////////////////////////////////////
 // CASE SCHEMA
@@ -440,6 +488,7 @@ export type Case = z.infer<typeof CaseSchema>;
 export type CaseRelations = {
   Court: CourtWithRelations;
   AdvocateCase: AdvocateCaseWithRelations[];
+  organization: OrganizationWithRelations;
 };
 
 export type CaseWithRelations = z.infer<typeof CaseSchema> & CaseRelations;
@@ -449,6 +498,7 @@ export const CaseWithRelationsSchema: z.ZodType<CaseWithRelations> =
     z.object({
       Court: z.lazy(() => CourtWithRelationsSchema),
       AdvocateCase: z.lazy(() => AdvocateCaseWithRelationsSchema).array(),
+      organization: z.lazy(() => OrganizationWithRelationsSchema),
     }),
   );
 
@@ -472,6 +522,8 @@ export type AdvocateCase = z.infer<typeof AdvocateCaseSchema>;
 
 export type AdvocateCaseRelations = {
   Case: CaseWithRelations;
+  orgMember: OrganizationMembersWithRelations;
+  Organization: OrganizationWithRelations;
 };
 
 export type AdvocateCaseWithRelations = z.infer<typeof AdvocateCaseSchema> &
@@ -481,6 +533,8 @@ export const AdvocateCaseWithRelationsSchema: z.ZodType<AdvocateCaseWithRelation
   AdvocateCaseSchema.merge(
     z.object({
       Case: z.lazy(() => CaseWithRelationsSchema),
+      orgMember: z.lazy(() => OrganizationMembersWithRelationsSchema),
+      Organization: z.lazy(() => OrganizationWithRelationsSchema),
     }),
   );
 
@@ -631,3 +685,27 @@ export const CaseImportTaskSchema = z.object({
 });
 
 export type CaseImportTask = z.infer<typeof CaseImportTaskSchema>;
+
+// CASE IMPORT TASK RELATION SCHEMA
+//------------------------------------------------------
+
+export type CaseImportTaskRelations = {
+  advocate: OrganizationMembersWithRelations;
+  organization: OrganizationWithRelations;
+};
+
+export type CaseImportTaskWithRelations = Omit<
+  z.infer<typeof CaseImportTaskSchema>,
+  "courtComplexIds" | "taskMeta"
+> & {
+  courtComplexIds?: JsonValueType | null;
+  taskMeta?: JsonValueType | null;
+} & CaseImportTaskRelations;
+
+export const CaseImportTaskWithRelationsSchema: z.ZodType<CaseImportTaskWithRelations> =
+  CaseImportTaskSchema.merge(
+    z.object({
+      advocate: z.lazy(() => OrganizationMembersWithRelationsSchema),
+      organization: z.lazy(() => OrganizationWithRelationsSchema),
+    }),
+  );
