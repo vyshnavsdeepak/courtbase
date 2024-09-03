@@ -1,4 +1,5 @@
 import type { TRPCRouterRecord } from "@trpc/server";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { MemberRole, OrganizationCreateModel } from "../models";
@@ -7,6 +8,7 @@ import {
   protectedProcedure,
   publicProcedure,
 } from "../trpc";
+import { generateMemberId } from "../utils/user-utils";
 
 export const organizationRouter = {
   byId: publicProcedure
@@ -48,11 +50,22 @@ export const organizationRouter = {
         .returning(["id", "name", "slug"])
         .executeTakeFirstOrThrow();
 
+      if (!ctx.session.user.name) {
+        // Todo: Make sure to collect name from user
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "[E-ORG-001] User name is required",
+        });
+      }
+
+      const memberId = generateMemberId(ctx.session.user.name);
+
       await ctx.kysely
         .insertInto("OrganizationMembers")
         .values({
           organizationId: org.id,
           userId: ctx.session.user.id,
+          memberId,
           role: MemberRole.enum.OWNER,
         })
         .executeTakeFirstOrThrow();
