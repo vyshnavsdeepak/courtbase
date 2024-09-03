@@ -92,7 +92,7 @@ export type District = {
   districtCode: string;
 };
 export type Organization = {
-  id: Generated<string>;
+  id: string;
   name: string;
   slug: string;
 };

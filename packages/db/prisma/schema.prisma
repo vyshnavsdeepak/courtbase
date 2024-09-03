@@ -85,7 +85,7 @@ model VerificationToken {
 }
 
 model Organization {
-  id   String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id   String
   name String @db.VarChar(255)
   slug String @unique
 }
