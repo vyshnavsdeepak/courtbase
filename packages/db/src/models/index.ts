@@ -421,7 +421,7 @@ export const OrganizationMembersSchema = z.object({
   designation: OrgDesignationSchema.nullish(),
   organizationId: z.string(),
   userId: z.string(),
-  memberId: z.string().nullish(),
+  memberId: z.string(),
 });
 
 export type OrganizationMembers = z.infer<typeof OrganizationMembersSchema>;
@@ -430,7 +430,6 @@ export type OrganizationMembers = z.infer<typeof OrganizationMembersSchema>;
 //------------------------------------------------------
 
 export type OrganizationMembersRelations = {
-  AdvocateCase: AdvocateCaseWithRelations[];
   CaseImportTask: CaseImportTaskWithRelations[];
 };
 
@@ -442,7 +441,6 @@ export type OrganizationMembersWithRelations = z.infer<
 export const OrganizationMembersWithRelationsSchema: z.ZodType<OrganizationMembersWithRelations> =
   OrganizationMembersSchema.merge(
     z.object({
-      AdvocateCase: z.lazy(() => AdvocateCaseWithRelationsSchema).array(),
       CaseImportTask: z.lazy(() => CaseImportTaskWithRelationsSchema).array(),
     }),
   );
@@ -518,7 +516,6 @@ export type AdvocateCase = z.infer<typeof AdvocateCaseSchema>;
 
 export type AdvocateCaseRelations = {
   Case: CaseWithRelations;
-  Advocate: OrganizationMembersWithRelations;
 };
 
 export type AdvocateCaseWithRelations = z.infer<typeof AdvocateCaseSchema> &
@@ -528,7 +525,6 @@ export const AdvocateCaseWithRelationsSchema: z.ZodType<AdvocateCaseWithRelation
   AdvocateCaseSchema.merge(
     z.object({
       Case: z.lazy(() => CaseWithRelationsSchema),
-      Advocate: z.lazy(() => OrganizationMembersWithRelationsSchema),
     }),
   );
 

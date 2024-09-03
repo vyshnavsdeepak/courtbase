@@ -100,7 +100,7 @@ export type Organization = {
 export type OrganizationMembers = {
   organizationId: string;
   userId: string;
-  memberId: string | null;
+  memberId: string;
   role: Generated<OrgRole>;
   designation: OrgDesignation | null;
 };
