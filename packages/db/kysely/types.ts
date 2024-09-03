@@ -92,9 +92,8 @@ export type District = {
   districtCode: string;
 };
 export type Organization = {
-  oldId: string;
+  id: string;
   name: string;
-  slug: string;
 };
 export type OrganizationMembers = {
   organizationId: string;
