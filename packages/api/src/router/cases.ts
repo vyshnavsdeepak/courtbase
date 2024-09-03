@@ -28,7 +28,12 @@ const casesRouter = {
         .selectFrom("Case")
         .innerJoin("AdvocateCase", "Case.id", "AdvocateCase.caseId")
         .innerJoin("Court", "Case.courtId", "Court.id")
-        .innerJoin("User", "AdvocateCase.advocateId", "User.id")
+        .innerJoin(
+          "OrganizationMembers",
+          "OrganizationMembers.memberId",
+          "AdvocateCase.advocateId",
+        )
+        .innerJoin("User", "User.id", "OrganizationMembers.userId") // TODO: Remove this join, as name is moved to OrganizationMembers table
         .select([
           "Case.id",
           sql`ARRAY_AGG("User"."name")`.as("advocateNames"), // Aggregate advocate names
