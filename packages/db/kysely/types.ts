@@ -69,7 +69,6 @@ export type CaseImportTask = {
   created_by: string;
   created_at: Generated<Timestamp>;
   updatedAt: Timestamp | null;
-  courtComplexId: string | null;
 };
 export type Court = {
   id: Generated<string>;
