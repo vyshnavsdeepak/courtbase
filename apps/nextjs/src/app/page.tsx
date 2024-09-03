@@ -26,7 +26,7 @@ export default async function HomePage() {
 
   if (orgs.length === 1 && orgs[0]) {
     // Redirect to the single organization
-    return redirect(getOrgDashboardPath(orgs[0].slug));
+    return redirect(getOrgDashboardPath(orgs[0].id));
   }
 
   if (orgs.length > 1) {
@@ -36,7 +36,7 @@ export default async function HomePage() {
         <ul>
           {orgs.map((org) => (
             <li key={org.id}>
-              <Link href={getOrgDashboardPath(org.slug)} className="underline">
+              <Link href={getOrgDashboardPath(org.id)} className="underline">
                 {org.name}
               </Link>
             </li>

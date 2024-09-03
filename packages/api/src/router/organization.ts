@@ -20,15 +20,6 @@ export const organizationRouter = {
         .where("id", "=", input.id)
         .execute();
     }),
-  bySlug: protectedProcedure
-    .input(z.object({ slug: z.string() }))
-    .query(({ ctx, input }) => {
-      return ctx.kysely
-        .selectFrom("Organization")
-        .select("id")
-        .where("slug", "=", input.slug)
-        .executeTakeFirstOrThrow();
-    }),
   getAllByUser: protectedProcedure.query(async ({ ctx }) => {
     return ctx.kysely
       .selectFrom("Organization")
@@ -37,19 +28,13 @@ export const organizationRouter = {
         "Organization.id",
         "OrganizationMembers.organizationId",
       )
-      .select(["Organization.id", "Organization.name", "Organization.slug"])
+      .select(["Organization.id", "Organization.name"])
       .where("OrganizationMembers.userId", "=", ctx.session.user.id)
       .execute();
   }),
   create: protectedProcedure
     .input(OrganizationCreateModel)
     .mutation(async ({ ctx, input }) => {
-      const org = await ctx.kysely
-        .insertInto("Organization")
-        .values(input)
-        .returning(["id", "name", "slug"])
-        .executeTakeFirstOrThrow();
-
       if (!ctx.session.user.name) {
         // Todo: Make sure to collect name from user
         throw new TRPCError({
@@ -58,8 +43,13 @@ export const organizationRouter = {
         });
       }
 
-      const memberId = generateMemberId(ctx.session.user.name);
+      const org = await ctx.kysely
+        .insertInto("Organization")
+        .values(input)
+        .returning(["id", "name"])
+        .executeTakeFirstOrThrow();
 
+      const memberId = generateMemberId(ctx.session.user.name);
       await ctx.kysely
         .insertInto("OrganizationMembers")
         .values({
@@ -78,7 +68,7 @@ export const organizationRouter = {
       .innerJoin("User", "OrganizationMembers.userId", "User.id")
       .where("OrganizationMembers.designation", "=", "ADVOCATE")
       .where("OrganizationMembers.organizationId", "=", ctx.orgId)
-      .select(["User.id as id", "User.name as name"])
+      .select(["OrganizationMembers.memberId as id", "User.name as name"]) // TODO: Bring name to OrganizationMembers
       .execute()
       .then((results) => results.filter((result) => result.name != null))
       .then((results) => results as { id: string; name: string }[]);

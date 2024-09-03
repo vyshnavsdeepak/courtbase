@@ -28,10 +28,10 @@ const isomorphicGetSession = async (headers: Headers) => {
 };
 
 const extractOrgSlugFromHeaders = (headers: Headers) => {
-  return headers.get(headerKeys.orgSlug) ?? null;
+  return headers.get(headerKeys.orgId) ?? null;
 };
 
-const getUserInOrg = async (userId: string, orgSlug: string) => {
+const getUserInOrg = async (userId: string, orgId: string) => {
   try {
     const result = await kysely
       .selectFrom("Organization")
@@ -41,7 +41,7 @@ const getUserInOrg = async (userId: string, orgSlug: string) => {
         "OrganizationMembers.organizationId",
       )
       .select(["OrganizationMembers.role", "Organization.id"])
-      .where("Organization.slug", "=", orgSlug)
+      .where("Organization.id", "=", orgId)
       .where("OrganizationMembers.userId", "=", userId)
       .executeTakeFirstOrThrow();
 

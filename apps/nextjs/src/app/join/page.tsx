@@ -45,7 +45,7 @@ function CardWithForm() {
   const form = useForm({
     defaultValues: {
       name: "",
-      slug: "",
+      id: "",
     },
     schema: OrganizationCreateModel,
   });
@@ -53,7 +53,7 @@ function CardWithForm() {
   const createOrganization = api.organization.create.useMutation({
     onSuccess: async (data) => {
       await utils.organization.invalidate();
-      router.push(`/x/${data.slug}`);
+      router.push(`/x/${data.id}`);
     },
     onError: (err) => {
       setLoading(false);
@@ -70,9 +70,9 @@ function CardWithForm() {
 
   React.useEffect(() => {
     const subscription = form.watch((value, { name }) => {
-      if (name === "name" && !form.getFieldState("slug").isDirty) {
+      if (name === "name" && !form.getFieldState("id").isDirty) {
         const slug = slugify(value.name ?? "");
-        form.setValue("slug", slug);
+        form.setValue("id", slug);
       }
     });
 
@@ -116,7 +116,7 @@ function CardWithForm() {
                 <Label htmlFor="workspace_slug">Workspace Url</Label>
                 <FormField
                   control={form.control}
-                  name="slug"
+                  name="id"
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>

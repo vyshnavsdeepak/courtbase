@@ -29,7 +29,7 @@ export const api = createTRPCReact<AppRouter>();
 
 export function TRPCReactProvider(props: { children: React.ReactNode }) {
   const queryClient = getQueryClient();
-  const { orgSlug } = useOrg();
+  const { orgId } = useOrg();
 
   const createTrpcClient = (orgSlug: string | null) =>
     api.createClient({
@@ -46,7 +46,7 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
             const headers = new Headers();
             headers.set("x-trpc-source", "nextjs-react");
             if (orgSlug) {
-              headers.set(headerKeys.orgSlug, orgSlug);
+              headers.set(headerKeys.orgId, orgSlug);
             }
             return headers;
           },
@@ -54,11 +54,11 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
       ],
     });
 
-  const [trpcClient, setTrpcClient] = useState(() => createTrpcClient(orgSlug));
+  const [trpcClient, setTrpcClient] = useState(() => createTrpcClient(orgId));
 
   useEffect(() => {
-    setTrpcClient(createTrpcClient(orgSlug));
-  }, [orgSlug]);
+    setTrpcClient(createTrpcClient(orgId));
+  }, [orgId]);
 
   return (
     <QueryClientProvider client={queryClient}>

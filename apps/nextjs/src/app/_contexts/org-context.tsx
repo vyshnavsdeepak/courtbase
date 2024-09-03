@@ -4,17 +4,17 @@ import React, { createContext, useContext, useMemo } from "react";
 import { usePathname } from "next/navigation";
 
 interface OrgContextType {
-  orgSlug: string | null;
+  orgId: string | null;
 }
 
-const OrgContext = createContext<OrgContextType>({ orgSlug: null });
+const OrgContext = createContext<OrgContextType>({ orgId: null });
 
 export const OrgProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const pathname = usePathname();
 
-  const orgSlug =
+  const orgId =
     useMemo(() => {
       const segments = pathname.split("/");
       return segments.includes("x")
@@ -23,7 +23,7 @@ export const OrgProvider: React.FC<{ children: React.ReactNode }> = ({
     }, [pathname]) ?? null;
 
   return (
-    <OrgContext.Provider value={{ orgSlug }}>{children}</OrgContext.Provider>
+    <OrgContext.Provider value={{ orgId }}>{children}</OrgContext.Provider>
   );
 };
 
@@ -32,11 +32,11 @@ export const useOrg = () => {
 
   return {
     nonNull: () => {
-      if (!context.orgSlug) {
+      if (!context.orgId) {
         throw new Error("orgSlug is null");
       }
-      return context.orgSlug;
+      return context.orgId;
     },
-    orgSlug: context.orgSlug,
+    orgId: context.orgId,
   };
 };

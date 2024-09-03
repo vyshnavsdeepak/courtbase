@@ -19,10 +19,10 @@ export default auth((req) => {
 
     const segments = path.split("/");
     if (segments.includes("x")) {
-      const orgSlug = segments[segments.indexOf("x") + 1];
-      if (orgSlug) {
+      const orgId = segments[segments.indexOf("x") + 1];
+      if (orgId) {
         const headers = new Headers(req.headers);
-        headers.set(headerKeys.orgSlug, orgSlug);
+        headers.set(headerKeys.orgId, orgId);
         return NextResponse.next({
           request: {
             headers,
