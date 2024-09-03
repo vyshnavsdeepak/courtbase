@@ -11,7 +11,7 @@ export const env = createEnv({
     NODE_ENV: z
       .enum(["development", "production", "test"])
       .default("development"),
-    NEXT_RUNTIME: z.enum(["nodejs", "edge"]).default("nodejs"),
+    NEXT_RUNTIME: z.enum(["nodejs", "edge"]).default("edge"),
   },
   /**
    * Specify your server-side environment variables schema here.
@@ -34,7 +34,7 @@ export const env = createEnv({
    */
   experimental__runtimeEnv: {
     NODE_ENV: process.env.NODE_ENV,
-
+    NEXT_RUNTIME: process.env.NEXT_RUNTIME,
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
   skipValidation:
