@@ -114,6 +114,7 @@ export const OrganizationScalarFieldEnumSchema = z.enum(["id", "name", "slug"]);
 export const OrganizationMembersScalarFieldEnumSchema = z.enum([
   "organizationId",
   "userId",
+  "memberId",
   "role",
   "designation",
 ]);
@@ -420,6 +421,7 @@ export const OrganizationMembersSchema = z.object({
   designation: OrgDesignationSchema.nullish(),
   organizationId: z.string(),
   userId: z.string(),
+  memberId: z.string().nullish(),
 });
 
 export type OrganizationMembers = z.infer<typeof OrganizationMembersSchema>;
