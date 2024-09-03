@@ -1,6 +1,6 @@
 import { fileURLToPath } from "url";
-import createJiti from "jiti";
 import { withSentryConfig } from "@sentry/nextjs";
+import createJiti from "jiti";
 
 // Import env files to validate at build time. Use jiti so we can load .ts files in here.
 createJiti(fileURLToPath(import.meta.url))("./src/env");
@@ -78,5 +78,5 @@ export default withSentryConfig(
     // https://docs.sentry.io/product/crons/
     // https://vercel.com/docs/cron-jobs
     automaticVercelMonitors: true,
-  }
+  },
 );
