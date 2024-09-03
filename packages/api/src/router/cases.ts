@@ -1,8 +1,7 @@
 import type { TRPCRouterRecord } from "@trpc/server";
-import type { z } from "zod";
+import { sql } from "kysely";
 
-import type { AllCaseResponseSchema } from "../schemas/cases";
-import { AllCaseRequestSchema } from "../schemas/cases";
+import { AllCaseRequestSchema, AllCaseResponseSchema } from "../schemas/cases";
 // import type { Case } from "@court-base/db/types";
 import { orgProtectedProcedure } from "../trpc";
 import { getNextHearingDateFilter } from "../utils/cases-utils";
@@ -27,11 +26,12 @@ const casesRouter = {
 
       const query = ctx.kysely
         .selectFrom("Case")
-        .leftJoin("AdvocateCase", "Case.id", "AdvocateCase.caseId")
-        .leftJoin("Court", "Case.courtId", "Court.id")
-        .leftJoin("User", "AdvocateCase.advocateId", "User.id")
+        .innerJoin("AdvocateCase", "Case.id", "AdvocateCase.caseId")
+        .innerJoin("Court", "Case.courtId", "Court.id")
+        .innerJoin("User", "AdvocateCase.advocateId", "User.id")
         .select([
           "Case.id",
+          sql`ARRAY_AGG("User"."name")`.as("advocateNames"), // Aggregate advocate names
           "AdvocateCase.advocateId as advocateId",
           "User.name as advocateName",
           "crn",
@@ -50,6 +50,12 @@ const casesRouter = {
           "extraRespondents",
           "extraParties",
           "Case.updatedAt as updatedAt",
+        ])
+        .groupBy([
+          "AdvocateCase.advocateId",
+          "Case.id",
+          "User.name",
+          "Court.name",
         ])
         .where("Case.organizationId", "=", orgId)
         .$if(typeof nextHearingDate !== "undefined", (query) => {
@@ -84,8 +90,8 @@ const casesRouter = {
 
       // https://github.com/kysely-org/kysely/issues/1115
       // Then, use this schema to validate the result of your query
-      const result: z.infer<typeof AllCaseResponseSchema>[] =
-        await query.execute();
+      const queryResponse = await query.execute();
+      const result = AllCaseResponseSchema.parse(queryResponse);
       return {
         data: result,
       };

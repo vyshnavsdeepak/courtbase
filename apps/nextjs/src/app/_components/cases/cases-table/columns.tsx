@@ -6,7 +6,7 @@ import moment from "moment";
 
 import { AllCaseResponseSchema } from "@court-base/api/schemas/cases";
 
-const _CaseTableRowsSchema = AllCaseResponseSchema.pick({
+const _CaseTableRowsSchema = AllCaseResponseSchema.element.pick({
   crn: true,
   courtId: true,
   courtName: true,
@@ -15,8 +15,7 @@ const _CaseTableRowsSchema = AllCaseResponseSchema.pick({
   regYear: true,
   title: true,
   nextHearingDate: true,
-  advocateId: true,
-  advocateName: true,
+  advocateNames: true,
   updatedAt: true,
 });
 
@@ -63,10 +62,9 @@ export const columns: ColumnDef<CaseTableRows>[] = [
     },
   },
   {
-    accessorKey: "advocateId",
-    header: "Advocate",
+    header: "Advocate(s)",
     cell: ({ row }) => {
-      return row.original.advocateName;
+      return row.original.advocateNames.join(", ");
     },
   },
   {

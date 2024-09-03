@@ -56,12 +56,14 @@ const CaseSchema = z.object({
   extraParties: z.string().nullable(),
   updatedAt: z.date().nullable(),
 });
-// Extend the schema to include fields from AdvocateCase if necessary
-export const AllCaseResponseSchema = CaseSchema.extend({
-  advocateId: z.string().nullable(),
-  advocateName: z.string().nullable(),
+
+// Extend the schema to include fields from AdvocateCase
+const CaseSchemaExtended = CaseSchema.extend({
+  advocateNames: z.array(z.string()),
   courtName: z.string().nullable(),
 });
+
+export const AllCaseResponseSchema = CaseSchemaExtended.array();
 
 export type CasesResponseTypeComplete = RouterOutputs["cases"]["all"];
 export type CasesResponseType = CasesResponseTypeComplete["data"];
