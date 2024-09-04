@@ -49,9 +49,11 @@ export const importCaseByCourtComplex = inngest.createFunction(
         .where("complexId", "in", payload.courtComplexIds)
         .execute(),
       kysely
-        .selectFrom("User")
-        .select("name")
-        .where("id", "=", payload.advocateId)
+        .selectFrom("OrganizationMembers")
+        .innerJoin("User", "User.id", "OrganizationMembers.userId")
+        .select("User.name")
+        .where("OrganizationMembers.memberId", "=", payload.advocateId) // Remove this once we have user name in OrganizationMembers
+        .where("OrganizationMembers.organizationId", "=", identity.orgId)
         .executeTakeFirstOrThrow(),
     ]);
 

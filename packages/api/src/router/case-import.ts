@@ -20,6 +20,7 @@ export const caseImportRouter = {
         // TODO: Remove this join, as name is moved to OrganizationMembers table
         .select(["User.name as name"])
         .where("memberId", "=", advocateId)
+        .where("organizationId", "=", orgId)
         .executeTakeFirstOrThrow();
 
       const advocateName = advocate.name;
