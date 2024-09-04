@@ -1,13 +1,19 @@
 import React from "react";
 
+import { cn } from "@court-base/ui";
 import { Button } from "@court-base/ui/button";
 import { Icons } from "@court-base/ui/icons";
 
 import CaseImportDialogButton from "~/app/_components/cases/case-import-dialog-button";
 
-export default function EmptyCases() {
+export default function EmptyCases({ className }: { className?: string }) {
   return (
-    <div className="container flex flex-col items-center justify-center">
+    <div
+      className={cn(
+        "container flex flex-col items-center justify-center",
+        className,
+      )}
+    >
       <Icons.cases className="mb-4 h-16 w-16" />
       <h2 className="text-2xl font-semibold">Cases</h2>
       <p className="mt-2 text-center text-gray-400">

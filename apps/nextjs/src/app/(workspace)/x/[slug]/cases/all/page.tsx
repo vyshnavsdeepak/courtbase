@@ -32,7 +32,7 @@ const CasesMainComponent = ({ promises }: { promises: CasesPageData }) => {
   const { casesDataPromise, casesCountPromise } = promises;
   const casesCount = React.use(casesCountPromise);
   if (casesCount === 0) {
-    return <EmptyCases />;
+    return <EmptyCases className="h-full" />;
   }
   const casesData = React.use(casesDataPromise);
   return (
