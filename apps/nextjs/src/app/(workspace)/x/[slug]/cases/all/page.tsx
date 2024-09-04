@@ -14,40 +14,31 @@ import SidebarToggle from "~/app/_components/sidebar-toggle";
 import { api } from "~/trpc/server";
 
 interface CasesPageData {
-  casesData: CasesResponseTypeComplete;
-  casesCount: number;
+  casesDataPromise: Promise<CasesResponseTypeComplete>;
+  casesCountPromise: Promise<number>;
 }
 
-async function fetchCasesData(
-  searchParams: SearchParams,
-): Promise<CasesPageData> {
+function fetchCasesData(searchParams: SearchParams): CasesPageData {
   const qsParams = qs.parse(searchParams);
   const caseReqParams = AllCaseRequestSchema.parse(qsParams);
 
-  const [casesData, casesCount] = await Promise.all([
-    api.cases.all(caseReqParams),
-    api.cases.count(),
-  ]);
+  const casesDataPromise = api.cases.all(caseReqParams);
+  const casesCountPromise = api.cases.count();
 
-  return { casesData, casesCount };
+  return { casesDataPromise, casesCountPromise };
 }
 
-const CasesMainComponent = ({
-  promise,
-}: {
-  promise: Promise<CasesPageData>;
-}) => {
-  const { casesData, casesCount } = React.use(promise);
+const CasesMainComponent = ({ promises }: { promises: CasesPageData }) => {
+  const { casesDataPromise, casesCountPromise } = promises;
+  const casesCount = React.use(casesCountPromise);
+  if (casesCount === 0) {
+    return <EmptyCases />;
+  }
+  const casesData = React.use(casesDataPromise);
   return (
     <>
-      {casesCount > 0 ? (
-        <>
-          <DatePickerWithPresets />
-          <CaseTable columns={columns} data={casesData.data} />
-        </>
-      ) : (
-        <EmptyCases />
-      )}
+      <DatePickerWithPresets />
+      <CaseTable columns={columns} data={casesData.data} />
     </>
   );
 };
@@ -57,7 +48,7 @@ export default function CasesPage({
 }: {
   searchParams: SearchParams;
 }) {
-  const promise = fetchCasesData(searchParams);
+  const promises = fetchCasesData(searchParams);
   const key = qs.stringify(searchParams);
   return (
     <div className="flex h-full min-h-screen flex-col">
@@ -86,7 +77,7 @@ export default function CasesPage({
                 />
               }
             >
-              <CasesMainComponent promise={promise} />
+              <CasesMainComponent promises={promises} />
             </Suspense>
           </div>
         </div>
