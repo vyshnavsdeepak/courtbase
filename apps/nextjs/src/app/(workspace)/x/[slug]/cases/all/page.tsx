@@ -66,7 +66,7 @@ export default function CasesPage({
           <SidebarToggle className="lg:hidden" />
         </div>
         <div className="flex flex-1">
-          <div className="mt-2 flex max-w-full flex-col gap-4">
+          <div className="mt-2 flex w-full flex-col gap-4">
             <Suspense
               key={key}
               fallback={
