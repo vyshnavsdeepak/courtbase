@@ -14,10 +14,12 @@ export default function WorkspaceLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex min-h-screen">
+    <div className="flex h-screen border-collapse overflow-hidden">
       <SidebarProvider>
         <Sidebar />
-        <main className="flex-1">{children}</main>
+        <main className="flex-1 overflow-y-auto overflow-x-hidden bg-secondary/10">
+          {children}
+        </main>
       </SidebarProvider>
     </div>
   );

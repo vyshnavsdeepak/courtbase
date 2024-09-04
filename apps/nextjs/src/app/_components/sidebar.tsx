@@ -32,9 +32,9 @@ export default function Sidebar() {
   return (
     <aside
       ref={sidebarRef}
-      className={`absolute bottom-0 top-0 z-20 mx-auto flex w-72 flex-col bg-background transition-transform duration-300 lg:relative lg:translate-x-0 ${
+      className={`absolute z-50 h-screen w-72 border-r bg-background transition-transform duration-500 lg:relative ${
         isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-      }`}
+      } lg:translate-x-0`}
     >
       <div className="flex">
         <SidebarToggle className="md:hidden" />
