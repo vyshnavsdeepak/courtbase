@@ -39,7 +39,7 @@ export default function Sidebar() {
       <div className="flex">
         <SidebarToggle className="md:hidden" />
       </div>
-      <div className="mx-2 my-4 flex flex-1 flex-col justify-between">
+      <div className="flex h-full flex-1 flex-col justify-between px-2 py-4">
         <DashboardNav workspaceLinks={workspaceLinks} />
         <div className="flex items-center">
           <AccountDropdown
