@@ -8,9 +8,6 @@
     "build": {
       "dependsOn": ["db:generate"]
     },
-    "dev": {
-      "dependsOn": ["db:generate"]
-    },
     "db:generate": {
       "cache": false
     }
