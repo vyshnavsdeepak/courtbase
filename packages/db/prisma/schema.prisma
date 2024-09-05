@@ -156,7 +156,7 @@ model Case {
 
   organizationId String
 
-  Court        Court          @relation(fields: [courtId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "eCourtCase_courtId_court_id_fk")
+  Court        Court          @relation(fields: [courtId], references: [id], onDelete: NoAction, onUpdate: Cascade, map: "eCourtCase_courtId_court_id_fk")
   AdvocateCase AdvocateCase[] @relation(map: "advocateCase_caseId_case_id_fk")
 
   organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "case_organizationId_organization_id_fk")
