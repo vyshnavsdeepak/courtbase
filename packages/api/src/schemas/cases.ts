@@ -6,6 +6,8 @@ import type { Case } from "@court-base/db/types";
 type CaseField = keyof Case;
 const CaseAvailableSorts: [CaseField, ...CaseField[]] = ["nextHearingDate"]; // Add any other valid keys here
 
+export const allowedFilters = ["nextHearingDate"];
+
 export const zNextHearingDateSpan = z.enum([
   "today",
   "tomorrow",

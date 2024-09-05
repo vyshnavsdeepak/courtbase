@@ -7,6 +7,7 @@ import { DataTableSkeleton } from "@court-base/ui/data-table/data-table-skeleton
 
 import type { SearchParams } from "~/app/types";
 import { CaseTable } from "~/app/_components/cases/cases-table";
+import { ClearFiltersButton } from "~/app/_components/cases/cases-table/clear-filters";
 import { columns } from "~/app/_components/cases/cases-table/columns";
 import { DatePickerWithPresets } from "~/app/_components/cases/cases-table/date-range-picker";
 import EmptyCases from "~/app/_components/cases/empty-cases";
@@ -34,10 +35,14 @@ const CasesMainComponent = ({ promises }: { promises: CasesPageData }) => {
   if (casesCount === 0) {
     return <EmptyCases className="h-full" />;
   }
+
   const casesData = React.use(casesDataPromise);
   return (
     <>
-      <DatePickerWithPresets />
+      <div className="flex w-full items-center justify-between space-x-2 overflow-auto p-1">
+        <DatePickerWithPresets />
+        <ClearFiltersButton />
+      </div>
       <CaseTable columns={columns} data={casesData.data} />
     </>
   );
