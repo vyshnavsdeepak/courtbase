@@ -218,7 +218,7 @@ model Court {
   stateCode    String       @db.VarChar(2)
   districtCode String       @db.VarChar(2)
   district     District     @relation(fields: [stateCode, districtCode], references: [stateCode, districtCode], onDelete: NoAction, onUpdate: NoAction, map: "court_district_stateCode_districtCode_fk")
-  complex      CourtComplex @relation(fields: [complexId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "court_complexId_courtComplex_id_fk")
+  complex      CourtComplex @relation(fields: [complexId], references: [id], onDelete: NoAction, onUpdate: Cascade, map: "court_complexId_courtComplex_id_fk")
   cases        Case[]       @relation(map: "Case_courtId_court_id_fk")
 
   @@unique([stateCode, districtCode, courtCode], map: "court_stateCode_districtCode_courtCode_unique")
