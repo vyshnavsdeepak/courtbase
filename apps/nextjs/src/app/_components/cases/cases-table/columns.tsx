@@ -30,10 +30,14 @@ export const columns: ColumnDef<CaseTableRows>[] = [
   },
   {
     accessorKey: "crn",
-    header: "CRN",
+    header: () => <div className="hidden text-right md:block">CRN</div>,
+    cell: ({ row }) => {
+      return (
+        <div className="hidden text-right md:block">{row.original.crn}</div>
+      );
+    },
   },
   {
-    accessorKey: "courtId",
     header: "Court",
     cell: ({ row }) => {
       return row.original.courtName;
