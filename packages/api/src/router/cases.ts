@@ -28,10 +28,14 @@ const casesRouter = {
         .selectFrom("Case")
         .innerJoin("AdvocateCase", "Case.id", "AdvocateCase.caseId")
         .innerJoin("Court", "Case.courtId", "Court.id")
-        .innerJoin(
-          "OrganizationMembers",
-          "OrganizationMembers.memberId",
-          "AdvocateCase.advocateId",
+        .innerJoin("OrganizationMembers", (join) =>
+          join
+            .onRef(
+              "OrganizationMembers.memberId",
+              "=",
+              "AdvocateCase.advocateId",
+            )
+            .on("OrganizationMembers.organizationId", "=", orgId),
         )
         .innerJoin("User", "User.id", "OrganizationMembers.userId") // TODO: Remove this join, as name is moved to OrganizationMembers table
         .select([
