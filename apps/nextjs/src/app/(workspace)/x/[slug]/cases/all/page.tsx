@@ -30,12 +30,7 @@ function fetchCasesData(searchParams: SearchParams): CasesPageData {
 }
 
 const CasesMainComponent = ({ promises }: { promises: CasesPageData }) => {
-  const { casesDataPromise, casesCountPromise } = promises;
-  const casesCount = React.use(casesCountPromise);
-  if (casesCount === 0) {
-    return <EmptyCases className="h-full" />;
-  }
-
+  const { casesDataPromise } = promises;
   const casesData = React.use(casesDataPromise);
   return (
     <>
@@ -48,13 +43,15 @@ const CasesMainComponent = ({ promises }: { promises: CasesPageData }) => {
   );
 };
 
-export default function CasesPage({
+export default async function CasesPage({
   searchParams,
 }: {
   searchParams: SearchParams;
 }) {
   const promises = fetchCasesData(searchParams);
   const key = qs.stringify(searchParams);
+
+  const casesCount = await promises.casesCountPromise;
   return (
     <div className="flex h-full min-h-screen flex-col">
       <div className="flex flex-1 flex-col">
@@ -63,27 +60,31 @@ export default function CasesPage({
         </div>
         <div className="flex flex-1">
           <div className="mt-2 flex w-full flex-col gap-4">
-            <Suspense
-              key={key}
-              fallback={
-                <DataTableSkeleton
-                  columnCount={7}
-                  searchableColumnCount={1}
-                  filterableColumnCount={2}
-                  cellWidths={[
-                    "10rem",
-                    "10rem",
-                    "10rem",
-                    "20rem",
-                    "8rem",
-                    "8rem",
-                    "8rem",
-                  ]}
-                />
-              }
-            >
-              <CasesMainComponent promises={promises} />
-            </Suspense>
+            {casesCount > 0 ? (
+              <Suspense
+                key={key}
+                fallback={
+                  <DataTableSkeleton
+                    columnCount={7}
+                    searchableColumnCount={1}
+                    filterableColumnCount={2}
+                    cellWidths={[
+                      "10rem",
+                      "10rem",
+                      "10rem",
+                      "20rem",
+                      "8rem",
+                      "8rem",
+                      "8rem",
+                    ]}
+                  />
+                }
+              >
+                <CasesMainComponent promises={promises} />
+              </Suspense>
+            ) : (
+              <EmptyCases className="h-full" />
+            )}
           </div>
         </div>
       </div>
