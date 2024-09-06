@@ -130,7 +130,7 @@ enum AdvocateCaseSide {
 model Case {
   id                String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   crn               String    @db.VarChar(16)
-  courtId           String    @db.Uuid
+  courtId           String
   typeName          String    @db.VarChar(50) // eg. OP, OS, CC, MC
   number            String    @db.VarChar(4) // eg. 232
   regYear           String    @db.VarChar(4) // eg. 2021
@@ -199,7 +199,7 @@ model District {
 }
 
 model CourtComplex {
-  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id           String    @id
   name         String    @db.VarChar(255)
   stateCode    String
   districtCode String
@@ -211,10 +211,10 @@ model CourtComplex {
 }
 
 model Court {
-  id           String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id           String       @id
   courtCode    String       @db.VarChar(3) // court code is unique in a district
   name         String       @db.VarChar(255)
-  complexId    String       @db.Uuid
+  complexId    String
   stateCode    String       @db.VarChar(2)
   districtCode String       @db.VarChar(2)
   district     District     @relation(fields: [stateCode, districtCode], references: [stateCode, districtCode], onDelete: NoAction, onUpdate: NoAction, map: "court_district_stateCode_districtCode_fk")

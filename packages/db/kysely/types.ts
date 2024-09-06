@@ -71,7 +71,7 @@ export type CaseImportTask = {
   updatedAt: Timestamp | null;
 };
 export type Court = {
-  id: Generated<string>;
+  id: string;
   courtCode: string;
   name: string;
   complexId: string;
@@ -79,7 +79,7 @@ export type Court = {
   districtCode: string;
 };
 export type CourtComplex = {
-  id: Generated<string>;
+  id: string;
   name: string;
   stateCode: string;
   districtCode: string;
