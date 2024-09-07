@@ -29,17 +29,26 @@ function fetchCasesData(searchParams: SearchParams): CasesPageData {
   return { casesDataPromise, casesCountPromise };
 }
 
-const CasesMainComponent = ({ promises }: { promises: CasesPageData }) => {
+const CasesMainComponent = ({
+  children,
+  promises,
+}: {
+  children: React.ReactNode;
+  promises: CasesPageData;
+}) => {
   const { casesDataPromise } = promises;
   const casesData = React.use(casesDataPromise);
   return (
-    <>
-      <div className="flex w-full items-center justify-between space-x-2 overflow-auto p-1">
-        <DatePickerWithPresets />
-        <ClearFiltersButton />
+    <div className="flex flex-1 flex-col">
+      <div className="sticky top-0 z-10 bg-shade">
+        {children}
+        <div className="flex w-full items-center justify-between space-x-2 overflow-auto p-1">
+          <DatePickerWithPresets />
+          <ClearFiltersButton />
+        </div>
       </div>
       <CaseTable columns={columns} data={casesData.data} />
-    </>
+    </div>
   );
 };
 
@@ -54,38 +63,40 @@ export default async function CasesPage({
   const casesCount = await promises.casesCountPromise;
   return (
     <div className="flex h-full min-h-screen flex-col">
-      <div className="flex flex-1 flex-col">
-        <div>
-          <SidebarToggle className="lg:hidden" />
-        </div>
-        <div className="flex flex-1">
-          <div className="mt-2 flex w-full flex-col gap-4">
-            {casesCount > 0 ? (
-              <Suspense
-                key={key}
-                fallback={
-                  <DataTableSkeleton
-                    columnCount={7}
-                    searchableColumnCount={1}
-                    filterableColumnCount={2}
-                    cellWidths={[
-                      "10rem",
-                      "10rem",
-                      "10rem",
-                      "20rem",
-                      "8rem",
-                      "8rem",
-                      "8rem",
-                    ]}
-                  />
-                }
-              >
-                <CasesMainComponent promises={promises} />
-              </Suspense>
-            ) : (
+      <div className="flex flex-1">
+        <div className="mt-2 flex w-full flex-col gap-4">
+          {casesCount > 110 ? (
+            <Suspense
+              key={key}
+              fallback={
+                <DataTableSkeleton
+                  columnCount={7}
+                  searchableColumnCount={1}
+                  filterableColumnCount={2}
+                  cellWidths={[
+                    "10rem",
+                    "10rem",
+                    "10rem",
+                    "20rem",
+                    "8rem",
+                    "8rem",
+                    "8rem",
+                  ]}
+                />
+              }
+            >
+              <CasesMainComponent promises={promises}>
+                <SidebarToggle className="lg:hidden" />
+              </CasesMainComponent>
+            </Suspense>
+          ) : (
+            <div className="flex h-full flex-col">
+              <div>
+                <SidebarToggle className="lg:hidden" />
+              </div>
               <EmptyCases className="h-full" />
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
