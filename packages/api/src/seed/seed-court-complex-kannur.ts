@@ -1,5 +1,7 @@
 import { kysely } from "@court-base/db";
 
+import { slugifyCourtName } from "../utils/courts-utils";
+
 interface Court {
   courtName: string;
   courtCode: string;
@@ -149,6 +151,7 @@ async function seed() {
       .insertInto("CourtComplex")
       .values(
         courtComplexes.map((name) => ({
+          id: slugifyCourtName(name),
           name,
           stateCode: stateData.code,
           districtCode: districtData.code,
@@ -164,13 +167,15 @@ async function seed() {
       }
 
       return courts.map((courtCode) => {
-        if (courtByCode[courtCode] == undefined) {
+        const courtName = courtByCode[courtCode];
+        if (courtName == undefined) {
           throw new Error(`No court found for code ${courtCode}`);
         }
 
         return {
+          id: slugifyCourtName(courtName),
           courtCode,
-          name: courtByCode[courtCode],
+          name: courtName,
           complexId: complex.id,
           stateCode: stateData.code,
           districtCode: districtData.code,
