@@ -4,6 +4,7 @@ import {
   importCaseByCourtComplex,
   importCaseByCourtComplexOnCron,
 } from "./functions/case-import";
+import { importCaseByCaseNo } from "./functions/case-import-by-case-no";
 import { ecourtAPI } from "./functions/ecourt";
 import { helloWorld } from "./functions/hello-world";
 import { refreshEcourtCases } from "./functions/refresh-ecourt-cases";
@@ -14,6 +15,7 @@ export const { GET, POST, PUT } = serve({
   functions: [
     helloWorld,
     ecourtAPI,
+    importCaseByCaseNo,
     importCaseByCourtComplex,
     importCaseByCourtComplexOnCron,
     refreshEcourtCases,

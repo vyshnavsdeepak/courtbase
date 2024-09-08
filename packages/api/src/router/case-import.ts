@@ -1,8 +1,12 @@
 import type { TRPCRouterRecord } from "@trpc/server";
+import { TRPCError } from "@trpc/server";
 
 import { inngest } from "@court-base/event-funnel";
 
-import { CreateCaseImportTaskParamsSchema } from "../models";
+import {
+  CreateCaseImportTaskParamsSchema,
+  ImportByCaseNumberParamsSchema,
+} from "../models";
 import { orgProtectedProcedure } from "../trpc";
 
 export const caseImportRouter = {
@@ -10,7 +14,6 @@ export const caseImportRouter = {
     .input(CreateCaseImportTaskParamsSchema)
     .mutation(async ({ ctx, input }) => {
       const courtComplexIds = input.courtComplexIds;
-      const userId = ctx.session.user.id;
       const orgId = ctx.orgId;
       const advocateId = input.advocateId;
 
@@ -38,7 +41,7 @@ export const caseImportRouter = {
           advocateId,
           caseStatus: input.status,
           taskStatus: "PENDING",
-          created_by: userId,
+          created_by: ctx.memberId,
         })
         .returning("id")
         .executeTakeFirstOrThrow()
@@ -80,4 +83,93 @@ export const caseImportRouter = {
       .select(["id", "taskStatus", "caseStatus", "created_at"])
       .execute();
   }),
+  importJobsByCaseNumber: orgProtectedProcedure.query(async ({ ctx }) => {
+    return ctx.kysely
+      .selectFrom("ManualCaseImportTask")
+      .select([
+        "id",
+        "caseType",
+        "number",
+        "regYear",
+        "response",
+        "districtCourtId",
+        "createdBy",
+        "createdAt",
+      ])
+      .where("organizationId", "=", ctx.orgId)
+      .execute();
+  }),
+  importByCaseNumber: orgProtectedProcedure
+    .input(ImportByCaseNumberParamsSchema)
+    .mutation(async ({ ctx, input }) => {
+      console.log("importByCaseNumber", input);
+      const { districtCourtId, caseNumber } = input;
+      const { number, caseTypeId, regYear } = caseNumber;
+
+      try {
+        const [districtCourt, caseType] = await Promise.all([
+          ctx.kysely
+            .selectFrom("DistrictCourt")
+            .innerJoin("State", "State.stateCode", "DistrictCourt.stateCode")
+            .select([
+              "State.highCourtId",
+              "State.stateCode",
+              "DistrictCourt.districtCode",
+              "DistrictCourt.courtCode",
+            ])
+            .where("DistrictCourt.id", "=", districtCourtId)
+            .executeTakeFirstOrThrow(),
+          ctx.kysely
+            .selectFrom("CaseType")
+            .where("id", "=", caseTypeId)
+            .select("code")
+            .executeTakeFirstOrThrow(),
+        ]);
+
+        const highCourtId = districtCourt.highCourtId;
+        const caseTypeCode = caseType.code;
+
+        const insertRes = await ctx.kysely
+          .insertInto("ManualCaseImportTask")
+          .values({
+            organizationId: ctx.orgId,
+            highCourtId,
+            caseType: caseTypeCode,
+            number,
+            regYear,
+            districtCourtId,
+            createdBy: ctx.memberId,
+          })
+          .returning("id")
+          .executeTakeFirstOrThrow();
+
+        await inngest.send({
+          name: "app/case-import-by-case-no",
+          data: {
+            payload: {
+              caseNumber: {
+                typeCode: caseTypeCode,
+                number,
+                regYear,
+              },
+              districtCode: districtCourt.districtCode,
+              stateCode: districtCourt.stateCode,
+              courtCode: districtCourt.courtCode,
+            },
+            identity: {
+              orgId: ctx.orgId,
+            },
+            tracking: {
+              caseImportTaskId: insertRes.id,
+            },
+          },
+        });
+      } catch (e) {
+        console.error(e);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: (e as Error).message || "An error occurred",
+        });
+      }
+    }),
 } satisfies TRPCRouterRecord;

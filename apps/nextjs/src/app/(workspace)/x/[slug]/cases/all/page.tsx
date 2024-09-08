@@ -13,6 +13,7 @@ import { columns } from "~/app/_components/cases/cases-table/columns";
 import { DatePickerWithPresets } from "~/app/_components/cases/cases-table/date-range-picker";
 import EmptyCases from "~/app/_components/cases/empty-cases";
 import ManualCaseImportDialogButton from "~/app/_components/cases/manual-case-import";
+import { ManualCaseImportJobs } from "~/app/_components/cases/manual-case-import-jobs";
 import SidebarToggle from "~/app/_components/sidebar-toggle";
 import { api } from "~/trpc/server";
 
@@ -54,8 +55,10 @@ const CasesMainComponent = ({
           </ManualCaseImportDialogButton>
         </div>
       </div>
-
-      <CaseTable columns={columns} data={casesData.data} />
+      <div className="flex flex-col">
+        <ManualCaseImportJobs />
+        <CaseTable columns={columns} data={casesData.data} />
+      </div>
     </div>
   );
 };

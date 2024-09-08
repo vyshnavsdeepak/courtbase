@@ -101,6 +101,21 @@ export type HighCourt = {
   id: string;
   name: string;
 };
+export type ManualCaseImportTask = {
+  id: Generated<string>;
+  highCourtId: string;
+  caseType: string;
+  number: string;
+  regYear: string;
+  districtCourtId: string;
+  importStatus: Generated<CaseImportTaskStatus>;
+  caseId: string | null;
+  createdBy: string;
+  response: unknown | null;
+  createdAt: Generated<Timestamp>;
+  updatedAt: Timestamp | null;
+  organizationId: string;
+};
 export type Organization = {
   id: string;
   name: string;
@@ -151,6 +166,7 @@ export type DB = {
   District: District;
   DistrictCourt: DistrictCourt;
   HighCourt: HighCourt;
+  ManualCaseImportTask: ManualCaseImportTask;
   Organization: Organization;
   OrganizationMembers: OrganizationMembers;
   Post: Post;

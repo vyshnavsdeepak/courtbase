@@ -17,3 +17,16 @@ export const CaseHistoryParamsSchema = z.object({
 });
 
 export type CaseHistoryParams = z.infer<typeof CaseHistoryParamsSchema>;
+
+export const DistrictCourtCaseByCaseNoParamsSchema = z.object({
+  state_code: z.string(),
+  dist_code: z.string(),
+  court_code: z.string(),
+  case_type: z.string(),
+  case_number: z.string(),
+  year: z.string(),
+});
+
+export type DistrictCourtCaseByCaseNoParams = z.infer<
+  typeof DistrictCourtCaseByCaseNoParamsSchema
+>;

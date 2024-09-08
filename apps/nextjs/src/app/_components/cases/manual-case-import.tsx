@@ -5,7 +5,7 @@ import React, { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 
-import { CreateManualCaseImportTaskParamsSchema } from "@court-base/api/models";
+import { ImportByCaseNumberParamsSchema } from "@court-base/api/models";
 import { Button } from "@court-base/ui/button";
 import { Combobox } from "@court-base/ui/combobox";
 import {
@@ -16,8 +16,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@court-base/ui/dialog";
+import { toast } from "@court-base/ui/toast";
 
 import { api } from "~/trpc/react";
+import ErrorDisplay from "../ErrorDisplay";
 import CaseNumberInput from "./case-number-input";
 
 export default function ManualCaseImportDialogButton(props: {
@@ -40,15 +42,18 @@ export default function ManualCaseImportDialogButton(props: {
   );
 }
 
-type FormData = z.infer<typeof CreateManualCaseImportTaskParamsSchema>;
+type FormData = z.infer<typeof ImportByCaseNumberParamsSchema>;
 
-function ManualCaseImportDialog({ close: _close }: { close: () => void }) {
+function ManualCaseImportDialog({ close }: { close: () => void }) {
   const {
     control,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<FormData>({
-    resolver: zodResolver(CreateManualCaseImportTaskParamsSchema),
+    resolver: zodResolver(ImportByCaseNumberParamsSchema),
+    defaultValues: {
+      caseNumber: {},
+    },
   });
   const [selectedStateCode, setSelectedStateCode] = useState<string | null>(
     null,
@@ -56,6 +61,7 @@ function ManualCaseImportDialog({ close: _close }: { close: () => void }) {
   const [selectedDistrictCode, setSelectedDistrictCode] = useState<
     string | null
   >(null);
+  const apiUtils = api.useUtils();
   const { data: statesSource, isLoading: statesLoading } =
     api.court.states.useQuery();
   const states = statesLoading
@@ -105,25 +111,27 @@ function ManualCaseImportDialog({ close: _close }: { close: () => void }) {
         { id: "", label: "Select a state to load case types." },
       ]);
 
-  // const { mutate: createCaseImportTask } = api.caseImport.create.useMutation({
-  //   onSuccess: () => {
-  //     console.log("Case import task created successfully");
-  //     toast.info("Case import task created successfully");
-  //     close();
-  //   },
-  //   onError: (err) => {
-  //     console.error("Failed to create case import task", err);
-  //     const messages = err.data?.zodError?.formErrors;
-  //     if (messages) {
-  //       toast.error(messages.join("\n"));
-  //     } else {
-  //       toast.error("Failed to create case import task");
-  //     }
-  //   },
-  // });
+  const { mutate: createCaseImportTask } =
+    api.caseImport.importByCaseNumber.useMutation({
+      onSuccess: () => {
+        console.log("Case import task created successfully");
+        toast.info("Case import task created successfully");
+        void apiUtils.caseImport.importJobsByCaseNumber.refetch();
+        close();
+      },
+      onError: (err) => {
+        console.error("Failed to create case import task", err);
+        const messages = err.data?.zodError?.formErrors;
+        if (messages) {
+          toast.error(messages.join("\n"));
+        } else {
+          toast.error("Failed to create case import task");
+        }
+      },
+    });
 
-  const onSubmit = (_data: FormData) => {
-    // createCaseImportTask(data);
+  const onSubmit = (data: FormData) => {
+    createCaseImportTask(data);
   };
 
   return (
@@ -187,21 +195,23 @@ function ManualCaseImportDialog({ close: _close }: { close: () => void }) {
                   value: caseType.id,
                   label: caseType.label,
                 }))}
-                onChange={field.onChange}
+                onChange={(value) => {
+                  field.onChange({
+                    target: {
+                      value: {
+                        caseTypeId: value.typeName,
+                        number: value.number,
+                        regYear: value.regYear,
+                      },
+                    },
+                  });
+                }}
                 disabled={!selectedStateCode}
               />
             )}
           />
         </div>
-        <div className="flex flex-col">
-          {Object.keys(errors).length > 0 && (
-            <div className="text-destructive">
-              {Object.values(errors).map((error) => (
-                <div key={error.message}>{error.message}</div>
-              ))}
-            </div>
-          )}
-        </div>
+        <ErrorDisplay errors={errors} />
         <Button type="submit" disabled={isSubmitting}>
           {isSubmitting ? "Submitting..." : "Import"}
         </Button>

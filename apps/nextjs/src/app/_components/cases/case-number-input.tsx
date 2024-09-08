@@ -23,6 +23,7 @@ const CaseNumberInput = ({
 
   const handleCaseTypeChange = (value: string) => {
     setTypeName(value);
+    onChange({ typeName: value, number, regYear });
   };
 
   const handleCaseRegNoChange = (
@@ -30,16 +31,14 @@ const CaseNumberInput = ({
   ) => {
     const newRegNo = event.target.value;
     setNumber(newRegNo);
+    onChange({ typeName, number: newRegNo, regYear });
   };
 
   const handleYearChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newYear = event.target.value;
     setRegYear(newYear);
+    onChange({ typeName, number, regYear: newYear });
   };
-
-  React.useEffect(() => {
-    onChange({ typeName, number, regYear });
-  }, [typeName, number, regYear, onChange]);
 
   return (
     <div className="flex flex-col space-y-4">

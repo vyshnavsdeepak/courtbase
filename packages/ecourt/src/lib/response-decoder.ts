@@ -19,8 +19,12 @@ function decodeResponse<T>(result: string): T {
     // remove non-printable and other non-valid JSON chars
     // eslint-disable-next-line no-control-regex
     .replace(/[\u0000-\u0019]+/g, "");
-
-  return JSON.parse(s) as T;
+  try {
+    return JSON.parse(s) as T;
+  } catch (e) {
+    console.error(e);
+    throw new Error("[decodeResponse] Failed to parse response");
+  }
 }
 
 export { decodeResponse };

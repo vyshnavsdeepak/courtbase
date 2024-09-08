@@ -91,6 +91,8 @@ model Organization {
   Case                Case[]
   AdvocateCase        AdvocateCase[]
   CaseImportTask      CaseImportTask[]
+
+  ManualCaseImportTask ManualCaseImportTask[] @relation(map: "manualCaseImportTask_organizationId_organization_id_fk")
 }
 
 enum OrgDesignation {
@@ -114,8 +116,9 @@ model OrganizationMembers {
   organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "organizationMembers_organizationId_organization_id_fk")
 
   // Only OrgDesignation.ADVOCATE will have AdvocateCase and CaseImportTask
-  AdvocateCase   AdvocateCase[]
-  CaseImportTask CaseImportTask[]
+  AdvocateCase         AdvocateCase[]
+  CaseImportTask       CaseImportTask[]
+  ManualCaseImportTask ManualCaseImportTask[]
 
   @@id([organizationId, memberId], map: "organizationMembers_organizationId_memberId_pk")
   @@unique([organizationId, userId], map: "organizationMembers_organizationId_userId_unique")
@@ -160,7 +163,8 @@ model Case {
   DistrictCourt DistrictCourt  @relation(fields: [courtId], references: [id], onDelete: NoAction, onUpdate: Cascade, map: "eCourtCase_courtId_districtcourt_id_fk")
   AdvocateCase  AdvocateCase[] @relation(map: "advocateCase_caseId_case_id_fk")
 
-  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "case_organizationId_organization_id_fk")
+  organization         Organization           @relation(fields: [organizationId], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "case_organizationId_organization_id_fk")
+  ManualCaseImportTask ManualCaseImportTask[]
 
   // to lookup case by case number of type OP/232/2021, we need to have a unique constraint on typeName, caseNo, caseRegYear per court per organization
   @@unique([organizationId, typeName, number, regYear, courtId], map: "case_organization_typeName_number_regYear_courtId_unique")
@@ -215,15 +219,16 @@ model CourtComplex {
 }
 
 model DistrictCourt {
-  id           String       @id
-  courtCode    String       @db.VarChar(3) // court code is unique in a district
-  name         String       @db.VarChar(255)
-  complexId    String
-  stateCode    String       @db.VarChar(2)
-  districtCode String       @db.VarChar(2)
-  district     District     @relation(fields: [stateCode, districtCode], references: [stateCode, districtCode], onDelete: NoAction, onUpdate: NoAction, map: "court_district_stateCode_districtCode_fk")
-  complex      CourtComplex @relation(fields: [complexId], references: [id], onDelete: NoAction, onUpdate: Cascade, map: "court_complexId_courtComplex_id_fk")
-  cases        Case[]       @relation(map: "Case_courtId_court_id_fk")
+  id                   String                 @id
+  courtCode            String                 @db.VarChar(3) // court code is unique in a district
+  name                 String                 @db.VarChar(255)
+  complexId            String
+  stateCode            String                 @db.VarChar(2)
+  districtCode         String                 @db.VarChar(2)
+  district             District               @relation(fields: [stateCode, districtCode], references: [stateCode, districtCode], onDelete: NoAction, onUpdate: NoAction, map: "court_district_stateCode_districtCode_fk")
+  complex              CourtComplex           @relation(fields: [complexId], references: [id], onDelete: NoAction, onUpdate: Cascade, map: "court_complexId_courtComplex_id_fk")
+  cases                Case[]                 @relation(map: "Case_courtId_court_id_fk")
+  ManualCaseImportTask ManualCaseImportTask[] @relation(map: "manualCaseImportTask_districtCourtId_districtcourt_id_fk")
 
   @@unique([stateCode, districtCode, courtCode], map: "districtcourt_stateCode_districtCode_courtCode_unique")
 }
@@ -237,11 +242,12 @@ model HighCourt {
 }
 
 model CaseType {
-  id          String    @id
-  label       String    @db.VarChar(255)
-  code        String    @db.VarChar(50)
-  highCourtId String
-  highCourt   HighCourt @relation(fields: [highCourtId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  id                   String                 @id
+  label                String                 @db.VarChar(255)
+  code                 String                 @db.VarChar(50)
+  highCourtId          String
+  highCourt            HighCourt              @relation(fields: [highCourtId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  ManualCaseImportTask ManualCaseImportTask[]
 
   @@unique([highCourtId, code])
 }
@@ -251,6 +257,39 @@ enum CaseImportTaskStatus {
   IN_PROGRESS
   COMPLETED
   FAILED
+}
+
+model ManualCaseImportTask {
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+  highCourtId     String
+  // typeName is eg. OP, OS, CC; should be infered from caseTypeCode
+  caseType        String
+  number          String        @db.VarChar(4) // eg. 232
+  regYear         String        @db.VarChar(4) // eg. 2021
+  CaseType        CaseType      @relation(fields: [highCourtId, caseType], references: [highCourtId, code], onDelete: NoAction, onUpdate: Cascade)
+  // typeName/number/regYear is unique in a court = eg. OP/232/2021
+  districtCourtId String
+  districtCourt   DistrictCourt @relation(fields: [districtCourtId], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "manualCaseImportTask_districtCourtId_districtcourt_id_fk")
+
+  importStatus CaseImportTaskStatus @default(PENDING)
+
+  caseId String? @db.Uuid
+  case   Case?   @relation(fields: [caseId], references: [id], onDelete: NoAction, onUpdate: Cascade)
+
+  createdBy String
+  creator   OrganizationMembers @relation(fields: [createdBy, organizationId], references: [memberId, organizationId], onDelete: NoAction, onUpdate: Cascade)
+
+  response Json?
+
+  createdAt DateTime  @default(now()) @db.Timestamp(6)
+  updatedAt DateTime? @db.Timestamptz(6)
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "manualCaseImportTask_organizationId_organization_id_fk")
+
+  @@unique([organizationId, highCourtId, caseType, number, regYear, districtCourtId])
+  @@index([organizationId, importStatus], map: "manualCaseImportTask_organizationId_importStatus_idx")
 }
 
 model CaseImportTask {

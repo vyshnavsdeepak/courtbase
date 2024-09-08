@@ -40,12 +40,17 @@ const getUserInOrg = async (userId: string, orgId: string) => {
         "Organization.id",
         "OrganizationMembers.organizationId",
       )
-      .select(["OrganizationMembers.role", "Organization.id"])
+      .select([
+        "OrganizationMembers.role",
+        "Organization.id",
+        "OrganizationMembers.memberId",
+      ])
       .where("Organization.id", "=", orgId)
       .where("OrganizationMembers.userId", "=", userId)
       .executeTakeFirstOrThrow();
 
     return {
+      memberId: result.memberId,
       role: result.role,
       orgId: result.id,
     };
@@ -200,6 +205,7 @@ export const orgProtectedProcedure = t.procedure
         session: { ...ctx.session, user: ctx.session.user },
         userRole: orgUser.role,
         orgId: orgUser.orgId,
+        memberId: orgUser.memberId,
       },
     });
   });
