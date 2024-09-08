@@ -27,7 +27,7 @@ const casesRouter = {
       const query = ctx.kysely
         .selectFrom("Case")
         .innerJoin("AdvocateCase", "Case.id", "AdvocateCase.caseId")
-        .innerJoin("Court", "Case.courtId", "Court.id")
+        .innerJoin("DistrictCourt", "Case.courtId", "DistrictCourt.id")
         .innerJoin("OrganizationMembers", (join) =>
           join
             .onRef(
@@ -43,7 +43,7 @@ const casesRouter = {
           sql`ARRAY_AGG("User"."name")`.as("advocateNames"), // Aggregate advocate names
           "crn",
           "Case.courtId",
-          "Court.name as courtName",
+          "DistrictCourt.name as courtName",
           "typeName",
           "number",
           "regYear",
@@ -58,7 +58,7 @@ const casesRouter = {
           "extraParties",
           "Case.updatedAt as updatedAt",
         ])
-        .groupBy(["Case.id", "Court.name"])
+        .groupBy(["Case.id", "DistrictCourt.name"])
         .where("Case.organizationId", "=", orgId)
         .$if(typeof nextHearingDate !== "undefined", (query) => {
           if (!nextHearingDate) {

@@ -170,7 +170,7 @@ export const CourtComplexScalarFieldEnumSchema = z.enum([
   "updatedAt",
 ]);
 
-export const CourtScalarFieldEnumSchema = z.enum([
+export const DistrictCourtScalarFieldEnumSchema = z.enum([
   "id",
   "courtCode",
   "name",
@@ -486,7 +486,7 @@ export type Case = z.infer<typeof CaseSchema>;
 //------------------------------------------------------
 
 export type CaseRelations = {
-  Court: CourtWithRelations;
+  DistrictCourt: DistrictCourtWithRelations;
   AdvocateCase: AdvocateCaseWithRelations[];
   organization: OrganizationWithRelations;
 };
@@ -496,7 +496,7 @@ export type CaseWithRelations = z.infer<typeof CaseSchema> & CaseRelations;
 export const CaseWithRelationsSchema: z.ZodType<CaseWithRelations> =
   CaseSchema.merge(
     z.object({
-      Court: z.lazy(() => CourtWithRelationsSchema),
+      DistrictCourt: z.lazy(() => DistrictCourtWithRelationsSchema),
       AdvocateCase: z.lazy(() => AdvocateCaseWithRelationsSchema).array(),
       organization: z.lazy(() => OrganizationWithRelationsSchema),
     }),
@@ -583,7 +583,7 @@ export type District = z.infer<typeof DistrictSchema>;
 export type DistrictRelations = {
   state: StateWithRelations;
   CourtComplex: CourtComplexWithRelations[];
-  Court: CourtWithRelations[];
+  DistrictCourt: DistrictCourtWithRelations[];
 };
 
 export type DistrictWithRelations = z.infer<typeof DistrictSchema> &
@@ -594,7 +594,7 @@ export const DistrictWithRelationsSchema: z.ZodType<DistrictWithRelations> =
     z.object({
       state: z.lazy(() => StateWithRelationsSchema),
       CourtComplex: z.lazy(() => CourtComplexWithRelationsSchema).array(),
-      Court: z.lazy(() => CourtWithRelationsSchema).array(),
+      DistrictCourt: z.lazy(() => DistrictCourtWithRelationsSchema).array(),
     }),
   );
 
@@ -618,7 +618,7 @@ export type CourtComplex = z.infer<typeof CourtComplexSchema>;
 
 export type CourtComplexRelations = {
   district: DistrictWithRelations;
-  Court: CourtWithRelations[];
+  DistrictCourt: DistrictCourtWithRelations[];
 };
 
 export type CourtComplexWithRelations = z.infer<typeof CourtComplexSchema> &
@@ -628,15 +628,15 @@ export const CourtComplexWithRelationsSchema: z.ZodType<CourtComplexWithRelation
   CourtComplexSchema.merge(
     z.object({
       district: z.lazy(() => DistrictWithRelationsSchema),
-      Court: z.lazy(() => CourtWithRelationsSchema).array(),
+      DistrictCourt: z.lazy(() => DistrictCourtWithRelationsSchema).array(),
     }),
   );
 
 /////////////////////////////////////////
-// COURT SCHEMA
+// DISTRICT COURT SCHEMA
 /////////////////////////////////////////
 
-export const CourtSchema = z.object({
+export const DistrictCourtSchema = z.object({
   id: z.string(),
   courtCode: z.string(),
   name: z.string(),
@@ -645,21 +645,22 @@ export const CourtSchema = z.object({
   districtCode: z.string(),
 });
 
-export type Court = z.infer<typeof CourtSchema>;
+export type DistrictCourt = z.infer<typeof DistrictCourtSchema>;
 
-// COURT RELATION SCHEMA
+// DISTRICT COURT RELATION SCHEMA
 //------------------------------------------------------
 
-export type CourtRelations = {
+export type DistrictCourtRelations = {
   district: DistrictWithRelations;
   complex: CourtComplexWithRelations;
   cases: CaseWithRelations[];
 };
 
-export type CourtWithRelations = z.infer<typeof CourtSchema> & CourtRelations;
+export type DistrictCourtWithRelations = z.infer<typeof DistrictCourtSchema> &
+  DistrictCourtRelations;
 
-export const CourtWithRelationsSchema: z.ZodType<CourtWithRelations> =
-  CourtSchema.merge(
+export const DistrictCourtWithRelationsSchema: z.ZodType<DistrictCourtWithRelations> =
+  DistrictCourtSchema.merge(
     z.object({
       district: z.lazy(() => DistrictWithRelationsSchema),
       complex: z.lazy(() => CourtComplexWithRelationsSchema),

@@ -92,7 +92,7 @@ export const backfillCourtComplexRemoveUuid = async () => {
 };
 
 const backFillCourts = async () => {
-  const courts = await kysely.selectFrom("Court").selectAll().execute();
+  const courts = await kysely.selectFrom("DistrictCourt").selectAll().execute();
   // console.log(courts);
   // fs.writeFileSync("courts-prod.json", JSON.stringify(courts, null, 2));
   await Promise.all(
@@ -107,7 +107,7 @@ const backFillCourts = async () => {
       });
       console.log({ id });
       await kysely
-        .updateTable("Court")
+        .updateTable("DistrictCourt")
         .set({ id })
         .where("id", "=", court.id)
         .execute();

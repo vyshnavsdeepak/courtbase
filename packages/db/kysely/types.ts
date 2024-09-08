@@ -70,14 +70,6 @@ export type CaseImportTask = {
   created_at: Generated<Timestamp>;
   updatedAt: Timestamp | null;
 };
-export type Court = {
-  id: string;
-  courtCode: string;
-  name: string;
-  complexId: string;
-  stateCode: string;
-  districtCode: string;
-};
 export type CourtComplex = {
   id: string;
   name: string;
@@ -88,6 +80,14 @@ export type CourtComplex = {
 };
 export type District = {
   name: string;
+  stateCode: string;
+  districtCode: string;
+};
+export type DistrictCourt = {
+  id: string;
+  courtCode: string;
+  name: string;
+  complexId: string;
   stateCode: string;
   districtCode: string;
 };
@@ -135,9 +135,9 @@ export type DB = {
   AdvocateCase: AdvocateCase;
   Case: Case;
   CaseImportTask: CaseImportTask;
-  Court: Court;
   CourtComplex: CourtComplex;
   District: District;
+  DistrictCourt: DistrictCourt;
   Organization: Organization;
   OrganizationMembers: OrganizationMembers;
   Post: Post;

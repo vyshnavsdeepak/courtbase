@@ -184,7 +184,10 @@ async function seed() {
     });
 
     const flatComplexToCourts = complexToCourts.flat();
-    await kysely.insertInto("Court").values(flatComplexToCourts).execute();
+    await kysely
+      .insertInto("DistrictCourt")
+      .values(flatComplexToCourts)
+      .execute();
   } catch (error: unknown) {
     console.error("Error seeding database:", error);
   } finally {

@@ -44,7 +44,7 @@ export const importCaseByCourtComplex = inngest.createFunction(
     const identity = event.data.identity;
     const [courts, advocate] = await Promise.all([
       kysely
-        .selectFrom("Court")
+        .selectFrom("DistrictCourt")
         .select(["id", "courtCode", "stateCode", "districtCode"])
         .where("complexId", "in", payload.courtComplexIds)
         .execute(),
