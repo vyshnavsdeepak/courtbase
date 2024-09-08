@@ -26,7 +26,6 @@ interface ComboboxProps {
   disabled?: boolean;
   allowDeselect?: boolean;
 }
-
 export const Combobox: React.FC<ComboboxProps> = ({
   items,
   placeholder = "Select an item...",
@@ -36,6 +35,7 @@ export const Combobox: React.FC<ComboboxProps> = ({
 }) => {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("");
+  const [searchQuery, setSearchQuery] = React.useState("");
   const buttonRef = React.useRef<HTMLButtonElement>(null);
   const [popoverWidth, setPopoverWidth] = React.useState<string | number>(
     "auto",
@@ -61,6 +61,10 @@ export const Combobox: React.FC<ComboboxProps> = ({
     }
   };
 
+  const filteredItems = items.filter((item) =>
+    item.label.toLowerCase().includes(searchQuery.toLowerCase()),
+  );
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -84,11 +88,15 @@ export const Combobox: React.FC<ComboboxProps> = ({
         portal={false}
       >
         <Command>
-          <CommandInput placeholder="Search..." />
+          <CommandInput
+            placeholder="Search..."
+            value={searchQuery}
+            onValueChange={setSearchQuery}
+          />
           <CommandEmpty>No item found.</CommandEmpty>
           <CommandList>
             <CommandGroup>
-              {items.map((item) => (
+              {filteredItems.map((item) => (
                 <CommandItem
                   key={item.value}
                   value={item.value}
