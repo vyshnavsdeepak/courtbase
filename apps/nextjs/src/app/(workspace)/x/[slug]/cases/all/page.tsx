@@ -65,7 +65,7 @@ export default async function CasesPage({
     <div className="flex h-full min-h-screen flex-col">
       <div className="flex flex-1">
         <div className="mt-2 flex w-full flex-col gap-4">
-          {casesCount > 110 ? (
+          {casesCount > 0 ? (
             <Suspense
               key={key}
               fallback={
