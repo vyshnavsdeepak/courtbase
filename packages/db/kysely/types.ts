@@ -127,7 +127,7 @@ export type Session = {
 export type State = {
   stateCode: string;
   name: string;
-  highCourtId: string | null;
+  highCourtId: string;
 };
 export type User = {
   id: Generated<string>;

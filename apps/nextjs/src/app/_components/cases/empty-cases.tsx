@@ -5,6 +5,7 @@ import { Button } from "@court-base/ui/button";
 import { Icons } from "@court-base/ui/icons";
 
 import CaseImportDialogButton from "~/app/_components/cases/case-import-dialog-button";
+import ManualCaseImportDialogButton from "./manual-case-import";
 
 export default function EmptyCases({ className }: { className?: string }) {
   return (
@@ -21,10 +22,12 @@ export default function EmptyCases({ className }: { className?: string }) {
         details. This is your first step in managing your cases efficiently.
       </p>
       <div className="mt-6 flex flex-col items-center justify-center gap-4 md:flex-row">
-        <Button className="w-56">Add New Case</Button>
+        <ManualCaseImportDialogButton>
+          <Button className="w-56">Import Case</Button>
+        </ManualCaseImportDialogButton>
         <CaseImportDialogButton>
           <Button variant="outline" className="w-56">
-            🪄 Import Cases (No magic!)
+            🪄 Import by Advocate name
           </Button>
         </CaseImportDialogButton>
       </div>

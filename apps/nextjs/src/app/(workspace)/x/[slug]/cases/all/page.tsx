@@ -3,6 +3,7 @@ import qs from "qs";
 
 import type { CasesResponseTypeComplete } from "@court-base/api/schemas/cases";
 import { AllCaseRequestSchema } from "@court-base/api/schemas/cases";
+import { Button } from "@court-base/ui/button";
 import { DataTableSkeleton } from "@court-base/ui/data-table/data-table-skeleton";
 
 import type { SearchParams } from "~/app/types";
@@ -11,6 +12,7 @@ import { ClearFiltersButton } from "~/app/_components/cases/cases-table/clear-fi
 import { columns } from "~/app/_components/cases/cases-table/columns";
 import { DatePickerWithPresets } from "~/app/_components/cases/cases-table/date-range-picker";
 import EmptyCases from "~/app/_components/cases/empty-cases";
+import ManualCaseImportDialogButton from "~/app/_components/cases/manual-case-import";
 import SidebarToggle from "~/app/_components/sidebar-toggle";
 import { api } from "~/trpc/server";
 
@@ -40,13 +42,19 @@ const CasesMainComponent = ({
   const casesData = React.use(casesDataPromise);
   return (
     <div className="flex flex-1 flex-col">
-      <div className="sticky top-0 z-10 bg-shade">
+      <div className="sticky top-0 z-10 flex justify-stretch bg-shade">
         {children}
         <div className="flex w-full items-center justify-between space-x-2 overflow-auto p-1">
           <DatePickerWithPresets />
           <ClearFiltersButton />
         </div>
+        <div className="flex items-center">
+          <ManualCaseImportDialogButton>
+            <Button className="">Import Case</Button>
+          </ManualCaseImportDialogButton>
+        </div>
       </div>
+
       <CaseTable columns={columns} data={casesData.data} />
     </div>
   );

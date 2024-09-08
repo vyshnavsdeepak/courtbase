@@ -558,7 +558,7 @@ export const AdvocateCaseWithRelationsSchema: z.ZodType<AdvocateCaseWithRelation
 export const StateSchema = z.object({
   stateCode: z.string(),
   name: z.string(),
-  highCourtId: z.string().nullish(),
+  highCourtId: z.string(),
 });
 
 export type State = z.infer<typeof StateSchema>;

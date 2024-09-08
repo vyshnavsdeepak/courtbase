@@ -187,7 +187,7 @@ model State {
   name      String     @db.VarChar(255)
   District  District[]
 
-  highCourtId String?
+  highCourtId String
   highCourt   HighCourt? @relation(fields: [highCourtId], references: [id])
 }
 

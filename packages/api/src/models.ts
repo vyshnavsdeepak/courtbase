@@ -27,3 +27,20 @@ export const CreateCaseImportTaskParamsSchema = z.object({
   }),
   status: z.union([z.literal("Pending"), z.literal("Disposed")]),
 });
+
+export const CreateManualCaseImportTaskParamsSchema = z.object({
+  districtCourtId: z.string({
+    message: "Please select the district court",
+  }),
+  caseNumber: z.object({
+    typeName: z.string({
+      message: "Please enter the case type",
+    }),
+    number: z.string({
+      message: "Please enter the case number",
+    }),
+    regYear: z.string({
+      message: "Please enter the registration year",
+    }),
+  }),
+});

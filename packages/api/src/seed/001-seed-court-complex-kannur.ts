@@ -130,11 +130,23 @@ const courtComplexes = Object.keys(CourtComplexToCourtsMap);
 
 async function seed() {
   try {
+    const highCourtName = "High Court of Kerala";
+    const slug = slugifyCourtName(highCourtName);
+    const { id: highCourtId } = await kysely
+      .insertInto("HighCourt")
+      .values({
+        id: slug,
+        name: highCourtName,
+      })
+      .returning("id")
+      .executeTakeFirstOrThrow();
+
     await kysely
       .insertInto("State")
       .values({
         name: stateData.name,
         stateCode: stateData.code, // state code is unique to India
+        highCourtId,
       })
       .execute();
 

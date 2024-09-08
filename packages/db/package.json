@@ -24,7 +24,7 @@
   "license": "MIT",
   "scripts": {
     "build": "tsc",
-    "dev": "tsc",
+    "dev": "tsc --watch",
     "clean": "rm -rf .prisma .turbo dist node_modules",
     "runscript": "dotenv -e ../../.env -- tsx",
     "db:format": "prisma format",
