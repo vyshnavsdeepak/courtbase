@@ -70,6 +70,12 @@ export type CaseImportTask = {
   created_at: Generated<Timestamp>;
   updatedAt: Timestamp | null;
 };
+export type CaseType = {
+  id: string;
+  label: string;
+  code: string;
+  highCourtId: string;
+};
 export type CourtComplex = {
   id: string;
   name: string;
@@ -90,6 +96,10 @@ export type DistrictCourt = {
   complexId: string;
   stateCode: string;
   districtCode: string;
+};
+export type HighCourt = {
+  id: string;
+  name: string;
 };
 export type Organization = {
   id: string;
@@ -117,6 +127,7 @@ export type Session = {
 export type State = {
   stateCode: string;
   name: string;
+  highCourtId: string | null;
 };
 export type User = {
   id: Generated<string>;
@@ -135,9 +146,11 @@ export type DB = {
   AdvocateCase: AdvocateCase;
   Case: Case;
   CaseImportTask: CaseImportTask;
+  CaseType: CaseType;
   CourtComplex: CourtComplex;
   District: District;
   DistrictCourt: DistrictCourt;
+  HighCourt: HighCourt;
   Organization: Organization;
   OrganizationMembers: OrganizationMembers;
   Post: Post;

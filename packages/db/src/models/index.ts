@@ -153,7 +153,11 @@ export const AdvocateCaseScalarFieldEnumSchema = z.enum([
   "updatedAt",
 ]);
 
-export const StateScalarFieldEnumSchema = z.enum(["stateCode", "name"]);
+export const StateScalarFieldEnumSchema = z.enum([
+  "stateCode",
+  "name",
+  "highCourtId",
+]);
 
 export const DistrictScalarFieldEnumSchema = z.enum([
   "name",
@@ -177,6 +181,15 @@ export const DistrictCourtScalarFieldEnumSchema = z.enum([
   "complexId",
   "stateCode",
   "districtCode",
+]);
+
+export const HighCourtScalarFieldEnumSchema = z.enum(["id", "name"]);
+
+export const CaseTypeScalarFieldEnumSchema = z.enum([
+  "id",
+  "label",
+  "code",
+  "highCourtId",
 ]);
 
 export const CaseImportTaskScalarFieldEnumSchema = z.enum([
@@ -545,6 +558,7 @@ export const AdvocateCaseWithRelationsSchema: z.ZodType<AdvocateCaseWithRelation
 export const StateSchema = z.object({
   stateCode: z.string(),
   name: z.string(),
+  highCourtId: z.string().nullish(),
 });
 
 export type State = z.infer<typeof StateSchema>;
@@ -554,6 +568,7 @@ export type State = z.infer<typeof StateSchema>;
 
 export type StateRelations = {
   District: DistrictWithRelations[];
+  highCourt?: HighCourtWithRelations | null;
 };
 
 export type StateWithRelations = z.infer<typeof StateSchema> & StateRelations;
@@ -562,6 +577,7 @@ export const StateWithRelationsSchema: z.ZodType<StateWithRelations> =
   StateSchema.merge(
     z.object({
       District: z.lazy(() => DistrictWithRelationsSchema).array(),
+      highCourt: z.lazy(() => HighCourtWithRelationsSchema).nullish(),
     }),
   );
 
@@ -665,6 +681,66 @@ export const DistrictCourtWithRelationsSchema: z.ZodType<DistrictCourtWithRelati
       district: z.lazy(() => DistrictWithRelationsSchema),
       complex: z.lazy(() => CourtComplexWithRelationsSchema),
       cases: z.lazy(() => CaseWithRelationsSchema).array(),
+    }),
+  );
+
+/////////////////////////////////////////
+// HIGH COURT SCHEMA
+/////////////////////////////////////////
+
+export const HighCourtSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+});
+
+export type HighCourt = z.infer<typeof HighCourtSchema>;
+
+// HIGH COURT RELATION SCHEMA
+//------------------------------------------------------
+
+export type HighCourtRelations = {
+  CaseType: CaseTypeWithRelations[];
+  State: StateWithRelations[];
+};
+
+export type HighCourtWithRelations = z.infer<typeof HighCourtSchema> &
+  HighCourtRelations;
+
+export const HighCourtWithRelationsSchema: z.ZodType<HighCourtWithRelations> =
+  HighCourtSchema.merge(
+    z.object({
+      CaseType: z.lazy(() => CaseTypeWithRelationsSchema).array(),
+      State: z.lazy(() => StateWithRelationsSchema).array(),
+    }),
+  );
+
+/////////////////////////////////////////
+// CASE TYPE SCHEMA
+/////////////////////////////////////////
+
+export const CaseTypeSchema = z.object({
+  id: z.string(),
+  label: z.string(),
+  code: z.string(),
+  highCourtId: z.string(),
+});
+
+export type CaseType = z.infer<typeof CaseTypeSchema>;
+
+// CASE TYPE RELATION SCHEMA
+//------------------------------------------------------
+
+export type CaseTypeRelations = {
+  highCourt: HighCourtWithRelations;
+};
+
+export type CaseTypeWithRelations = z.infer<typeof CaseTypeSchema> &
+  CaseTypeRelations;
+
+export const CaseTypeWithRelationsSchema: z.ZodType<CaseTypeWithRelations> =
+  CaseTypeSchema.merge(
+    z.object({
+      highCourt: z.lazy(() => HighCourtWithRelationsSchema),
     }),
   );
 

@@ -119,6 +119,7 @@ model OrganizationMembers {
 
   @@id([organizationId, memberId], map: "organizationMembers_organizationId_memberId_pk")
   @@unique([organizationId, userId], map: "organizationMembers_organizationId_userId_unique")
+  @@index([organizationId, designation], map: "organizationMembers_organizationId_designation_idx")
 }
 
 enum AdvocateCaseSide {
@@ -185,6 +186,9 @@ model State {
   stateCode String     @id @db.VarChar(2) // State code is unique to India
   name      String     @db.VarChar(255)
   District  District[]
+
+  highCourtId String?
+  highCourt   HighCourt? @relation(fields: [highCourtId], references: [id])
 }
 
 model District {
@@ -222,6 +226,24 @@ model DistrictCourt {
   cases        Case[]       @relation(map: "Case_courtId_court_id_fk")
 
   @@unique([stateCode, districtCode, courtCode], map: "districtcourt_stateCode_districtCode_courtCode_unique")
+}
+
+model HighCourt {
+  id   String @id
+  name String @db.VarChar(255)
+
+  CaseType CaseType[]
+  State    State[]
+}
+
+model CaseType {
+  id          String    @id
+  label       String    @db.VarChar(255)
+  code        String    @db.VarChar(50)
+  highCourtId String
+  highCourt   HighCourt @relation(fields: [highCourtId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@unique([highCourtId, code])
 }
 
 enum CaseImportTaskStatus {
