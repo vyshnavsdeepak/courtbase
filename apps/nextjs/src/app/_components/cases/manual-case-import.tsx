@@ -85,13 +85,17 @@ function ManualCaseImportDialog({
       caseNumber: {},
     },
   });
+
   const [selectedStateCode, setSelectedStateCode] = useState<string | null>(
     null,
   );
   const [selectedDistrictCode, setSelectedDistrictCode] = useState<
     string | null
   >(null);
+
   const apiUtils = api.useUtils();
+
+  // Fetch states
   const { data: statesSource, isLoading: statesLoading } =
     api.court.states.useQuery();
   const states = statesLoading
@@ -100,6 +104,7 @@ function ManualCaseImportDialog({
         { name: "No states found", stateCode: "", highCourtId: "" },
       ]);
 
+  // Fetch districts when selectedStateCode is available
   const { data: districtsSource, isLoading: districtsLoading } =
     api.court.districts.useQuery(
       { stateCode: selectedStateCode ?? "" },
@@ -110,56 +115,53 @@ function ManualCaseImportDialog({
     ? [{ name: "Loading...", districtCode: "" }]
     : (districtsSource ?? [{ name: "No districts found", districtCode: "" }]);
 
+  // Fetch district courts when both stateCode and districtCode are available
   const { data: districtCourtsSource, isLoading: districtCourtsLoading } =
     api.court.districtCourts.useQuery(
       {
         districtCode: selectedDistrictCode ?? "",
         stateCode: selectedStateCode ?? "",
       },
-      { enabled: !!selectedDistrictCode && !!selectedStateCode },
+      { enabled: !!selectedStateCode && !!selectedDistrictCode },
     );
 
   const districtCourts = districtCourtsLoading
     ? [{ name: "Loading...", id: "" }]
     : (districtCourtsSource ?? [{ name: "No courts found", id: "" }]);
 
+  // Find selected state's high court ID
   const selectedStateObj = states.find(
     (state) => state.stateCode === selectedStateCode,
   );
   const selectedHighCourtId = selectedStateObj?.highCourtId;
 
+  // Fetch case types based on highCourtId and availability of districtCourts
   const { data: caseTypesSource, isLoading: caseTypesLoading } =
     api.court.getCaseTypes.useQuery(
       { highCourtId: selectedHighCourtId ?? "" },
-      {
-        enabled: !!selectedHighCourtId && districtCourts.length > 0,
-      },
+      { enabled: !!selectedHighCourtId && districtCourts.length > 0 },
     );
+
   const caseTypes = caseTypesLoading
     ? [{ id: "", label: "Loading..." }]
     : (caseTypesSource ?? [
         { id: "", label: "Select a state to load case types." },
       ]);
 
+  // Mutation for creating the case import task
   const { mutate: createCaseImportTask, isPending } =
     api.caseImport.importByCaseNumber.useMutation({
       onSuccess: () => {
-        console.log("Case import task created successfully");
         toast.info("Case import task created successfully");
         void apiUtils.caseImport.importJobsByCaseNumber.refetch();
         close();
-        if (onSuccess) {
-          onSuccess();
-        }
+        onSuccess?.();
       },
       onError: (err) => {
-        console.error("Failed to create case import task", err);
         const messages = err.data?.zodError?.formErrors;
-        if (messages) {
-          toast.error(messages.join("\n"));
-        } else {
-          toast.error("Failed to create case import task");
-        }
+        toast.error(
+          messages?.join("\n") ?? "Failed to create case import task",
+        );
       },
     });
 
@@ -183,9 +185,7 @@ function ManualCaseImportDialog({
               value: state.stateCode,
               label: state.name,
             }))}
-            onSelect={(value) => {
-              setSelectedStateCode(value);
-            }}
+            onSelect={setSelectedStateCode}
           />
           <Combobox
             placeholder="Select District"
@@ -193,9 +193,7 @@ function ManualCaseImportDialog({
               value: district.districtCode,
               label: district.name,
             }))}
-            onSelect={(value) => {
-              setSelectedDistrictCode(value);
-            }}
+            onSelect={setSelectedDistrictCode}
             disabled={!selectedStateCode}
           />
         </div>
@@ -204,17 +202,15 @@ function ManualCaseImportDialog({
             name="districtCourtId"
             control={control}
             render={({ field }) => (
-              <>
-                <Combobox
-                  placeholder="Select Court"
-                  items={districtCourts.map((court) => ({
-                    value: court.id,
-                    label: court.name,
-                  }))}
-                  onSelect={field.onChange}
-                  disabled={!selectedDistrictCode}
-                />
-              </>
+              <Combobox
+                placeholder="Select Court"
+                items={districtCourts.map((court) => ({
+                  value: court.id,
+                  label: court.name,
+                }))}
+                onSelect={field.onChange}
+                disabled={!selectedDistrictCode}
+              />
             )}
           />
         </div>
