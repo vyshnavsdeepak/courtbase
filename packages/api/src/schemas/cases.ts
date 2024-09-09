@@ -61,7 +61,7 @@ const CaseSchema = z.object({
 
 // Extend the schema to include fields from AdvocateCase
 const CaseSchemaExtended = CaseSchema.extend({
-  advocateNames: z.array(z.string()),
+  advocateNames: z.array(z.string().nullable()),
   courtName: z.string().nullable(),
 });
 

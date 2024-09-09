@@ -26,9 +26,9 @@ const casesRouter = {
 
       const query = ctx.kysely
         .selectFrom("Case")
-        .innerJoin("AdvocateCase", "Case.id", "AdvocateCase.caseId")
-        .innerJoin("DistrictCourt", "Case.courtId", "DistrictCourt.id")
-        .innerJoin("OrganizationMembers", (join) =>
+        .leftJoin("AdvocateCase", "Case.id", "AdvocateCase.caseId")
+        .leftJoin("DistrictCourt", "Case.courtId", "DistrictCourt.id")
+        .leftJoin("OrganizationMembers", (join) =>
           join
             .onRef(
               "OrganizationMembers.memberId",
@@ -37,7 +37,7 @@ const casesRouter = {
             )
             .on("OrganizationMembers.organizationId", "=", orgId),
         )
-        .innerJoin("User", "User.id", "OrganizationMembers.userId") // TODO: Remove this join, as name is moved to OrganizationMembers table
+        .leftJoin("User", "User.id", "OrganizationMembers.userId") // TODO: Remove this join, as name is moved to OrganizationMembers table
         .select([
           "Case.id",
           sql`ARRAY_AGG("User"."name")`.as("advocateNames"), // Aggregate advocate names
