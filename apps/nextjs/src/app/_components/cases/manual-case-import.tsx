@@ -132,7 +132,7 @@ function ManualCaseImportDialog({
     api.court.getCaseTypes.useQuery(
       { highCourtId: selectedHighCourtId ?? "" },
       {
-        enabled: !!selectedHighCourtId,
+        enabled: !!selectedHighCourtId && districtCourts.length > 0,
       },
     );
   const caseTypes = caseTypesLoading
@@ -141,7 +141,7 @@ function ManualCaseImportDialog({
         { id: "", label: "Select a state to load case types." },
       ]);
 
-  const { mutate: createCaseImportTask } =
+  const { mutate: createCaseImportTask, isPending } =
     api.caseImport.importByCaseNumber.useMutation({
       onSuccess: () => {
         console.log("Case import task created successfully");
@@ -245,8 +245,8 @@ function ManualCaseImportDialog({
           />
         </div>
         <ErrorDisplay errors={errors} />
-        <Button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? "Submitting..." : "Import"}
+        <Button type="submit" disabled={isSubmitting || isPending}>
+          {isSubmitting || isPending ? "Submitting..." : "Import"}
         </Button>
       </form>
     </>
