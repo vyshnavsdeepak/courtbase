@@ -120,8 +120,11 @@ export const importCaseByCaseNo = inngest.createFunction(
             : null,
           side: "UNKNOWN",
           nextHearingDate: caseObj.nextHearingDate,
+          // Unlike import by advocate, we setting next hearing date here,
+          // thus we are updating updatedAt column as well
           rawData: caseObj.rawData,
           organizationId: identity.orgId,
+          updatedAt: new Date(),
         })
         .returning("id")
         .executeTakeFirstOrThrow();
