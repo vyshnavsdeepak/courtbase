@@ -44,7 +44,7 @@ export function transformCaseHistory(
     crn: rawCase.cino,
     caseNo: {
       typeName: rawCase.type_name,
-      number: rawCase.regcase_type,
+      number: rawCase.reg_no,
       year: rawCase.reg_year,
     },
     nextHearingDate: new Date(rawCase.date_next_list),
