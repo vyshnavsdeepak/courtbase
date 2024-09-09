@@ -1,29 +1,51 @@
 "use client";
 
 import React from "react";
+import { format } from "date-fns";
+
+import { Badge } from "@court-base/ui/badge";
+import { Card } from "@court-base/ui/card";
 
 import { api } from "~/trpc/react";
 
+// Minimal Shimmer component for loading effect
+const Shimmer = () => (
+  <div className="animate-pulse rounded-lg bg-gray-200 p-4">
+    <div className="h-2 rounded bg-gray-400"></div>
+    <div className="mt-2 h-2 rounded bg-gray-400"></div>
+    <div className="mt-2 h-2 rounded bg-gray-400"></div>
+  </div>
+);
+
 export const ManualCaseImportJobs = () => {
-  const { data, error } = api.caseImport.importJobsByCaseNumber.useQuery();
+  const { data, error, isLoading } =
+    api.caseImport.importJobsByCaseNumber.useQuery();
 
   return (
-    <div>
-      <h1>Manual Case Import Jobs</h1>
-      <div>
-        {data?.map((job) => (
-          <div key={job.id}>
-            <div>Case Type: {job.caseType}</div>
-            <div>
-              Case Number: {job.number}/{job.regYear}
+    <div className="grid grid-cols-1 gap-4 p-4 md:grid-cols-3">
+      {isLoading ? (
+        <>
+          <Shimmer />
+          <Shimmer />
+          <Shimmer />
+        </>
+      ) : (
+        data?.map((job) => (
+          <Card key={job.id} className="mb-4 p-2">
+            <div className="font-bold">Case Type: {job.caseType}</div>
+            <div className="text-sm">
+              {job.caseType}/{job.number}/{job.regYear}
             </div>
-            <div>Response: {JSON.stringify(job.response)}</div>
-            <div>Created By: {job.createdBy}</div>
-            <div>Created At: {job.createdAt.toLocaleString()}</div>
-          </div>
-        ))}
-      </div>
-      <div>{error && <div>Error: {error.message}</div>}</div>
+            <div className="text-sm">
+              Created At: {format(job.createdAt, "Pp")}
+            </div>
+            <Badge variant="outline" color="primary">
+              {job.importStatus}
+            </Badge>
+          </Card>
+        ))
+      )}
+      {error && <p className="text-red-500">Error: {error.message}</p>}
     </div>
   );
 };

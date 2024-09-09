@@ -86,17 +86,23 @@ export const caseImportRouter = {
   importJobsByCaseNumber: orgProtectedProcedure.query(async ({ ctx }) => {
     return ctx.kysely
       .selectFrom("ManualCaseImportTask")
+      .leftJoin(
+        "DistrictCourt",
+        "DistrictCourt.id",
+        "ManualCaseImportTask.districtCourtId",
+      )
+      .leftJoin("CaseType", "CaseType.code", "ManualCaseImportTask.caseType")
       .select([
-        "id",
-        "caseType",
-        "number",
-        "regYear",
-        "response",
-        "districtCourtId",
-        "createdBy",
-        "createdAt",
+        "ManualCaseImportTask.id",
+        "CaseType.label as caseType",
+        "ManualCaseImportTask.number",
+        "ManualCaseImportTask.regYear",
+        "DistrictCourt.name as courtName",
+        "ManualCaseImportTask.importStatus",
+        "ManualCaseImportTask.createdAt",
       ])
       .where("organizationId", "=", ctx.orgId)
+      .orderBy("ManualCaseImportTask.createdAt desc")
       .execute();
   }),
   importByCaseNumber: orgProtectedProcedure

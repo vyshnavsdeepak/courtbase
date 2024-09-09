@@ -2,6 +2,7 @@
 
 import type { z } from "zod";
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 
@@ -18,12 +19,32 @@ import {
 } from "@court-base/ui/dialog";
 import { toast } from "@court-base/ui/toast";
 
+import { useOrg } from "~/app/_contexts/org-context";
 import { api } from "~/trpc/react";
+import { getOrgDashboardPath } from "~/utils";
 import ErrorDisplay from "../ErrorDisplay";
 import CaseNumberInput from "./case-number-input";
 
+export function ManualCaseImportInCasePage() {
+  const router = useRouter();
+  const orgSlug = useOrg().nonNull();
+
+  return (
+    <ManualCaseImportDialogButton
+      onSuccess={() => {
+        router.push(
+          [getOrgDashboardPath(orgSlug), "cases", "imports"].join("/"),
+        );
+      }}
+    >
+      <Button className="">Import Case</Button>
+    </ManualCaseImportDialogButton>
+  );
+}
+
 export default function ManualCaseImportDialogButton(props: {
   children: React.ReactNode;
+  onSuccess?: () => void;
 }) {
   const [open, setOpen] = useState(false);
   return (
@@ -36,7 +57,10 @@ export default function ManualCaseImportDialogButton(props: {
           e.preventDefault();
         }}
       >
-        <ManualCaseImportDialog close={() => setOpen(false)} />
+        <ManualCaseImportDialog
+          close={() => setOpen(false)}
+          onSuccess={props.onSuccess}
+        />
       </DialogContent>
     </Dialog>
   );
@@ -44,7 +68,13 @@ export default function ManualCaseImportDialogButton(props: {
 
 type FormData = z.infer<typeof ImportByCaseNumberParamsSchema>;
 
-function ManualCaseImportDialog({ close }: { close: () => void }) {
+function ManualCaseImportDialog({
+  close,
+  onSuccess,
+}: {
+  close: () => void;
+  onSuccess?: () => void;
+}) {
   const {
     control,
     handleSubmit,
@@ -118,6 +148,9 @@ function ManualCaseImportDialog({ close }: { close: () => void }) {
         toast.info("Case import task created successfully");
         void apiUtils.caseImport.importJobsByCaseNumber.refetch();
         close();
+        if (onSuccess) {
+          onSuccess();
+        }
       },
       onError: (err) => {
         console.error("Failed to create case import task", err);
