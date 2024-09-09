@@ -174,7 +174,6 @@ export const importCaseByCourtComplex = inngest.createFunction(
         )
         .onConflict((conflict) =>
           conflict.columns(["crn", "organizationId"]).doUpdateSet((eb) => ({
-            updatedAt: new Date(),
             petitioner: eb.ref("excluded.petitioner"),
             petitionerLawyers: eb.ref("excluded.petitionerLawyers"),
             respondent: eb.ref("excluded.respondent"),

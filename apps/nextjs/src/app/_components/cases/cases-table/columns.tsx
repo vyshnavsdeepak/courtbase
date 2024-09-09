@@ -75,7 +75,9 @@ export const columns: ColumnDef<CaseTableRows>[] = [
     header: "Last Updated",
     cell: ({ row }) => (
       <div className="text-sm text-muted-foreground" suppressHydrationWarning>
-        {moment(row.original.updatedAt).fromNow()}
+        {row.original.updatedAt
+          ? moment(row.original.updatedAt).fromNow()
+          : "Pending"}
       </div>
     ),
   },
