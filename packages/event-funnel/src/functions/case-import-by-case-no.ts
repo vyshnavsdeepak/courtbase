@@ -1,3 +1,4 @@
+import type { eCourtAPICallReturn } from "./ecourt";
 import { inngest } from "../lib/inngest";
 import { ecourtAPI } from "./ecourt";
 
@@ -73,11 +74,65 @@ export const importCaseByCaseNo = inngest.createFunction(
       },
     });
 
+    const caseBody =
+      apiRes.body as unknown as eCourtAPICallReturn["import-case-by-case-no"];
+
+    const caseHistoryResp = await step.invoke("get/ecourt/refresh-case", {
+      function: ecourtAPI,
+      data: {
+        function: "refresh-case",
+        payload: {
+          cino: caseBody.cino,
+        },
+      },
+    });
+
+    const caseHistory =
+      caseHistoryResp.body as unknown as eCourtAPICallReturn["refresh-case"];
+    const caseObj = caseHistory.case;
+
+    const identity = event.data.identity;
+
+    const { id: courtId } = await kysely
+      .selectFrom("DistrictCourt")
+      .select("id")
+      .where("courtCode", "=", courtCode)
+      .where("stateCode", "=", stateCode)
+      .where("districtCode", "=", districtCode)
+      .executeTakeFirstOrThrow();
+
+    const caseInserted = await step.run("insert-case", async () => {
+      return kysely
+        .insertInto("Case")
+        .values({
+          crn: caseObj.crn,
+          courtId,
+          typeName: caseObj.caseNo.typeName,
+          number: caseObj.caseNo.number.toString(),
+          regYear: caseObj.caseNo.year.toString(),
+          title: caseObj.title,
+          petitioner: caseObj.petitioner,
+          petitionerLawyers: caseObj.petitionerLawyers,
+          respondent: caseObj.respondent,
+          respondentLawyers: caseObj.respondentLawyers,
+          dateOfDecision: caseObj.dateOfDecision
+            ? new Date(caseObj.dateOfDecision)
+            : null,
+          side: "UNKNOWN",
+          nextHearingDate: caseObj.nextHearingDate,
+          rawData: caseObj.rawData,
+          organizationId: identity.orgId,
+        })
+        .returning("id")
+        .executeTakeFirstOrThrow();
+    });
+
     await step.run("mark-end-case-import-task", async () => {
       await kysely
         .updateTable("ManualCaseImportTask")
         .set("importStatus", "COMPLETED")
-        .set("response", apiRes.body)
+        .set("caseId", caseInserted.id)
+        .set("response", caseBody)
         .where("id", "=", caseImportTaskId)
         .execute();
       return true;

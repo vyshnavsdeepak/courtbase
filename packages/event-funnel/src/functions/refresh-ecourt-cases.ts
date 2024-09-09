@@ -50,7 +50,7 @@ export const refreshEcourtCases = inngest.createFunction(
           await kysely
             .updateTable("Case")
             .set({
-              nextHearingDate: body.nextHearingDate,
+              nextHearingDate: body.case.nextHearingDate,
               updatedAt: new Date(),
             })
             .where("crn", "=", cino)
