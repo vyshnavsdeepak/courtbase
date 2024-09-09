@@ -33,12 +33,7 @@ export function transformCase(rawCase: CaseRaw): Case {
 export function transformCaseHistory(
   rawCase: CaseHistoryRawResult,
 ): CaseHistory {
-  let title;
-  if (rawCase.petNameAdd.startsWith("XXXXXXX")) {
-    title = rawCase.pet_name + " Vs " + rawCase.res_name;
-  } else {
-    title = rawCase.petNameAdd.replace(/<br\/> Vs <br\/>/g, " Vs ");
-  }
+  const title = rawCase.pet_name + " Vs " + rawCase.res_name;
 
   return {
     crn: rawCase.cino,
