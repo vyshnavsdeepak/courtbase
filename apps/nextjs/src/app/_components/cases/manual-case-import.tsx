@@ -149,21 +149,31 @@ function ManualCaseImportDialog({
       ]);
 
   // Mutation for creating the case import task
-  const { mutate: createCaseImportTask, isPending } =
-    api.caseImport.importByCaseNumber.useMutation({
-      onSuccess: () => {
-        toast.info("Case import task created successfully");
-        void apiUtils.caseImport.importJobsByCaseNumber.refetch();
-        close();
-        onSuccess?.();
-      },
-      onError: (err) => {
-        const messages = err.data?.zodError?.formErrors;
-        toast.error(
-          messages?.join("\n") ?? "Failed to create case import task",
-        );
-      },
-    });
+  const {
+    mutate: createCaseImportTask,
+    isPending,
+    status,
+    isPaused,
+  } = api.caseImport.importByCaseNumber.useMutation({
+    onSuccess: () => {
+      toast.info("Case import task created successfully");
+      void apiUtils.caseImport.importJobsByCaseNumber.refetch();
+      onSuccess?.();
+    },
+    onError: (err) => {
+      const messages = err.data?.zodError?.formErrors;
+      toast.error(messages?.join("\n") ?? "Failed to create case import task");
+    },
+    onSettled: () => {
+      // reset form after mutation is settled
+      close();
+    },
+  });
+  console.log("Mutation cycles: ", {
+    isPending,
+    status,
+    isPaused,
+  });
 
   const onSubmit = (data: FormData) => {
     createCaseImportTask(data);
