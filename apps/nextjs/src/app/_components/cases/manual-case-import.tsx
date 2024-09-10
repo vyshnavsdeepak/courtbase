@@ -175,10 +175,6 @@ function ManualCaseImportDialog({
     isPaused,
   });
 
-  const onSubmit = (data: FormData) => {
-    createCaseImportTask(data);
-  };
-
   return (
     <>
       <DialogHeader>
@@ -187,7 +183,10 @@ function ManualCaseImportDialog({
           Enter case number, court name to search for cases.
         </DialogDescription>
       </DialogHeader>
-      <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4 py-4">
+      <form
+        onSubmit={handleSubmit((data) => createCaseImportTask(data))}
+        className="grid gap-4 py-4"
+      >
         <div className="grid grid-cols-2 gap-4">
           <Combobox
             placeholder="Select State"
