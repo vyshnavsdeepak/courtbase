@@ -139,7 +139,7 @@ function ManualCaseImportDialog({
   const { data: caseTypesSource, isLoading: caseTypesLoading } =
     api.court.getCaseTypes.useQuery(
       { highCourtId: selectedHighCourtId ?? "" },
-      { enabled: !!selectedHighCourtId && districtCourts.length > 0 },
+      { enabled: !!selectedHighCourtId && !!districtCourtsSource },
     );
 
   const caseTypes = caseTypesLoading
