@@ -108,7 +108,7 @@ export const caseImportRouter = {
   importByCaseNumber: orgProtectedProcedure
     .input(ImportByCaseNumberParamsSchema)
     .mutation(async ({ ctx, input }) => {
-      console.log(`importByCaseNumber ${new Date().toISOString()}`, input);
+      console.log("importByCaseNumber", input);
       const { districtCourtId, caseNumber } = input;
       const { number, caseTypeId, regYear } = caseNumber;
 
@@ -134,9 +134,6 @@ export const caseImportRouter = {
 
         const highCourtId = districtCourt.highCourtId;
         const caseTypeCode = caseType.code;
-        console.log(
-          `Inserting into ManualCaseImportTask ${new Date().toISOString()}`,
-        );
 
         const insertRes = await ctx.kysely
           .insertInto("ManualCaseImportTask")
@@ -152,7 +149,6 @@ export const caseImportRouter = {
           .returning("id")
           .executeTakeFirstOrThrow();
 
-        console.log(`Sending event to inngest ${new Date().toISOString()}`);
         await inngest.send({
           name: "app/case-import-by-case-no",
           data: {
@@ -174,7 +170,6 @@ export const caseImportRouter = {
             },
           },
         });
-        console.log(`Event sent to inngest ${new Date().toISOString()}`);
         return {
           importTaskId: insertRes.id,
         };
