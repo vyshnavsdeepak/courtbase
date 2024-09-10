@@ -113,7 +113,6 @@ export const caseImportRouter = {
       const { number, caseTypeId, regYear } = caseNumber;
 
       try {
-        const startTime = new Date().toISOString();
         const [districtCourt, caseType] = await Promise.all([
           ctx.kysely
             .selectFrom("DistrictCourt")
@@ -135,8 +134,10 @@ export const caseImportRouter = {
 
         const highCourtId = districtCourt.highCourtId;
         const caseTypeCode = caseType.code;
+        console.log(
+          `Inserting into ManualCaseImportTask ${new Date().toISOString()}`,
+        );
 
-        const insertStartTime = new Date().toISOString();
         const insertRes = await ctx.kysely
           .insertInto("ManualCaseImportTask")
           .values({
@@ -150,9 +151,8 @@ export const caseImportRouter = {
           })
           .returning("id")
           .executeTakeFirstOrThrow();
-        const insertEndTime = new Date().toISOString();
 
-        const sendEventStartTime = new Date().toISOString();
+        console.log(`Sending event to inngest ${new Date().toISOString()}`);
         await inngest.send({
           name: "app/case-import-by-case-no",
           data: {
@@ -174,22 +174,9 @@ export const caseImportRouter = {
             },
           },
         });
-        const sendEventEndTime = new Date().toISOString();
-
-        const endTime = new Date().toISOString();
-        const timeTaken = {
-          total: new Date(endTime).getTime() - new Date(startTime).getTime(),
-          insert:
-            new Date(insertEndTime).getTime() -
-            new Date(insertStartTime).getTime(),
-          sendEvent:
-            new Date(sendEventEndTime).getTime() -
-            new Date(sendEventStartTime).getTime(),
-        };
-
+        console.log(`Event sent to inngest ${new Date().toISOString()}`);
         return {
           importTaskId: insertRes.id,
-          timeTaken,
         };
       } catch (e) {
         console.error(e);
