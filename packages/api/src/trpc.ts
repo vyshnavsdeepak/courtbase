@@ -6,6 +6,7 @@
  * tl;dr - this is where all the tRPC server stuff is created and plugged in.
  * The pieces you will need to use are documented accordingly near the end
  */
+import * as Sentry from "@sentry/nextjs";
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
@@ -128,6 +129,15 @@ export const createCallerFactory = t.createCallerFactory;
 export const createTRPCRouter = t.router;
 
 /**
+ * Sentry middleware
+ */
+const sentryMiddleware = t.middleware(
+  Sentry.trpcMiddleware({
+    attachRpcInput: true,
+  }),
+);
+
+/**
  * Middleware for timing procedure execution and adding an articifial delay in development.
  *
  * You can remove this if you don't like it, but it can help catch unwanted waterfalls by simulating
@@ -157,7 +167,9 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
  * tRPC API. It does not guarantee that a user querying is authorized, but you
  * can still access user session data if they are logged in
  */
-export const publicProcedure = t.procedure.use(timingMiddleware);
+export const publicProcedure = t.procedure
+  .use(sentryMiddleware)
+  .use(timingMiddleware);
 
 /**
  * Protected (authenticated) procedure
@@ -167,27 +179,21 @@ export const publicProcedure = t.procedure.use(timingMiddleware);
  *
  * @see https://trpc.io/docs/procedures
  */
-export const protectedProcedure = t.procedure
-  .use(timingMiddleware)
-  .use(({ ctx, next }) => {
-    if (!ctx.session?.user) {
-      throw new TRPCError({ code: "UNAUTHORIZED" });
-    }
-    return next({
-      ctx: {
-        // infers the `session` as non-nullable
-        session: { ...ctx.session, user: ctx.session.user },
-      },
-    });
+export const protectedProcedure = publicProcedure.use(({ ctx, next }) => {
+  if (!ctx.session?.user) {
+    throw new TRPCError({ code: "UNAUTHORIZED" });
+  }
+  return next({
+    ctx: {
+      // infers the `session` as non-nullable
+      session: { ...ctx.session, user: ctx.session.user },
+    },
   });
+});
 
 // orgProtectedProcedure is a procedure on top of protectedProcedure that checks if the user is a member of the organization
-export const orgProtectedProcedure = t.procedure
-  .use(timingMiddleware)
-  .use(async ({ ctx, next }) => {
-    if (!ctx.session?.user) {
-      throw new TRPCError({ code: "UNAUTHORIZED" });
-    }
+export const orgProtectedProcedure = protectedProcedure.use(
+  async ({ ctx, next }) => {
     const orgSlug = ctx.orgSlug;
     if (!orgSlug) {
       throw new TRPCError({ code: "FORBIDDEN", message: "No org slug" });
@@ -208,4 +214,5 @@ export const orgProtectedProcedure = t.procedure
         memberId: orgUser.memberId,
       },
     });
-  });
+  },
+);
