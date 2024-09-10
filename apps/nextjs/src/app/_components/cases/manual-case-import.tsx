@@ -95,12 +95,9 @@ function ManualCaseImportDialog({
 
   const apiUtils = api.useUtils();
 
+  // Fetch states
   const { data: statesSource, isLoading: statesLoading } =
-    api.court.states.useQuery(
-      undefined,
-      { staleTime: 600000, gcTime: 900000 }, // Cache for 10-15 minutes
-    );
-
+    api.court.states.useQuery();
   const states = statesLoading
     ? [{ name: "Loading...", stateCode: "", highCourtId: "" }]
     : (statesSource ?? [
@@ -108,12 +105,12 @@ function ManualCaseImportDialog({
       ]);
 
   // Fetch districts when selectedStateCode is available
-  // Fetch districts
   const { data: districtsSource, isLoading: districtsLoading } =
     api.court.districts.useQuery(
       { stateCode: selectedStateCode ?? "" },
-      { enabled: !!selectedStateCode, staleTime: 600000, gcTime: 900000 },
+      { enabled: !!selectedStateCode },
     );
+
   const districts = districtsLoading
     ? [{ name: "Loading...", districtCode: "" }]
     : (districtsSource ?? [{ name: "No districts found", districtCode: "" }]);
@@ -125,11 +122,7 @@ function ManualCaseImportDialog({
         districtCode: selectedDistrictCode ?? "",
         stateCode: selectedStateCode ?? "",
       },
-      {
-        enabled: !!selectedStateCode && !!selectedDistrictCode,
-        staleTime: 600000,
-        gcTime: 900000,
-      },
+      { enabled: !!selectedStateCode && !!selectedDistrictCode },
     );
 
   const districtCourts = districtCourtsLoading
@@ -146,11 +139,7 @@ function ManualCaseImportDialog({
   const { data: caseTypesSource, isLoading: caseTypesLoading } =
     api.court.getCaseTypes.useQuery(
       { highCourtId: selectedHighCourtId ?? "" },
-      {
-        enabled: !!selectedHighCourtId && !!districtCourtsSource,
-        staleTime: 600000,
-        gcTime: 900000,
-      },
+      { enabled: !!selectedHighCourtId && !!districtCourtsSource },
     );
 
   const caseTypes = caseTypesLoading
@@ -175,9 +164,8 @@ function ManualCaseImportDialog({
       const messages = err.data?.zodError?.formErrors;
       toast.error(messages?.join("\n") ?? "Failed to create case import task");
     },
-    retry: 0, // Disable retry or set to a low number like 1
-    retryDelay: 1000, // Set retry delay to 1 second if retry is enabled
     onSettled: () => {
+      // reset form after mutation is settled
       close();
     },
   });
