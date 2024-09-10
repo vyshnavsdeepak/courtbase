@@ -170,6 +170,9 @@ export const caseImportRouter = {
             },
           },
         });
+        return {
+          importTaskId: insertRes.id,
+        };
       } catch (e) {
         console.error(e);
         throw new TRPCError({
