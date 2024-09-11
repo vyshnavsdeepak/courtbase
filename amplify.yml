@@ -4,15 +4,15 @@ applications:
       phases:
         build:
           commands:
-            - npx ampx pipeline-deploy --branch $AWS_BRANCH --app-id $AWS_APP_ID
+            - pnpm exec ampx pipeline-deploy --branch $AWS_BRANCH --app-id $AWS_APP_ID
     frontend:
       phases:
         preBuild:
           commands:
-            - npx pnpm install
+            - pnpm install
         build:
           commands:
-            - npx turbo run build --filter=nextjs
+            - pnpm exec turbo run build --filter=nextjs
       artifacts:
         baseDirectory: .next
         files:
