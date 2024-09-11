@@ -11,11 +11,11 @@ applications:
           commands:
             - pnpm exec turbo run build --filter=@court-base/nextjs
       artifacts:
-        baseDirectory: .next
+        baseDirectory: apps/nextjs/.next
         files:
           - '**/*'
       cache:
         paths:
-          - .next/cache/**/*
+          - apps/nextjs/.next/cache/**/*
           - node_modules/**/*
     buildPath: apps/nextjs
