@@ -11,7 +11,7 @@ applications:
             - pnpm install
             - pnpm exec turbo run build --filter=@court-base/nextjs
       artifacts:
-        baseDirectory: apps/nextjs/.next
+        baseDirectory: .next
         files:
           - '**/*'
       cache:
