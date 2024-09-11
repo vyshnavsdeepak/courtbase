@@ -9,7 +9,7 @@ applications:
             - pnpm install
         build:
           commands:
-            - pnpm exec turbo run build --filter=nextjs
+            - pnpm exec turbo run build --filter=@court-base/nextjs
       artifacts:
         baseDirectory: .next
         files:
