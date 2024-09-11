@@ -1,6 +1,6 @@
 version: 1
 applications:
-  frontend:
+  - frontend:
     phases:
       preBuild:
         commands:
