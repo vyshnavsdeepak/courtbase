@@ -285,7 +285,7 @@ importers:
         specifier: ^2.30.1
         version: 2.30.1
       next:
-        specifier: 'catalog:'
+        specifier: ^14.2.7
         version: 14.2.7(@babel/core@7.25.2)(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       next-nprogress-bar:
         specifier: ^2.3.13
