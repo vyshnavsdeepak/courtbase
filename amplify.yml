@@ -6,9 +6,9 @@ applications:
         preBuild:
           commands:
             - npm install -g pnpm
-            - pnpm install
         build:
           commands:
+            - pnpm install
             - pnpm exec turbo run build --filter=@court-base/nextjs
       artifacts:
         baseDirectory: apps/nextjs/.next
