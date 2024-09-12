@@ -8,7 +8,6 @@ applications:
             - npm install -g pnpm
         build:
           commands:
-            - pnpm clean:workspaces
             - pnpm install
             - pnpm exec turbo run build --filter=@court-base/nextjs
       artifacts:
