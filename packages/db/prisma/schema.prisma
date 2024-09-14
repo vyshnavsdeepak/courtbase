@@ -144,7 +144,7 @@ model Case {
   petitioner        String    @db.VarChar(255)
   petitionerLawyers String    @db.VarChar(255)
   respondent        String    @db.VarChar(255)
-  respondentLawyers String    @db.VarChar(255)
+  respondentLawyers String?   @db.VarChar(255)
   dateOfDecision    DateTime? @db.Date
   nextHearingDate   DateTime? @db.Date
 

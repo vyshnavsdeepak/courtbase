@@ -46,7 +46,7 @@ export type Case = {
   petitioner: string;
   petitionerLawyers: string;
   respondent: string;
-  respondentLawyers: string;
+  respondentLawyers: string | null;
   dateOfDecision: Timestamp | null;
   nextHearingDate: Timestamp | null;
   side: AdvocateCaseSide;

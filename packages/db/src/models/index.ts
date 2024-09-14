@@ -505,7 +505,7 @@ export const CaseSchema = z.object({
   petitioner: z.string(),
   petitionerLawyers: z.string(),
   respondent: z.string(),
-  respondentLawyers: z.string(),
+  respondentLawyers: z.string().nullish(),
   dateOfDecision: z.coerce.date().nullish(),
   nextHearingDate: z.coerce.date().nullish(),
   extraPetitioners: z.string().nullish(),
