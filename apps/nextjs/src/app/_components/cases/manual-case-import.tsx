@@ -77,6 +77,7 @@ function ManualCaseImportDialog({
 }) {
   const {
     control,
+    watch,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<FormData>({
@@ -92,6 +93,8 @@ function ManualCaseImportDialog({
   const [selectedDistrictCode, setSelectedDistrictCode] = useState<
     string | null
   >(null);
+
+  const selectedDistrictCourt = watch("districtCourtId");
 
   const apiUtils = api.useUtils();
 
@@ -126,20 +129,20 @@ function ManualCaseImportDialog({
     );
 
   const districtCourts = districtCourtsLoading
-    ? [{ name: "Loading...", id: "" }]
-    : (districtCourtsSource ?? [{ name: "No courts found", id: "" }]);
+    ? [{ name: "Loading...", id: "", complexId: "" }]
+    : (districtCourtsSource ?? [
+        { name: "No courts found", id: "", complexId: "" },
+      ]);
 
-  // Find selected state's high court ID
-  const selectedStateObj = states.find(
-    (state) => state.stateCode === selectedStateCode,
+  const selectedDistrictCourtObj = districtCourts.find(
+    (d) => d.id === selectedDistrictCourt,
   );
-  const selectedHighCourtId = selectedStateObj?.highCourtId;
-
+  const complexId = selectedDistrictCourtObj?.complexId;
   // Fetch case types based on highCourtId and availability of districtCourts
   const { data: caseTypesSource, isLoading: caseTypesLoading } =
     api.court.getCaseTypes.useQuery(
-      { highCourtId: selectedHighCourtId ?? "" },
-      { enabled: !!selectedHighCourtId && !!districtCourtsSource },
+      { complexId: complexId ?? "" },
+      { enabled: !!complexId },
     );
 
   const caseTypes = caseTypesLoading
@@ -234,7 +237,7 @@ function ManualCaseImportDialog({
                     },
                   });
                 }}
-                disabled={!selectedStateCode}
+                disabled={!selectedDistrictCourt}
               />
             )}
           />

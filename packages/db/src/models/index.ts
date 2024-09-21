@@ -153,11 +153,7 @@ export const AdvocateCaseScalarFieldEnumSchema = z.enum([
   "updatedAt",
 ]);
 
-export const StateScalarFieldEnumSchema = z.enum([
-  "stateCode",
-  "name",
-  "highCourtId",
-]);
+export const StateScalarFieldEnumSchema = z.enum(["stateCode", "name"]);
 
 export const DistrictScalarFieldEnumSchema = z.enum([
   "name",
@@ -168,8 +164,11 @@ export const DistrictScalarFieldEnumSchema = z.enum([
 export const CourtComplexScalarFieldEnumSchema = z.enum([
   "id",
   "name",
+  "complexCode",
   "stateCode",
   "districtCode",
+  "isMasterCourtComplex",
+  "masterComplexCourtCode",
   "created_at",
   "updatedAt",
 ]);
@@ -183,22 +182,20 @@ export const DistrictCourtScalarFieldEnumSchema = z.enum([
   "districtCode",
 ]);
 
-export const HighCourtScalarFieldEnumSchema = z.enum(["id", "name"]);
-
 export const CaseTypeScalarFieldEnumSchema = z.enum([
   "id",
   "label",
   "code",
-  "highCourtId",
+  "complexId",
 ]);
 
 export const ManualCaseImportTaskScalarFieldEnumSchema = z.enum([
   "id",
-  "highCourtId",
   "caseType",
   "number",
   "regYear",
   "districtCourtId",
+  "complexId",
   "importStatus",
   "caseId",
   "createdBy",
@@ -586,7 +583,6 @@ export const AdvocateCaseWithRelationsSchema: z.ZodType<AdvocateCaseWithRelation
 export const StateSchema = z.object({
   stateCode: z.string(),
   name: z.string(),
-  highCourtId: z.string(),
 });
 
 export type State = z.infer<typeof StateSchema>;
@@ -596,7 +592,6 @@ export type State = z.infer<typeof StateSchema>;
 
 export type StateRelations = {
   District: DistrictWithRelations[];
-  highCourt?: HighCourtWithRelations | null;
 };
 
 export type StateWithRelations = z.infer<typeof StateSchema> & StateRelations;
@@ -605,7 +600,6 @@ export const StateWithRelationsSchema: z.ZodType<StateWithRelations> =
   StateSchema.merge(
     z.object({
       District: z.lazy(() => DistrictWithRelationsSchema).array(),
-      highCourt: z.lazy(() => HighCourtWithRelationsSchema).nullish(),
     }),
   );
 
@@ -649,8 +643,11 @@ export const DistrictWithRelationsSchema: z.ZodType<DistrictWithRelations> =
 export const CourtComplexSchema = z.object({
   id: z.string(),
   name: z.string(),
+  complexCode: z.string().nullish(),
   stateCode: z.string(),
   districtCode: z.string(),
+  isMasterCourtComplex: z.boolean(),
+  masterComplexCourtCode: z.string().nullish(),
   created_at: z.coerce.date(),
   updatedAt: z.coerce.date().nullish(),
 });
@@ -663,6 +660,8 @@ export type CourtComplex = z.infer<typeof CourtComplexSchema>;
 export type CourtComplexRelations = {
   district: DistrictWithRelations;
   DistrictCourt: DistrictCourtWithRelations[];
+  CaseType: CaseTypeWithRelations[];
+  ManualCaseImportTask: ManualCaseImportTaskWithRelations[];
 };
 
 export type CourtComplexWithRelations = z.infer<typeof CourtComplexSchema> &
@@ -673,6 +672,10 @@ export const CourtComplexWithRelationsSchema: z.ZodType<CourtComplexWithRelation
     z.object({
       district: z.lazy(() => DistrictWithRelationsSchema),
       DistrictCourt: z.lazy(() => DistrictCourtWithRelationsSchema).array(),
+      CaseType: z.lazy(() => CaseTypeWithRelationsSchema).array(),
+      ManualCaseImportTask: z
+        .lazy(() => ManualCaseImportTaskWithRelationsSchema)
+        .array(),
     }),
   );
 
@@ -717,36 +720,6 @@ export const DistrictCourtWithRelationsSchema: z.ZodType<DistrictCourtWithRelati
   );
 
 /////////////////////////////////////////
-// HIGH COURT SCHEMA
-/////////////////////////////////////////
-
-export const HighCourtSchema = z.object({
-  id: z.string(),
-  name: z.string(),
-});
-
-export type HighCourt = z.infer<typeof HighCourtSchema>;
-
-// HIGH COURT RELATION SCHEMA
-//------------------------------------------------------
-
-export type HighCourtRelations = {
-  CaseType: CaseTypeWithRelations[];
-  State: StateWithRelations[];
-};
-
-export type HighCourtWithRelations = z.infer<typeof HighCourtSchema> &
-  HighCourtRelations;
-
-export const HighCourtWithRelationsSchema: z.ZodType<HighCourtWithRelations> =
-  HighCourtSchema.merge(
-    z.object({
-      CaseType: z.lazy(() => CaseTypeWithRelationsSchema).array(),
-      State: z.lazy(() => StateWithRelationsSchema).array(),
-    }),
-  );
-
-/////////////////////////////////////////
 // CASE TYPE SCHEMA
 /////////////////////////////////////////
 
@@ -754,7 +727,7 @@ export const CaseTypeSchema = z.object({
   id: z.string(),
   label: z.string(),
   code: z.string(),
-  highCourtId: z.string(),
+  complexId: z.string().nullish(),
 });
 
 export type CaseType = z.infer<typeof CaseTypeSchema>;
@@ -763,8 +736,8 @@ export type CaseType = z.infer<typeof CaseTypeSchema>;
 //------------------------------------------------------
 
 export type CaseTypeRelations = {
-  highCourt: HighCourtWithRelations;
   ManualCaseImportTask: ManualCaseImportTaskWithRelations[];
+  Complex?: CourtComplexWithRelations | null;
 };
 
 export type CaseTypeWithRelations = z.infer<typeof CaseTypeSchema> &
@@ -773,10 +746,10 @@ export type CaseTypeWithRelations = z.infer<typeof CaseTypeSchema> &
 export const CaseTypeWithRelationsSchema: z.ZodType<CaseTypeWithRelations> =
   CaseTypeSchema.merge(
     z.object({
-      highCourt: z.lazy(() => HighCourtWithRelationsSchema),
       ManualCaseImportTask: z
         .lazy(() => ManualCaseImportTaskWithRelationsSchema)
         .array(),
+      Complex: z.lazy(() => CourtComplexWithRelationsSchema).nullish(),
     }),
   );
 
@@ -787,11 +760,11 @@ export const CaseTypeWithRelationsSchema: z.ZodType<CaseTypeWithRelations> =
 export const ManualCaseImportTaskSchema = z.object({
   importStatus: CaseImportTaskStatusSchema,
   id: z.string(),
-  highCourtId: z.string(),
   caseType: z.string(),
   number: z.string(),
   regYear: z.string(),
   districtCourtId: z.string(),
+  complexId: z.string().nullish(),
   caseId: z.string().nullish(),
   createdBy: z.string(),
   response: JsonValueSchema.nullable(),
@@ -806,8 +779,9 @@ export type ManualCaseImportTask = z.infer<typeof ManualCaseImportTaskSchema>;
 //------------------------------------------------------
 
 export type ManualCaseImportTaskRelations = {
-  CaseType: CaseTypeWithRelations;
+  CaseType?: CaseTypeWithRelations | null;
   districtCourt: DistrictCourtWithRelations;
+  complex?: CourtComplexWithRelations | null;
   case?: CaseWithRelations | null;
   creator: OrganizationMembersWithRelations;
   organization: OrganizationWithRelations;
@@ -823,8 +797,9 @@ export type ManualCaseImportTaskWithRelations = Omit<
 export const ManualCaseImportTaskWithRelationsSchema: z.ZodType<ManualCaseImportTaskWithRelations> =
   ManualCaseImportTaskSchema.merge(
     z.object({
-      CaseType: z.lazy(() => CaseTypeWithRelationsSchema),
+      CaseType: z.lazy(() => CaseTypeWithRelationsSchema).nullish(),
       districtCourt: z.lazy(() => DistrictCourtWithRelationsSchema),
+      complex: z.lazy(() => CourtComplexWithRelationsSchema).nullish(),
       case: z.lazy(() => CaseWithRelationsSchema).nullish(),
       creator: z.lazy(() => OrganizationMembersWithRelationsSchema),
       organization: z.lazy(() => OrganizationWithRelationsSchema),

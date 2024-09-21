@@ -74,13 +74,16 @@ export type CaseType = {
   id: string;
   label: string;
   code: string;
-  highCourtId: string;
+  complexId: string | null;
 };
 export type CourtComplex = {
   id: string;
   name: string;
+  complexCode: string | null;
   stateCode: string;
   districtCode: string;
+  isMasterCourtComplex: Generated<boolean>;
+  masterComplexCourtCode: string | null;
   created_at: Generated<Timestamp>;
   updatedAt: Timestamp | null;
 };
@@ -97,17 +100,13 @@ export type DistrictCourt = {
   stateCode: string;
   districtCode: string;
 };
-export type HighCourt = {
-  id: string;
-  name: string;
-};
 export type ManualCaseImportTask = {
   id: Generated<string>;
-  highCourtId: string;
   caseType: string;
   number: string;
   regYear: string;
   districtCourtId: string;
+  complexId: string | null;
   importStatus: Generated<CaseImportTaskStatus>;
   caseId: string | null;
   createdBy: string;
@@ -142,7 +141,6 @@ export type Session = {
 export type State = {
   stateCode: string;
   name: string;
-  highCourtId: string;
 };
 export type User = {
   id: Generated<string>;
@@ -165,7 +163,6 @@ export type DB = {
   CourtComplex: CourtComplex;
   District: District;
   DistrictCourt: DistrictCourt;
-  HighCourt: HighCourt;
   ManualCaseImportTask: ManualCaseImportTask;
   Organization: Organization;
   OrganizationMembers: OrganizationMembers;

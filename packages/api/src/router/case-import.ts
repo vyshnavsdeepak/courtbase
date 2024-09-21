@@ -91,7 +91,11 @@ export const caseImportRouter = {
         "DistrictCourt.id",
         "ManualCaseImportTask.districtCourtId",
       )
-      .leftJoin("CaseType", "CaseType.code", "ManualCaseImportTask.caseType")
+      .innerJoin("CaseType", (qb) => {
+        return qb
+          .onRef("CaseType.code", "=", "ManualCaseImportTask.caseType")
+          .onRef("CaseType.complexId", "=", "ManualCaseImportTask.complexId");
+      })
       .select([
         "ManualCaseImportTask.id",
         "CaseType.label as caseType",
@@ -116,13 +120,7 @@ export const caseImportRouter = {
         const [districtCourt, caseType] = await Promise.all([
           ctx.kysely
             .selectFrom("DistrictCourt")
-            .innerJoin("State", "State.stateCode", "DistrictCourt.stateCode")
-            .select([
-              "State.highCourtId",
-              "State.stateCode",
-              "DistrictCourt.districtCode",
-              "DistrictCourt.courtCode",
-            ])
+            .select(["stateCode", "complexId", "districtCode", "courtCode"])
             .where("DistrictCourt.id", "=", districtCourtId)
             .executeTakeFirstOrThrow(),
           ctx.kysely
@@ -132,14 +130,20 @@ export const caseImportRouter = {
             .executeTakeFirstOrThrow(),
         ]);
 
-        const highCourtId = districtCourt.highCourtId;
+        if (!districtCourt.stateCode) {
+          throw new Error(
+            `State code not found for district court ${districtCourtId}`,
+          );
+        }
+
+        const complexId = districtCourt.complexId;
         const caseTypeCode = caseType.code;
 
         const insertRes = await ctx.kysely
           .insertInto("ManualCaseImportTask")
           .values({
             organizationId: ctx.orgId,
-            highCourtId,
+            complexId,
             caseType: caseTypeCode,
             number,
             regYear,

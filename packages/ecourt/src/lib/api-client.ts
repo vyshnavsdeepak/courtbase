@@ -18,7 +18,11 @@ const baseUrl = "https://app.ecourts.gov.in/ecourt_mobile_encrypted_DC";
 type Endpoint =
   | "/searchByAdvocateName.php"
   | "/caseHistoryWebService.php"
-  | "/caseNumberSearch.php";
+  | "/caseNumberSearch.php"
+  | "/stateWebService.php"
+  | "/districtWebService.php"
+  | "/caseNumberWebService.php" // caseTypes
+  | "/courtEstWebService.php";
 
 type RequestData = Record<string, string>;
 
