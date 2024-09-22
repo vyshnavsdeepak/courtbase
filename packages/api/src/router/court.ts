@@ -32,12 +32,37 @@ export const courtRouter = {
   districtCourts: orgProtectedProcedure
     .input(z.object({ districtCode: z.string(), stateCode: z.string() }))
     .query(async ({ ctx, input }) => {
-      return ctx.kysely
-        .selectFrom("DistrictCourt")
-        .select(["id", "name", "complexId"])
+      const complexes = await ctx.kysely
+        .selectFrom("CourtComplex")
+        .select([
+          "id",
+          "name",
+          "isMasterCourtComplex",
+          "masterComplexCourtCode",
+        ])
         .where("stateCode", "=", input.stateCode)
         .where("districtCode", "=", input.districtCode)
         .execute();
+
+      const complexIds = complexes.map((complex) => complex.id);
+      const courts = await ctx.kysely
+        .selectFrom("DistrictCourt")
+        .select(["id", "name", "complexId"])
+        .where("complexId", "in", complexIds)
+        .execute();
+
+      const courtsByComplexId = courts.reduce((acc, court) => {
+        acc.set(
+          court.complexId,
+          (acc.get(court.complexId) ?? []).concat(court),
+        );
+        return acc;
+      }, new Map<string, (typeof courts)[number][]>());
+
+      return complexes.map((complex) => ({
+        ...complex,
+        courts: courtsByComplexId.get(complex.id) ?? [],
+      }));
     }),
   getCaseTypes: orgProtectedProcedure
     .input(z.object({ complexId: z.string() }))

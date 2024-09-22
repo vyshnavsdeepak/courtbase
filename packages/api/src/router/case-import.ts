@@ -112,42 +112,70 @@ export const caseImportRouter = {
   importByCaseNumber: orgProtectedProcedure
     .input(ImportByCaseNumberParamsSchema)
     .mutation(async ({ ctx, input }) => {
-      console.log("importByCaseNumber", input);
-      const { districtCourtId, caseNumber } = input;
+      const { districtCourt: districtCourtInput, caseNumber } = input;
       const { number, caseTypeId, regYear } = caseNumber;
 
-      try {
-        const [districtCourt, caseType] = await Promise.all([
-          ctx.kysely
-            .selectFrom("DistrictCourt")
-            .select(["stateCode", "complexId", "districtCode", "courtCode"])
-            .where("DistrictCourt.id", "=", districtCourtId)
-            .executeTakeFirstOrThrow(),
-          ctx.kysely
-            .selectFrom("CaseType")
-            .where("id", "=", caseTypeId)
-            .select("code")
-            .executeTakeFirstOrThrow(),
-        ]);
+      let courtCode: string;
+      let stateCode: string;
+      let districtCode: string;
+      let complexId: string;
 
-        if (!districtCourt.stateCode) {
-          throw new Error(
-            `State code not found for district court ${districtCourtId}`,
-          );
+      if (districtCourtInput.courtId) {
+        const court = await ctx.kysely
+          .selectFrom("DistrictCourt")
+          .select(["stateCode", "complexId", "districtCode", "courtCode"])
+          .where("DistrictCourt.id", "=", districtCourtInput.courtId)
+          .executeTakeFirstOrThrow();
+        courtCode = court.courtCode;
+        stateCode = court.stateCode;
+        districtCode = court.districtCode;
+        complexId = court.complexId;
+      } else {
+        const complex = await ctx.kysely
+          .selectFrom("CourtComplex")
+          .select([
+            "masterComplexCourtCode as courtCode",
+            "districtCode",
+            "stateCode",
+          ])
+          .where("id", "=", districtCourtInput.complexId)
+          .where("isMasterCourtComplex", "=", true)
+          .executeTakeFirstOrThrow()
+          .catch(() => {
+            throw new TRPCError({
+              code: "BAD_REQUEST",
+              message: "Complex not found",
+            });
+          });
+        if (!complex.courtCode) {
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "E1-Something went wrong in finding court complex", // Never
+          });
         }
+        complexId = districtCourtInput.complexId;
+        courtCode = complex.courtCode;
+        stateCode = complex.stateCode;
+        districtCode = complex.districtCode;
+      }
 
-        const complexId = districtCourt.complexId;
+      try {
+        const caseType = await ctx.kysely
+          .selectFrom("CaseType")
+          .where("id", "=", caseTypeId)
+          .select("code")
+          .executeTakeFirstOrThrow();
         const caseTypeCode = caseType.code;
 
         const insertRes = await ctx.kysely
           .insertInto("ManualCaseImportTask")
           .values({
             organizationId: ctx.orgId,
-            complexId,
             caseType: caseTypeCode,
             number,
             regYear,
-            districtCourtId,
+            complexId,
+            districtCourtId: districtCourtInput.courtId,
             createdBy: ctx.memberId,
           })
           .returning("id")
@@ -162,9 +190,9 @@ export const caseImportRouter = {
                 number,
                 regYear,
               },
-              districtCode: districtCourt.districtCode,
-              stateCode: districtCourt.stateCode,
-              courtCode: districtCourt.courtCode,
+              districtCode,
+              stateCode,
+              courtCode,
             },
             identity: {
               orgId: ctx.orgId,
@@ -174,11 +202,11 @@ export const caseImportRouter = {
             },
           },
         });
+
         return {
           importTaskId: insertRes.id,
         };
       } catch (e) {
-        console.error(e);
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: (e as Error).message || "An error occurred",

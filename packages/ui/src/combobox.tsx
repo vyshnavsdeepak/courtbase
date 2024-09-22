@@ -20,7 +20,12 @@ import {
 } from "@court-base/ui/popover";
 
 interface ComboboxProps {
-  items: { value: string; label: string }[];
+  items: {
+    value: string;
+    label: string;
+    isHeader?: boolean;
+    selectable?: boolean;
+  }[];
   placeholder?: string;
   onSelect?: (value: string) => void;
   disabled?: boolean;
@@ -62,7 +67,10 @@ export const Combobox: React.FC<ComboboxProps> = ({
   };
 
   const filteredItems = items.filter((item) =>
-    item.label.toLowerCase().includes(searchQuery.toLowerCase()),
+    searchQuery.trim()
+      ? item.label.toLowerCase().includes(searchQuery.toLowerCase()) &&
+        !!item.selectable
+      : true,
   );
 
   return (
@@ -100,15 +108,31 @@ export const Combobox: React.FC<ComboboxProps> = ({
                 <CommandItem
                   key={item.value}
                   value={item.value}
-                  onSelect={handleSelect}
+                  onSelect={
+                    item.isHeader
+                      ? item.selectable
+                        ? handleSelect
+                        : undefined
+                      : handleSelect
+                  }
                 >
-                  <Check
-                    className={cn(
-                      "mr-2 h-4 w-4",
-                      value === item.value ? "opacity-100" : "opacity-0",
-                    )}
-                  />
-                  {item.label}
+                  {item.isHeader && !item.selectable ? (
+                    <strong>{item.label}</strong>
+                  ) : (
+                    <>
+                      <Check
+                        className={cn(
+                          "mr-2 h-4 w-4",
+                          value === item.value ? "opacity-100" : "opacity-0",
+                        )}
+                      />
+                      {item.isHeader ? (
+                        <strong>{item.label}</strong>
+                      ) : (
+                        item.label
+                      )}
+                    </>
+                  )}
                 </CommandItem>
               ))}
             </CommandGroup>

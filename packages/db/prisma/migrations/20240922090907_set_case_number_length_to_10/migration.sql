@@ -1,0 +1,6 @@
+-- AlterTable
+ALTER TABLE "Case" ALTER COLUMN "number" SET DATA TYPE VARCHAR(10);
+
+-- AlterTable
+ALTER TABLE "ManualCaseImportTask" ALTER COLUMN "number" SET DATA TYPE VARCHAR(10),
+ALTER COLUMN "districtCourtId" DROP NOT NULL;

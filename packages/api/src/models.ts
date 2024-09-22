@@ -29,8 +29,11 @@ export const CreateCaseImportTaskParamsSchema = z.object({
 });
 
 export const ImportByCaseNumberParamsSchema = z.object({
-  districtCourtId: z.string({
-    message: "Please select the district court",
+  districtCourt: z.object({
+    courtId: z.string().optional(),
+    complexId: z.string({
+      message: "Please select a court",
+    }),
   }),
   caseNumber: z.object({
     caseTypeId: z.string({

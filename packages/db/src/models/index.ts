@@ -763,7 +763,7 @@ export const ManualCaseImportTaskSchema = z.object({
   caseType: z.string(),
   number: z.string(),
   regYear: z.string(),
-  districtCourtId: z.string(),
+  districtCourtId: z.string().nullish(),
   complexId: z.string().nullish(),
   caseId: z.string().nullish(),
   createdBy: z.string(),
@@ -780,7 +780,7 @@ export type ManualCaseImportTask = z.infer<typeof ManualCaseImportTaskSchema>;
 
 export type ManualCaseImportTaskRelations = {
   CaseType?: CaseTypeWithRelations | null;
-  districtCourt: DistrictCourtWithRelations;
+  districtCourt?: DistrictCourtWithRelations | null;
   complex?: CourtComplexWithRelations | null;
   case?: CaseWithRelations | null;
   creator: OrganizationMembersWithRelations;
@@ -798,7 +798,7 @@ export const ManualCaseImportTaskWithRelationsSchema: z.ZodType<ManualCaseImport
   ManualCaseImportTaskSchema.merge(
     z.object({
       CaseType: z.lazy(() => CaseTypeWithRelationsSchema).nullish(),
-      districtCourt: z.lazy(() => DistrictCourtWithRelationsSchema),
+      districtCourt: z.lazy(() => DistrictCourtWithRelationsSchema).nullish(),
       complex: z.lazy(() => CourtComplexWithRelationsSchema).nullish(),
       case: z.lazy(() => CaseWithRelationsSchema).nullish(),
       creator: z.lazy(() => OrganizationMembersWithRelationsSchema),

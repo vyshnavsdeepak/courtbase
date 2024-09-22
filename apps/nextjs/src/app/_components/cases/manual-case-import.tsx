@@ -83,6 +83,7 @@ function ManualCaseImportDialog({
   } = useForm<FormData>({
     resolver: zodResolver(ImportByCaseNumberParamsSchema),
     defaultValues: {
+      districtCourt: {},
       caseNumber: {},
     },
   });
@@ -94,7 +95,7 @@ function ManualCaseImportDialog({
     string | null
   >(null);
 
-  const selectedDistrictCourt = watch("districtCourtId");
+  const selectedDistrictCourt = watch("districtCourt");
 
   const apiUtils = api.useUtils();
 
@@ -128,20 +129,59 @@ function ManualCaseImportDialog({
       { enabled: !!selectedStateCode && !!selectedDistrictCode },
     );
 
-  const districtCourts = districtCourtsLoading
-    ? [{ name: "Loading...", id: "", complexId: "" }]
-    : (districtCourtsSource ?? [
-        { name: "No courts found", id: "", complexId: "" },
-      ]);
+  // Transform districtCourts before sending to Combobox
+  const transformDistrictCourts = () => {
+    if (districtCourtsLoading) {
+      return [
+        { value: "", label: "Loading...", isHeader: false, selectable: false },
+      ];
+    }
+    if (!districtCourtsSource) {
+      return [
+        {
+          value: "",
+          label: "No courts found",
+          isHeader: false,
+          selectable: false,
+        },
+      ];
+    }
+    const items: {
+      value: string;
+      label: string;
+      isHeader: boolean;
+      selectable: boolean;
+    }[] = [];
 
-  const selectedDistrictCourtObj = districtCourts.find(
-    (d) => d.id === selectedDistrictCourt,
-  );
-  const complexId = selectedDistrictCourtObj?.complexId;
+    districtCourtsSource.forEach((complex) => {
+      // Add complex name as header
+      items.push({
+        value: JSON.stringify({ complexId: complex.id }),
+        label: complex.name,
+        isHeader: true,
+        selectable: complex.isMasterCourtComplex,
+      });
+
+      // Add courts under the complex if it's not a master court complex
+      if (!complex.isMasterCourtComplex) {
+        complex.courts.forEach((court) => {
+          items.push({
+            value: JSON.stringify({ courtId: court.id, complexId: complex.id }),
+            label: court.name,
+            isHeader: false,
+            selectable: true,
+          });
+        });
+      }
+    });
+    return items;
+  };
+  const districtCourts = transformDistrictCourts();
+  const complexId = selectedDistrictCourt.complexId;
   // Fetch case types based on highCourtId and availability of districtCourts
   const { data: caseTypesSource, isLoading: caseTypesLoading } =
     api.court.getCaseTypes.useQuery(
-      { complexId: complexId ?? "" },
+      { complexId: complexId },
       { enabled: !!complexId },
     );
 
@@ -201,16 +241,15 @@ function ManualCaseImportDialog({
         </div>
         <div className="grid">
           <Controller
-            name="districtCourtId"
+            name="districtCourt"
             control={control}
             render={({ field }) => (
               <Combobox
                 placeholder="Select Court"
-                items={districtCourts.map((court) => ({
-                  value: court.id,
-                  label: court.name,
-                }))}
-                onSelect={field.onChange}
+                items={districtCourts}
+                onSelect={(val) => {
+                  field.onChange(JSON.parse(val));
+                }}
                 disabled={!selectedDistrictCode}
               />
             )}
