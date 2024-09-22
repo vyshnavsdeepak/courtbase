@@ -32,7 +32,7 @@ interface ComboboxProps {
   allowDeselect?: boolean;
 }
 export const Combobox: React.FC<ComboboxProps> = ({
-  items,
+  items: itemsInput,
   placeholder = "Select an item...",
   onSelect,
   disabled = false,
@@ -40,11 +40,15 @@ export const Combobox: React.FC<ComboboxProps> = ({
 }) => {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("");
-  const [searchQuery, setSearchQuery] = React.useState("");
   const buttonRef = React.useRef<HTMLButtonElement>(null);
   const [popoverWidth, setPopoverWidth] = React.useState<string | number>(
     "auto",
   );
+
+  const items = itemsInput.map((item) => ({
+    selectable: item.selectable ?? true,
+    ...item,
+  }));
 
   React.useEffect(() => {
     if (buttonRef.current) {
@@ -65,13 +69,6 @@ export const Combobox: React.FC<ComboboxProps> = ({
       onSelect(newValue);
     }
   };
-
-  const filteredItems = items.filter((item) =>
-    searchQuery.trim()
-      ? item.label.toLowerCase().includes(searchQuery.toLowerCase()) &&
-        !!item.selectable
-      : true,
-  );
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -95,16 +92,25 @@ export const Combobox: React.FC<ComboboxProps> = ({
         className="p-0"
         portal={false}
       >
-        <Command>
-          <CommandInput
-            placeholder="Search..."
-            value={searchQuery}
-            onValueChange={setSearchQuery}
-          />
+        <Command
+          filter={(value, search) => {
+            const searchValue = search.toLowerCase();
+            const item = items.find((item) => item.value === value);
+            if (!item) {
+              throw new Error("Item not found (Never)");
+            }
+
+            if (item.selectable) {
+              return item.label.toLowerCase().includes(searchValue) ? 1 : 0;
+            }
+            return 0;
+          }}
+        >
+          <CommandInput />
           <CommandEmpty>No item found.</CommandEmpty>
           <CommandList>
             <CommandGroup>
-              {filteredItems.map((item) => (
+              {items.map((item) => (
                 <CommandItem
                   key={item.value}
                   value={item.value}
