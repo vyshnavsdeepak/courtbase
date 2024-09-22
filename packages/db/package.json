@@ -30,12 +30,12 @@
     "db:format": "if [ \"$NODE_ENV\" != \"production\" ]; then prisma format; fi",
     "db:generate:raw": "pnpm with-env prisma generate",
     "db:migrate:raw": "pnpm with-env prisma migrate dev",
-    "db:generate": "pnpm db:format && pnpm db:generate:raw && pnpm format",
+    "db:generate": "pnpm db:format && pnpm db:generate:raw && pnpm format --write",
     "db:migrate": "pnpm db:format && pnpm db:migrate:raw && pnpm format",
     "push": "pnpm with-env prisma db push --skip-generate",
     "pull": "pnpm with-env prisma db pull",
     "studio": "pnpm with-env prisma studio --port 5556",
-    "format": "prettier --check src/models --ignore-path ../../.gitignore",
+    "format": "prettier --check src/models",
     "lint": "eslint",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false",
     "with-env": "dotenv -e ../../.env --",
@@ -44,7 +44,7 @@
   "lint-staged": {
     "*.{ts}": [
       "eslint --fix",
-      "prettier --check --ignore-path ../../.gitignore --write"
+      "pnpm run format --write"
     ]
   },
   "dependencies": {

@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  output   = "./generated/client"
 }
 
 datasource db {
@@ -32,6 +33,7 @@ generator zod {
   useDefaultValidators             = false // default is true
   coerceDate                       = true // default is true
   writeNullishInModelTypes         = true // default is false
+  prismaClientPath                 = "../../prisma/generated/client"
 }
 
 model Account {

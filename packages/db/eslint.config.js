@@ -8,6 +8,7 @@ export default [
       "kysely/types.ts",
       "kysely/enums.ts",
       "src/models/index.ts",
+      "prisma/generated/client/**",
     ],
   },
   ...baseConfig,

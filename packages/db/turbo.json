@@ -6,7 +6,6 @@
       "dependsOn": ["db:generate"]
     },
     "build": {
-      "dependsOn": ["db:generate"]
     },
     "db:generate": {
       "cache": false
