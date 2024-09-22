@@ -44,6 +44,7 @@
   "dependencies": {
     "@court-base/auth": "workspace:*",
     "@court-base/db": "workspace:*",
+    "@court-base/ecourt": "workspace:*",
     "@court-base/event-funnel": "workspace:*",
     "@court-base/validators": "workspace:*",
     "@trpc/server": "catalog:",

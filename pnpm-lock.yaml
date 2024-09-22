@@ -369,6 +369,9 @@ importers:
       '@court-base/db':
         specifier: workspace:*
         version: link:../db
+      '@court-base/ecourt':
+        specifier: workspace:*
+        version: link:../ecourt
       '@court-base/event-funnel':
         specifier: workspace:*
         version: link:../event-funnel
