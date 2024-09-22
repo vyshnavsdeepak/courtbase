@@ -97,7 +97,8 @@ export const Combobox: React.FC<ComboboxProps> = ({
             const searchValue = search.toLowerCase();
             const item = items.find((item) => item.value === value);
             if (!item) {
-              throw new Error("Item not found (Never)");
+              console.log(`Item not found for val: ${value}`);
+              return 0;
             }
 
             if (item.selectable) {
