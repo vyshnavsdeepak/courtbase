@@ -23,8 +23,8 @@
   },
   "license": "MIT",
   "scripts": {
-    "build": "tsc",
-    "dev": "tsc --watch",
+    "build": "tsc && cp -r prisma dist/",
+    "dev": "cp -r prisma dist/ && tsc --watch",
     "clean": "rm -rf .prisma .turbo dist node_modules",
     "runscript": "dotenv -e ../../.env -- tsx",
     "db:format": "if [ \"$NODE_ENV\" != \"production\" ]; then prisma format; fi",
