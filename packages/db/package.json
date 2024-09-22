@@ -35,7 +35,7 @@
     "push": "pnpm with-env prisma db push --skip-generate",
     "pull": "pnpm with-env prisma db pull",
     "studio": "pnpm with-env prisma studio --port 5556",
-    "format": "if [ \"$NODE_ENV\" != \"production\" ]; then prettier --check . --ignore-path ../../.gitignore --write src/models; fi",
+    "format": "prettier --check src/models --ignore-path ../../.gitignore",
     "lint": "eslint",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false",
     "with-env": "dotenv -e ../../.env --",
