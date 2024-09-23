@@ -142,6 +142,7 @@ model Case {
   regYear           String    @db.VarChar(4) // eg. 2021
   // typeName/number/regYear is unique in a court = eg. OP/232/2021
   title             String    @db.VarChar(255)
+  customTitle       String?   @db.VarChar(255)
   description       String?   @db.VarChar(255)
   petitioner        String    @db.VarChar(255)
   petitionerLawyers String    @db.VarChar(255)

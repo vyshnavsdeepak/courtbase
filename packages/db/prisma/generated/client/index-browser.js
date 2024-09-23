@@ -182,6 +182,7 @@ exports.Prisma.CaseScalarFieldEnum = {
   number: 'number',
   regYear: 'regYear',
   title: 'title',
+  customTitle: 'customTitle',
   description: 'description',
   petitioner: 'petitioner',
   petitionerLawyers: 'petitionerLawyers',

@@ -35,16 +35,15 @@ export function DatePickerWithPresets() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const parseSearchParams = () => {
-    const params = qs.parse(searchParams.toString());
-    const nextHearingDate = params.nextHearingDate;
-    if (nextHearingDate) {
-      return { nextHearingDate };
-    }
-    return { dateRange: params.dateRange };
-  };
-
   React.useEffect(() => {
+    const parseSearchParams = () => {
+      const params = qs.parse(searchParams.toString());
+      const nextHearingDate = params.nextHearingDate;
+      if (nextHearingDate) {
+        return { nextHearingDate };
+      }
+      return { dateRange: params.dateRange };
+    };
     const { nextHearingDate } = parseSearchParams();
     if (typeof nextHearingDate === "string") {
       const parsedDateSpan = zDateSpan.safeParse(nextHearingDate);

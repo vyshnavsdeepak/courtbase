@@ -9296,6 +9296,7 @@ export namespace Prisma {
     number: string | null
     regYear: string | null
     title: string | null
+    customTitle: string | null
     description: string | null
     petitioner: string | null
     petitionerLawyers: string | null
@@ -9320,6 +9321,7 @@ export namespace Prisma {
     number: string | null
     regYear: string | null
     title: string | null
+    customTitle: string | null
     description: string | null
     petitioner: string | null
     petitionerLawyers: string | null
@@ -9344,6 +9346,7 @@ export namespace Prisma {
     number: number
     regYear: number
     title: number
+    customTitle: number
     description: number
     petitioner: number
     petitionerLawyers: number
@@ -9371,6 +9374,7 @@ export namespace Prisma {
     number?: true
     regYear?: true
     title?: true
+    customTitle?: true
     description?: true
     petitioner?: true
     petitionerLawyers?: true
@@ -9395,6 +9399,7 @@ export namespace Prisma {
     number?: true
     regYear?: true
     title?: true
+    customTitle?: true
     description?: true
     petitioner?: true
     petitionerLawyers?: true
@@ -9419,6 +9424,7 @@ export namespace Prisma {
     number?: true
     regYear?: true
     title?: true
+    customTitle?: true
     description?: true
     petitioner?: true
     petitionerLawyers?: true
@@ -9517,6 +9523,7 @@ export namespace Prisma {
     number: string
     regYear: string
     title: string
+    customTitle: string | null
     description: string | null
     petitioner: string
     petitionerLawyers: string
@@ -9559,6 +9566,7 @@ export namespace Prisma {
     number?: boolean
     regYear?: boolean
     title?: boolean
+    customTitle?: boolean
     description?: boolean
     petitioner?: boolean
     petitionerLawyers?: boolean
@@ -9589,6 +9597,7 @@ export namespace Prisma {
     number?: boolean
     regYear?: boolean
     title?: boolean
+    customTitle?: boolean
     description?: boolean
     petitioner?: boolean
     petitionerLawyers?: boolean
@@ -9616,6 +9625,7 @@ export namespace Prisma {
     number?: boolean
     regYear?: boolean
     title?: boolean
+    customTitle?: boolean
     description?: boolean
     petitioner?: boolean
     petitionerLawyers?: boolean
@@ -9661,6 +9671,7 @@ export namespace Prisma {
       number: string
       regYear: string
       title: string
+      customTitle: string | null
       description: string | null
       petitioner: string
       petitionerLawyers: string
@@ -10080,6 +10091,7 @@ export namespace Prisma {
     readonly number: FieldRef<"Case", 'String'>
     readonly regYear: FieldRef<"Case", 'String'>
     readonly title: FieldRef<"Case", 'String'>
+    readonly customTitle: FieldRef<"Case", 'String'>
     readonly description: FieldRef<"Case", 'String'>
     readonly petitioner: FieldRef<"Case", 'String'>
     readonly petitionerLawyers: FieldRef<"Case", 'String'>
@@ -18487,6 +18499,7 @@ export namespace Prisma {
     number: 'number',
     regYear: 'regYear',
     title: 'title',
+    customTitle: 'customTitle',
     description: 'description',
     petitioner: 'petitioner',
     petitionerLawyers: 'petitionerLawyers',
@@ -19205,6 +19218,7 @@ export namespace Prisma {
     number?: StringFilter<"Case"> | string
     regYear?: StringFilter<"Case"> | string
     title?: StringFilter<"Case"> | string
+    customTitle?: StringNullableFilter<"Case"> | string | null
     description?: StringNullableFilter<"Case"> | string | null
     petitioner?: StringFilter<"Case"> | string
     petitionerLawyers?: StringFilter<"Case"> | string
@@ -19234,6 +19248,7 @@ export namespace Prisma {
     number?: SortOrder
     regYear?: SortOrder
     title?: SortOrder
+    customTitle?: SortOrderInput | SortOrder
     description?: SortOrderInput | SortOrder
     petitioner?: SortOrder
     petitionerLawyers?: SortOrder
@@ -19268,6 +19283,7 @@ export namespace Prisma {
     number?: StringFilter<"Case"> | string
     regYear?: StringFilter<"Case"> | string
     title?: StringFilter<"Case"> | string
+    customTitle?: StringNullableFilter<"Case"> | string | null
     description?: StringNullableFilter<"Case"> | string | null
     petitioner?: StringFilter<"Case"> | string
     petitionerLawyers?: StringFilter<"Case"> | string
@@ -19297,6 +19313,7 @@ export namespace Prisma {
     number?: SortOrder
     regYear?: SortOrder
     title?: SortOrder
+    customTitle?: SortOrderInput | SortOrder
     description?: SortOrderInput | SortOrder
     petitioner?: SortOrder
     petitionerLawyers?: SortOrder
@@ -19328,6 +19345,7 @@ export namespace Prisma {
     number?: StringWithAggregatesFilter<"Case"> | string
     regYear?: StringWithAggregatesFilter<"Case"> | string
     title?: StringWithAggregatesFilter<"Case"> | string
+    customTitle?: StringNullableWithAggregatesFilter<"Case"> | string | null
     description?: StringNullableWithAggregatesFilter<"Case"> | string | null
     petitioner?: StringWithAggregatesFilter<"Case"> | string
     petitionerLawyers?: StringWithAggregatesFilter<"Case"> | string
@@ -20336,6 +20354,7 @@ export namespace Prisma {
     number: string
     regYear: string
     title: string
+    customTitle?: string | null
     description?: string | null
     petitioner: string
     petitionerLawyers: string
@@ -20364,6 +20383,7 @@ export namespace Prisma {
     number: string
     regYear: string
     title: string
+    customTitle?: string | null
     description?: string | null
     petitioner: string
     petitionerLawyers: string
@@ -20390,6 +20410,7 @@ export namespace Prisma {
     number?: StringFieldUpdateOperationsInput | string
     regYear?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    customTitle?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     petitioner?: StringFieldUpdateOperationsInput | string
     petitionerLawyers?: StringFieldUpdateOperationsInput | string
@@ -20418,6 +20439,7 @@ export namespace Prisma {
     number?: StringFieldUpdateOperationsInput | string
     regYear?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    customTitle?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     petitioner?: StringFieldUpdateOperationsInput | string
     petitionerLawyers?: StringFieldUpdateOperationsInput | string
@@ -20445,6 +20467,7 @@ export namespace Prisma {
     number: string
     regYear: string
     title: string
+    customTitle?: string | null
     description?: string | null
     petitioner: string
     petitionerLawyers: string
@@ -20469,6 +20492,7 @@ export namespace Prisma {
     number?: StringFieldUpdateOperationsInput | string
     regYear?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    customTitle?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     petitioner?: StringFieldUpdateOperationsInput | string
     petitionerLawyers?: StringFieldUpdateOperationsInput | string
@@ -20493,6 +20517,7 @@ export namespace Prisma {
     number?: StringFieldUpdateOperationsInput | string
     regYear?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    customTitle?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     petitioner?: StringFieldUpdateOperationsInput | string
     petitionerLawyers?: StringFieldUpdateOperationsInput | string
@@ -21600,6 +21625,7 @@ export namespace Prisma {
     number?: SortOrder
     regYear?: SortOrder
     title?: SortOrder
+    customTitle?: SortOrder
     description?: SortOrder
     petitioner?: SortOrder
     petitionerLawyers?: SortOrder
@@ -21625,6 +21651,7 @@ export namespace Prisma {
     number?: SortOrder
     regYear?: SortOrder
     title?: SortOrder
+    customTitle?: SortOrder
     description?: SortOrder
     petitioner?: SortOrder
     petitionerLawyers?: SortOrder
@@ -21649,6 +21676,7 @@ export namespace Prisma {
     number?: SortOrder
     regYear?: SortOrder
     title?: SortOrder
+    customTitle?: SortOrder
     description?: SortOrder
     petitioner?: SortOrder
     petitionerLawyers?: SortOrder
@@ -23962,6 +23990,7 @@ export namespace Prisma {
     number: string
     regYear: string
     title: string
+    customTitle?: string | null
     description?: string | null
     petitioner: string
     petitionerLawyers: string
@@ -23989,6 +24018,7 @@ export namespace Prisma {
     number: string
     regYear: string
     title: string
+    customTitle?: string | null
     description?: string | null
     petitioner: string
     petitionerLawyers: string
@@ -24171,6 +24201,7 @@ export namespace Prisma {
     number?: StringFilter<"Case"> | string
     regYear?: StringFilter<"Case"> | string
     title?: StringFilter<"Case"> | string
+    customTitle?: StringNullableFilter<"Case"> | string | null
     description?: StringNullableFilter<"Case"> | string | null
     petitioner?: StringFilter<"Case"> | string
     petitionerLawyers?: StringFilter<"Case"> | string
@@ -24691,6 +24722,7 @@ export namespace Prisma {
     number: string
     regYear: string
     title: string
+    customTitle?: string | null
     description?: string | null
     petitioner: string
     petitionerLawyers: string
@@ -24718,6 +24750,7 @@ export namespace Prisma {
     number: string
     regYear: string
     title: string
+    customTitle?: string | null
     description?: string | null
     petitioner: string
     petitionerLawyers: string
@@ -24807,6 +24840,7 @@ export namespace Prisma {
     number?: StringFieldUpdateOperationsInput | string
     regYear?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    customTitle?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     petitioner?: StringFieldUpdateOperationsInput | string
     petitionerLawyers?: StringFieldUpdateOperationsInput | string
@@ -24834,6 +24868,7 @@ export namespace Prisma {
     number?: StringFieldUpdateOperationsInput | string
     regYear?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    customTitle?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     petitioner?: StringFieldUpdateOperationsInput | string
     petitionerLawyers?: StringFieldUpdateOperationsInput | string
@@ -25373,6 +25408,7 @@ export namespace Prisma {
     number: string
     regYear: string
     title: string
+    customTitle?: string | null
     description?: string | null
     petitioner: string
     petitionerLawyers: string
@@ -25399,6 +25435,7 @@ export namespace Prisma {
     number: string
     regYear: string
     title: string
+    customTitle?: string | null
     description?: string | null
     petitioner: string
     petitionerLawyers: string
@@ -25770,6 +25807,7 @@ export namespace Prisma {
     number: string
     regYear: string
     title: string
+    customTitle?: string | null
     description?: string | null
     petitioner: string
     petitionerLawyers: string
@@ -25797,6 +25835,7 @@ export namespace Prisma {
     number: string
     regYear: string
     title: string
+    customTitle?: string | null
     description?: string | null
     petitioner: string
     petitionerLawyers: string
@@ -25979,6 +26018,7 @@ export namespace Prisma {
     number?: StringFieldUpdateOperationsInput | string
     regYear?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    customTitle?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     petitioner?: StringFieldUpdateOperationsInput | string
     petitionerLawyers?: StringFieldUpdateOperationsInput | string
@@ -26006,6 +26046,7 @@ export namespace Prisma {
     number?: StringFieldUpdateOperationsInput | string
     regYear?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    customTitle?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     petitioner?: StringFieldUpdateOperationsInput | string
     petitionerLawyers?: StringFieldUpdateOperationsInput | string
@@ -26279,6 +26320,7 @@ export namespace Prisma {
     number: string
     regYear: string
     title: string
+    customTitle?: string | null
     description?: string | null
     petitioner: string
     petitionerLawyers: string
@@ -26364,6 +26406,7 @@ export namespace Prisma {
     number?: StringFieldUpdateOperationsInput | string
     regYear?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    customTitle?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     petitioner?: StringFieldUpdateOperationsInput | string
     petitionerLawyers?: StringFieldUpdateOperationsInput | string
@@ -26391,6 +26434,7 @@ export namespace Prisma {
     number?: StringFieldUpdateOperationsInput | string
     regYear?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    customTitle?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     petitioner?: StringFieldUpdateOperationsInput | string
     petitionerLawyers?: StringFieldUpdateOperationsInput | string
@@ -26417,6 +26461,7 @@ export namespace Prisma {
     number?: StringFieldUpdateOperationsInput | string
     regYear?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    customTitle?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     petitioner?: StringFieldUpdateOperationsInput | string
     petitionerLawyers?: StringFieldUpdateOperationsInput | string
@@ -26991,6 +27036,7 @@ export namespace Prisma {
     number: string
     regYear: string
     title: string
+    customTitle?: string | null
     description?: string | null
     petitioner: string
     petitionerLawyers: string
@@ -27030,6 +27076,7 @@ export namespace Prisma {
     number?: StringFieldUpdateOperationsInput | string
     regYear?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    customTitle?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     petitioner?: StringFieldUpdateOperationsInput | string
     petitionerLawyers?: StringFieldUpdateOperationsInput | string
@@ -27056,6 +27103,7 @@ export namespace Prisma {
     number?: StringFieldUpdateOperationsInput | string
     regYear?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    customTitle?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     petitioner?: StringFieldUpdateOperationsInput | string
     petitionerLawyers?: StringFieldUpdateOperationsInput | string
@@ -27082,6 +27130,7 @@ export namespace Prisma {
     number?: StringFieldUpdateOperationsInput | string
     regYear?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    customTitle?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     petitioner?: StringFieldUpdateOperationsInput | string
     petitionerLawyers?: StringFieldUpdateOperationsInput | string

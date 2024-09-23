@@ -42,6 +42,7 @@ export type Case = {
   number: string;
   regYear: string;
   title: string;
+  customTitle: string | null;
   description: string | null;
   petitioner: string;
   petitionerLawyers: string;
