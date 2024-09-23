@@ -13,6 +13,7 @@ applications:
             - pwd
             - env >> .env.production
             - pnpm exec turbo run build --filter=@court-base/nextjs
+            - pnpm run db:migrate:deploy
       artifacts:
         baseDirectory: .next
         files:
