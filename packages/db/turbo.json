@@ -3,7 +3,6 @@
   "extends": ["//"],
   "tasks": {
     "typecheck": {
-      "dependsOn": ["db:generate"]
     },
     "build": {
     },

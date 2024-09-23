@@ -1,7 +1,11 @@
 import type { TRPCRouterRecord } from "@trpc/server";
 import { sql } from "kysely";
 
-import { AllCaseRequestSchema, AllCaseResponseSchema } from "../schemas/cases";
+import {
+  AllCaseRequestSchema,
+  AllCaseResponseSchema,
+  CaseUpdateTitleRequestSchema,
+} from "../schemas/cases";
 // import type { Case } from "@court-base/db/types";
 import { orgProtectedProcedure } from "../trpc";
 import { getNextHearingDateFilter } from "../utils/cases-utils";
@@ -48,6 +52,7 @@ const casesRouter = {
           "number",
           "regYear",
           "title",
+          "customTitle",
           "petitioner",
           "respondent",
           "dateOfDecision",
@@ -113,6 +118,40 @@ const casesRouter = {
 
     return result.count as number;
   }),
+  hasOne: orgProtectedProcedure.query(async ({ ctx }) => {
+    const result = await ctx.kysely
+      .selectFrom("Case")
+      .select("id")
+      .where("organizationId", "=", ctx.orgId)
+      .limit(1)
+      .execute()
+      .then((res) => res.length > 0)
+      .catch((e) => {
+        console.error(e);
+        throw new Error("Failed to check if case exists. (E-1)");
+      });
+    return !!result;
+  }),
+  updateTitle: orgProtectedProcedure
+    .input(CaseUpdateTitleRequestSchema)
+    .mutation(async ({ ctx, input }) => {
+      return ctx.kysely
+        .updateTable("Case")
+        .set("customTitle", input.title)
+        .where("crn", "=", input.crn)
+        .where("organizationId", "=", ctx.orgId)
+        .execute()
+        .then(() => {
+          return {
+            success: true,
+            message: "Case title updated successfully.",
+          };
+        })
+        .catch((e) => {
+          console.error(e);
+          throw new Error("Failed to update case title. (E-1)");
+        });
+    }),
 } satisfies TRPCRouterRecord;
 
 export { casesRouter };

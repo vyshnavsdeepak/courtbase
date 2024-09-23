@@ -42,6 +42,7 @@ export type Case = {
   number: string;
   regYear: string;
   title: string;
+  customTitle: string | null;
   description: string | null;
   petitioner: string;
   petitionerLawyers: string;
@@ -74,7 +75,7 @@ export type CaseType = {
   id: string;
   label: string;
   code: string;
-  complexId: string | null;
+  complexId: string;
 };
 export type CourtComplex = {
   id: string;
@@ -106,7 +107,7 @@ export type ManualCaseImportTask = {
   number: string;
   regYear: string;
   districtCourtId: string | null;
-  complexId: string | null;
+  complexId: string;
   importStatus: Generated<CaseImportTaskStatus>;
   caseId: string | null;
   createdBy: string;

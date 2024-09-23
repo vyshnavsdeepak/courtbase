@@ -9296,6 +9296,7 @@ export namespace Prisma {
     number: string | null
     regYear: string | null
     title: string | null
+    customTitle: string | null
     description: string | null
     petitioner: string | null
     petitionerLawyers: string | null
@@ -9320,6 +9321,7 @@ export namespace Prisma {
     number: string | null
     regYear: string | null
     title: string | null
+    customTitle: string | null
     description: string | null
     petitioner: string | null
     petitionerLawyers: string | null
@@ -9344,6 +9346,7 @@ export namespace Prisma {
     number: number
     regYear: number
     title: number
+    customTitle: number
     description: number
     petitioner: number
     petitionerLawyers: number
@@ -9371,6 +9374,7 @@ export namespace Prisma {
     number?: true
     regYear?: true
     title?: true
+    customTitle?: true
     description?: true
     petitioner?: true
     petitionerLawyers?: true
@@ -9395,6 +9399,7 @@ export namespace Prisma {
     number?: true
     regYear?: true
     title?: true
+    customTitle?: true
     description?: true
     petitioner?: true
     petitionerLawyers?: true
@@ -9419,6 +9424,7 @@ export namespace Prisma {
     number?: true
     regYear?: true
     title?: true
+    customTitle?: true
     description?: true
     petitioner?: true
     petitionerLawyers?: true
@@ -9517,6 +9523,7 @@ export namespace Prisma {
     number: string
     regYear: string
     title: string
+    customTitle: string | null
     description: string | null
     petitioner: string
     petitionerLawyers: string
@@ -9559,6 +9566,7 @@ export namespace Prisma {
     number?: boolean
     regYear?: boolean
     title?: boolean
+    customTitle?: boolean
     description?: boolean
     petitioner?: boolean
     petitionerLawyers?: boolean
@@ -9589,6 +9597,7 @@ export namespace Prisma {
     number?: boolean
     regYear?: boolean
     title?: boolean
+    customTitle?: boolean
     description?: boolean
     petitioner?: boolean
     petitionerLawyers?: boolean
@@ -9616,6 +9625,7 @@ export namespace Prisma {
     number?: boolean
     regYear?: boolean
     title?: boolean
+    customTitle?: boolean
     description?: boolean
     petitioner?: boolean
     petitionerLawyers?: boolean
@@ -9661,6 +9671,7 @@ export namespace Prisma {
       number: string
       regYear: string
       title: string
+      customTitle: string | null
       description: string | null
       petitioner: string
       petitionerLawyers: string
@@ -10080,6 +10091,7 @@ export namespace Prisma {
     readonly number: FieldRef<"Case", 'String'>
     readonly regYear: FieldRef<"Case", 'String'>
     readonly title: FieldRef<"Case", 'String'>
+    readonly customTitle: FieldRef<"Case", 'String'>
     readonly description: FieldRef<"Case", 'String'>
     readonly petitioner: FieldRef<"Case", 'String'>
     readonly petitionerLawyers: FieldRef<"Case", 'String'>
@@ -15482,7 +15494,7 @@ export namespace Prisma {
     id: string
     label: string
     code: string
-    complexId: string | null
+    complexId: string
     _count: CaseTypeCountAggregateOutputType | null
     _min: CaseTypeMinAggregateOutputType | null
     _max: CaseTypeMaxAggregateOutputType | null
@@ -15508,7 +15520,7 @@ export namespace Prisma {
     code?: boolean
     complexId?: boolean
     ManualCaseImportTask?: boolean | CaseType$ManualCaseImportTaskArgs<ExtArgs>
-    Complex?: boolean | CaseType$ComplexArgs<ExtArgs>
+    Complex?: boolean | CourtComplexDefaultArgs<ExtArgs>
     _count?: boolean | CaseTypeCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["caseType"]>
 
@@ -15517,7 +15529,7 @@ export namespace Prisma {
     label?: boolean
     code?: boolean
     complexId?: boolean
-    Complex?: boolean | CaseType$ComplexArgs<ExtArgs>
+    Complex?: boolean | CourtComplexDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["caseType"]>
 
   export type CaseTypeSelectScalar = {
@@ -15529,24 +15541,24 @@ export namespace Prisma {
 
   export type CaseTypeInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     ManualCaseImportTask?: boolean | CaseType$ManualCaseImportTaskArgs<ExtArgs>
-    Complex?: boolean | CaseType$ComplexArgs<ExtArgs>
+    Complex?: boolean | CourtComplexDefaultArgs<ExtArgs>
     _count?: boolean | CaseTypeCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type CaseTypeIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    Complex?: boolean | CaseType$ComplexArgs<ExtArgs>
+    Complex?: boolean | CourtComplexDefaultArgs<ExtArgs>
   }
 
   export type $CaseTypePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "CaseType"
     objects: {
       ManualCaseImportTask: Prisma.$ManualCaseImportTaskPayload<ExtArgs>[]
-      Complex: Prisma.$CourtComplexPayload<ExtArgs> | null
+      Complex: Prisma.$CourtComplexPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       label: string
       code: string
-      complexId: string | null
+      complexId: string
     }, ExtArgs["result"]["caseType"]>
     composites: {}
   }
@@ -15912,7 +15924,7 @@ export namespace Prisma {
   export interface Prisma__CaseTypeClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     ManualCaseImportTask<T extends CaseType$ManualCaseImportTaskArgs<ExtArgs> = {}>(args?: Subset<T, CaseType$ManualCaseImportTaskArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ManualCaseImportTaskPayload<ExtArgs>, T, "findMany"> | Null>
-    Complex<T extends CaseType$ComplexArgs<ExtArgs> = {}>(args?: Subset<T, CaseType$ComplexArgs<ExtArgs>>): Prisma__CourtComplexClient<$Result.GetResult<Prisma.$CourtComplexPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    Complex<T extends CourtComplexDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CourtComplexDefaultArgs<ExtArgs>>): Prisma__CourtComplexClient<$Result.GetResult<Prisma.$CourtComplexPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -16284,21 +16296,6 @@ export namespace Prisma {
   }
 
   /**
-   * CaseType.Complex
-   */
-  export type CaseType$ComplexArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the CourtComplex
-     */
-    select?: CourtComplexSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CourtComplexInclude<ExtArgs> | null
-    where?: CourtComplexWhereInput
-  }
-
-  /**
    * CaseType without action
    */
   export type CaseTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -16496,7 +16493,7 @@ export namespace Prisma {
     number: string
     regYear: string
     districtCourtId: string | null
-    complexId: string | null
+    complexId: string
     importStatus: $Enums.CaseImportTaskStatus
     caseId: string | null
     createdBy: string
@@ -16539,7 +16536,7 @@ export namespace Prisma {
     organizationId?: boolean
     CaseType?: boolean | ManualCaseImportTask$CaseTypeArgs<ExtArgs>
     districtCourt?: boolean | ManualCaseImportTask$districtCourtArgs<ExtArgs>
-    complex?: boolean | ManualCaseImportTask$complexArgs<ExtArgs>
+    complex?: boolean | CourtComplexDefaultArgs<ExtArgs>
     case?: boolean | ManualCaseImportTask$caseArgs<ExtArgs>
     creator?: boolean | OrganizationMembersDefaultArgs<ExtArgs>
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
@@ -16561,7 +16558,7 @@ export namespace Prisma {
     organizationId?: boolean
     CaseType?: boolean | ManualCaseImportTask$CaseTypeArgs<ExtArgs>
     districtCourt?: boolean | ManualCaseImportTask$districtCourtArgs<ExtArgs>
-    complex?: boolean | ManualCaseImportTask$complexArgs<ExtArgs>
+    complex?: boolean | CourtComplexDefaultArgs<ExtArgs>
     case?: boolean | ManualCaseImportTask$caseArgs<ExtArgs>
     creator?: boolean | OrganizationMembersDefaultArgs<ExtArgs>
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
@@ -16586,7 +16583,7 @@ export namespace Prisma {
   export type ManualCaseImportTaskInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     CaseType?: boolean | ManualCaseImportTask$CaseTypeArgs<ExtArgs>
     districtCourt?: boolean | ManualCaseImportTask$districtCourtArgs<ExtArgs>
-    complex?: boolean | ManualCaseImportTask$complexArgs<ExtArgs>
+    complex?: boolean | CourtComplexDefaultArgs<ExtArgs>
     case?: boolean | ManualCaseImportTask$caseArgs<ExtArgs>
     creator?: boolean | OrganizationMembersDefaultArgs<ExtArgs>
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
@@ -16594,7 +16591,7 @@ export namespace Prisma {
   export type ManualCaseImportTaskIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     CaseType?: boolean | ManualCaseImportTask$CaseTypeArgs<ExtArgs>
     districtCourt?: boolean | ManualCaseImportTask$districtCourtArgs<ExtArgs>
-    complex?: boolean | ManualCaseImportTask$complexArgs<ExtArgs>
+    complex?: boolean | CourtComplexDefaultArgs<ExtArgs>
     case?: boolean | ManualCaseImportTask$caseArgs<ExtArgs>
     creator?: boolean | OrganizationMembersDefaultArgs<ExtArgs>
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
@@ -16605,7 +16602,7 @@ export namespace Prisma {
     objects: {
       CaseType: Prisma.$CaseTypePayload<ExtArgs> | null
       districtCourt: Prisma.$DistrictCourtPayload<ExtArgs> | null
-      complex: Prisma.$CourtComplexPayload<ExtArgs> | null
+      complex: Prisma.$CourtComplexPayload<ExtArgs>
       case: Prisma.$CasePayload<ExtArgs> | null
       creator: Prisma.$OrganizationMembersPayload<ExtArgs>
       organization: Prisma.$OrganizationPayload<ExtArgs>
@@ -16616,7 +16613,7 @@ export namespace Prisma {
       number: string
       regYear: string
       districtCourtId: string | null
-      complexId: string | null
+      complexId: string
       importStatus: $Enums.CaseImportTaskStatus
       caseId: string | null
       createdBy: string
@@ -16990,7 +16987,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     CaseType<T extends ManualCaseImportTask$CaseTypeArgs<ExtArgs> = {}>(args?: Subset<T, ManualCaseImportTask$CaseTypeArgs<ExtArgs>>): Prisma__CaseTypeClient<$Result.GetResult<Prisma.$CaseTypePayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     districtCourt<T extends ManualCaseImportTask$districtCourtArgs<ExtArgs> = {}>(args?: Subset<T, ManualCaseImportTask$districtCourtArgs<ExtArgs>>): Prisma__DistrictCourtClient<$Result.GetResult<Prisma.$DistrictCourtPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
-    complex<T extends ManualCaseImportTask$complexArgs<ExtArgs> = {}>(args?: Subset<T, ManualCaseImportTask$complexArgs<ExtArgs>>): Prisma__CourtComplexClient<$Result.GetResult<Prisma.$CourtComplexPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    complex<T extends CourtComplexDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CourtComplexDefaultArgs<ExtArgs>>): Prisma__CourtComplexClient<$Result.GetResult<Prisma.$CourtComplexPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     case<T extends ManualCaseImportTask$caseArgs<ExtArgs> = {}>(args?: Subset<T, ManualCaseImportTask$caseArgs<ExtArgs>>): Prisma__CaseClient<$Result.GetResult<Prisma.$CasePayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     creator<T extends OrganizationMembersDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrganizationMembersDefaultArgs<ExtArgs>>): Prisma__OrganizationMembersClient<$Result.GetResult<Prisma.$OrganizationMembersPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     organization<T extends OrganizationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrganizationDefaultArgs<ExtArgs>>): Prisma__OrganizationClient<$Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
@@ -17381,21 +17378,6 @@ export namespace Prisma {
      */
     include?: DistrictCourtInclude<ExtArgs> | null
     where?: DistrictCourtWhereInput
-  }
-
-  /**
-   * ManualCaseImportTask.complex
-   */
-  export type ManualCaseImportTask$complexArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the CourtComplex
-     */
-    select?: CourtComplexSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CourtComplexInclude<ExtArgs> | null
-    where?: CourtComplexWhereInput
   }
 
   /**
@@ -18517,6 +18499,7 @@ export namespace Prisma {
     number: 'number',
     regYear: 'regYear',
     title: 'title',
+    customTitle: 'customTitle',
     description: 'description',
     petitioner: 'petitioner',
     petitionerLawyers: 'petitionerLawyers',
@@ -19235,6 +19218,7 @@ export namespace Prisma {
     number?: StringFilter<"Case"> | string
     regYear?: StringFilter<"Case"> | string
     title?: StringFilter<"Case"> | string
+    customTitle?: StringNullableFilter<"Case"> | string | null
     description?: StringNullableFilter<"Case"> | string | null
     petitioner?: StringFilter<"Case"> | string
     petitionerLawyers?: StringFilter<"Case"> | string
@@ -19264,6 +19248,7 @@ export namespace Prisma {
     number?: SortOrder
     regYear?: SortOrder
     title?: SortOrder
+    customTitle?: SortOrderInput | SortOrder
     description?: SortOrderInput | SortOrder
     petitioner?: SortOrder
     petitionerLawyers?: SortOrder
@@ -19298,6 +19283,7 @@ export namespace Prisma {
     number?: StringFilter<"Case"> | string
     regYear?: StringFilter<"Case"> | string
     title?: StringFilter<"Case"> | string
+    customTitle?: StringNullableFilter<"Case"> | string | null
     description?: StringNullableFilter<"Case"> | string | null
     petitioner?: StringFilter<"Case"> | string
     petitionerLawyers?: StringFilter<"Case"> | string
@@ -19327,6 +19313,7 @@ export namespace Prisma {
     number?: SortOrder
     regYear?: SortOrder
     title?: SortOrder
+    customTitle?: SortOrderInput | SortOrder
     description?: SortOrderInput | SortOrder
     petitioner?: SortOrder
     petitionerLawyers?: SortOrder
@@ -19358,6 +19345,7 @@ export namespace Prisma {
     number?: StringWithAggregatesFilter<"Case"> | string
     regYear?: StringWithAggregatesFilter<"Case"> | string
     title?: StringWithAggregatesFilter<"Case"> | string
+    customTitle?: StringNullableWithAggregatesFilter<"Case"> | string | null
     description?: StringNullableWithAggregatesFilter<"Case"> | string | null
     petitioner?: StringWithAggregatesFilter<"Case"> | string
     petitionerLawyers?: StringWithAggregatesFilter<"Case"> | string
@@ -19696,16 +19684,16 @@ export namespace Prisma {
     id?: StringFilter<"CaseType"> | string
     label?: StringFilter<"CaseType"> | string
     code?: StringFilter<"CaseType"> | string
-    complexId?: StringNullableFilter<"CaseType"> | string | null
+    complexId?: StringFilter<"CaseType"> | string
     ManualCaseImportTask?: ManualCaseImportTaskListRelationFilter
-    Complex?: XOR<CourtComplexNullableRelationFilter, CourtComplexWhereInput> | null
+    Complex?: XOR<CourtComplexRelationFilter, CourtComplexWhereInput>
   }
 
   export type CaseTypeOrderByWithRelationInput = {
     id?: SortOrder
     label?: SortOrder
     code?: SortOrder
-    complexId?: SortOrderInput | SortOrder
+    complexId?: SortOrder
     ManualCaseImportTask?: ManualCaseImportTaskOrderByRelationAggregateInput
     Complex?: CourtComplexOrderByWithRelationInput
   }
@@ -19718,16 +19706,16 @@ export namespace Prisma {
     NOT?: CaseTypeWhereInput | CaseTypeWhereInput[]
     label?: StringFilter<"CaseType"> | string
     code?: StringFilter<"CaseType"> | string
-    complexId?: StringNullableFilter<"CaseType"> | string | null
+    complexId?: StringFilter<"CaseType"> | string
     ManualCaseImportTask?: ManualCaseImportTaskListRelationFilter
-    Complex?: XOR<CourtComplexNullableRelationFilter, CourtComplexWhereInput> | null
+    Complex?: XOR<CourtComplexRelationFilter, CourtComplexWhereInput>
   }, "id" | "complexId_code">
 
   export type CaseTypeOrderByWithAggregationInput = {
     id?: SortOrder
     label?: SortOrder
     code?: SortOrder
-    complexId?: SortOrderInput | SortOrder
+    complexId?: SortOrder
     _count?: CaseTypeCountOrderByAggregateInput
     _max?: CaseTypeMaxOrderByAggregateInput
     _min?: CaseTypeMinOrderByAggregateInput
@@ -19740,7 +19728,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"CaseType"> | string
     label?: StringWithAggregatesFilter<"CaseType"> | string
     code?: StringWithAggregatesFilter<"CaseType"> | string
-    complexId?: StringNullableWithAggregatesFilter<"CaseType"> | string | null
+    complexId?: StringWithAggregatesFilter<"CaseType"> | string
   }
 
   export type ManualCaseImportTaskWhereInput = {
@@ -19752,7 +19740,7 @@ export namespace Prisma {
     number?: StringFilter<"ManualCaseImportTask"> | string
     regYear?: StringFilter<"ManualCaseImportTask"> | string
     districtCourtId?: StringNullableFilter<"ManualCaseImportTask"> | string | null
-    complexId?: StringNullableFilter<"ManualCaseImportTask"> | string | null
+    complexId?: StringFilter<"ManualCaseImportTask"> | string
     importStatus?: EnumCaseImportTaskStatusFilter<"ManualCaseImportTask"> | $Enums.CaseImportTaskStatus
     caseId?: UuidNullableFilter<"ManualCaseImportTask"> | string | null
     createdBy?: StringFilter<"ManualCaseImportTask"> | string
@@ -19762,7 +19750,7 @@ export namespace Prisma {
     organizationId?: StringFilter<"ManualCaseImportTask"> | string
     CaseType?: XOR<CaseTypeNullableRelationFilter, CaseTypeWhereInput> | null
     districtCourt?: XOR<DistrictCourtNullableRelationFilter, DistrictCourtWhereInput> | null
-    complex?: XOR<CourtComplexNullableRelationFilter, CourtComplexWhereInput> | null
+    complex?: XOR<CourtComplexRelationFilter, CourtComplexWhereInput>
     case?: XOR<CaseNullableRelationFilter, CaseWhereInput> | null
     creator?: XOR<OrganizationMembersRelationFilter, OrganizationMembersWhereInput>
     organization?: XOR<OrganizationRelationFilter, OrganizationWhereInput>
@@ -19774,7 +19762,7 @@ export namespace Prisma {
     number?: SortOrder
     regYear?: SortOrder
     districtCourtId?: SortOrderInput | SortOrder
-    complexId?: SortOrderInput | SortOrder
+    complexId?: SortOrder
     importStatus?: SortOrder
     caseId?: SortOrderInput | SortOrder
     createdBy?: SortOrder
@@ -19800,7 +19788,7 @@ export namespace Prisma {
     number?: StringFilter<"ManualCaseImportTask"> | string
     regYear?: StringFilter<"ManualCaseImportTask"> | string
     districtCourtId?: StringNullableFilter<"ManualCaseImportTask"> | string | null
-    complexId?: StringNullableFilter<"ManualCaseImportTask"> | string | null
+    complexId?: StringFilter<"ManualCaseImportTask"> | string
     importStatus?: EnumCaseImportTaskStatusFilter<"ManualCaseImportTask"> | $Enums.CaseImportTaskStatus
     caseId?: UuidNullableFilter<"ManualCaseImportTask"> | string | null
     createdBy?: StringFilter<"ManualCaseImportTask"> | string
@@ -19810,7 +19798,7 @@ export namespace Prisma {
     organizationId?: StringFilter<"ManualCaseImportTask"> | string
     CaseType?: XOR<CaseTypeNullableRelationFilter, CaseTypeWhereInput> | null
     districtCourt?: XOR<DistrictCourtNullableRelationFilter, DistrictCourtWhereInput> | null
-    complex?: XOR<CourtComplexNullableRelationFilter, CourtComplexWhereInput> | null
+    complex?: XOR<CourtComplexRelationFilter, CourtComplexWhereInput>
     case?: XOR<CaseNullableRelationFilter, CaseWhereInput> | null
     creator?: XOR<OrganizationMembersRelationFilter, OrganizationMembersWhereInput>
     organization?: XOR<OrganizationRelationFilter, OrganizationWhereInput>
@@ -19822,7 +19810,7 @@ export namespace Prisma {
     number?: SortOrder
     regYear?: SortOrder
     districtCourtId?: SortOrderInput | SortOrder
-    complexId?: SortOrderInput | SortOrder
+    complexId?: SortOrder
     importStatus?: SortOrder
     caseId?: SortOrderInput | SortOrder
     createdBy?: SortOrder
@@ -19844,7 +19832,7 @@ export namespace Prisma {
     number?: StringWithAggregatesFilter<"ManualCaseImportTask"> | string
     regYear?: StringWithAggregatesFilter<"ManualCaseImportTask"> | string
     districtCourtId?: StringNullableWithAggregatesFilter<"ManualCaseImportTask"> | string | null
-    complexId?: StringNullableWithAggregatesFilter<"ManualCaseImportTask"> | string | null
+    complexId?: StringWithAggregatesFilter<"ManualCaseImportTask"> | string
     importStatus?: EnumCaseImportTaskStatusWithAggregatesFilter<"ManualCaseImportTask"> | $Enums.CaseImportTaskStatus
     caseId?: UuidNullableWithAggregatesFilter<"ManualCaseImportTask"> | string | null
     createdBy?: StringWithAggregatesFilter<"ManualCaseImportTask"> | string
@@ -20366,6 +20354,7 @@ export namespace Prisma {
     number: string
     regYear: string
     title: string
+    customTitle?: string | null
     description?: string | null
     petitioner: string
     petitionerLawyers: string
@@ -20394,6 +20383,7 @@ export namespace Prisma {
     number: string
     regYear: string
     title: string
+    customTitle?: string | null
     description?: string | null
     petitioner: string
     petitionerLawyers: string
@@ -20420,6 +20410,7 @@ export namespace Prisma {
     number?: StringFieldUpdateOperationsInput | string
     regYear?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    customTitle?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     petitioner?: StringFieldUpdateOperationsInput | string
     petitionerLawyers?: StringFieldUpdateOperationsInput | string
@@ -20448,6 +20439,7 @@ export namespace Prisma {
     number?: StringFieldUpdateOperationsInput | string
     regYear?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    customTitle?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     petitioner?: StringFieldUpdateOperationsInput | string
     petitionerLawyers?: StringFieldUpdateOperationsInput | string
@@ -20475,6 +20467,7 @@ export namespace Prisma {
     number: string
     regYear: string
     title: string
+    customTitle?: string | null
     description?: string | null
     petitioner: string
     petitionerLawyers: string
@@ -20499,6 +20492,7 @@ export namespace Prisma {
     number?: StringFieldUpdateOperationsInput | string
     regYear?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    customTitle?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     petitioner?: StringFieldUpdateOperationsInput | string
     petitionerLawyers?: StringFieldUpdateOperationsInput | string
@@ -20523,6 +20517,7 @@ export namespace Prisma {
     number?: StringFieldUpdateOperationsInput | string
     regYear?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    customTitle?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     petitioner?: StringFieldUpdateOperationsInput | string
     petitionerLawyers?: StringFieldUpdateOperationsInput | string
@@ -20851,14 +20846,14 @@ export namespace Prisma {
     label: string
     code: string
     ManualCaseImportTask?: ManualCaseImportTaskCreateNestedManyWithoutCaseTypeInput
-    Complex?: CourtComplexCreateNestedOneWithoutCaseTypeInput
+    Complex: CourtComplexCreateNestedOneWithoutCaseTypeInput
   }
 
   export type CaseTypeUncheckedCreateInput = {
     id: string
     label: string
     code: string
-    complexId?: string | null
+    complexId: string
     ManualCaseImportTask?: ManualCaseImportTaskUncheckedCreateNestedManyWithoutCaseTypeInput
   }
 
@@ -20867,14 +20862,14 @@ export namespace Prisma {
     label?: StringFieldUpdateOperationsInput | string
     code?: StringFieldUpdateOperationsInput | string
     ManualCaseImportTask?: ManualCaseImportTaskUpdateManyWithoutCaseTypeNestedInput
-    Complex?: CourtComplexUpdateOneWithoutCaseTypeNestedInput
+    Complex?: CourtComplexUpdateOneRequiredWithoutCaseTypeNestedInput
   }
 
   export type CaseTypeUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     label?: StringFieldUpdateOperationsInput | string
     code?: StringFieldUpdateOperationsInput | string
-    complexId?: NullableStringFieldUpdateOperationsInput | string | null
+    complexId?: StringFieldUpdateOperationsInput | string
     ManualCaseImportTask?: ManualCaseImportTaskUncheckedUpdateManyWithoutCaseTypeNestedInput
   }
 
@@ -20882,7 +20877,7 @@ export namespace Prisma {
     id: string
     label: string
     code: string
-    complexId?: string | null
+    complexId: string
   }
 
   export type CaseTypeUpdateManyMutationInput = {
@@ -20895,7 +20890,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     label?: StringFieldUpdateOperationsInput | string
     code?: StringFieldUpdateOperationsInput | string
-    complexId?: NullableStringFieldUpdateOperationsInput | string | null
+    complexId?: StringFieldUpdateOperationsInput | string
   }
 
   export type ManualCaseImportTaskCreateInput = {
@@ -20908,7 +20903,7 @@ export namespace Prisma {
     updatedAt?: Date | string | null
     CaseType?: CaseTypeCreateNestedOneWithoutManualCaseImportTaskInput
     districtCourt?: DistrictCourtCreateNestedOneWithoutManualCaseImportTaskInput
-    complex?: CourtComplexCreateNestedOneWithoutManualCaseImportTaskInput
+    complex: CourtComplexCreateNestedOneWithoutManualCaseImportTaskInput
     case?: CaseCreateNestedOneWithoutManualCaseImportTaskInput
     creator: OrganizationMembersCreateNestedOneWithoutManualCaseImportTaskInput
     organization: OrganizationCreateNestedOneWithoutManualCaseImportTaskInput
@@ -20920,7 +20915,7 @@ export namespace Prisma {
     number: string
     regYear: string
     districtCourtId?: string | null
-    complexId?: string | null
+    complexId: string
     importStatus?: $Enums.CaseImportTaskStatus
     caseId?: string | null
     createdBy: string
@@ -20940,7 +20935,7 @@ export namespace Prisma {
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     CaseType?: CaseTypeUpdateOneWithoutManualCaseImportTaskNestedInput
     districtCourt?: DistrictCourtUpdateOneWithoutManualCaseImportTaskNestedInput
-    complex?: CourtComplexUpdateOneWithoutManualCaseImportTaskNestedInput
+    complex?: CourtComplexUpdateOneRequiredWithoutManualCaseImportTaskNestedInput
     case?: CaseUpdateOneWithoutManualCaseImportTaskNestedInput
     creator?: OrganizationMembersUpdateOneRequiredWithoutManualCaseImportTaskNestedInput
     organization?: OrganizationUpdateOneRequiredWithoutManualCaseImportTaskNestedInput
@@ -20952,7 +20947,7 @@ export namespace Prisma {
     number?: StringFieldUpdateOperationsInput | string
     regYear?: StringFieldUpdateOperationsInput | string
     districtCourtId?: NullableStringFieldUpdateOperationsInput | string | null
-    complexId?: NullableStringFieldUpdateOperationsInput | string | null
+    complexId?: StringFieldUpdateOperationsInput | string
     importStatus?: EnumCaseImportTaskStatusFieldUpdateOperationsInput | $Enums.CaseImportTaskStatus
     caseId?: NullableStringFieldUpdateOperationsInput | string | null
     createdBy?: StringFieldUpdateOperationsInput | string
@@ -20968,7 +20963,7 @@ export namespace Prisma {
     number: string
     regYear: string
     districtCourtId?: string | null
-    complexId?: string | null
+    complexId: string
     importStatus?: $Enums.CaseImportTaskStatus
     caseId?: string | null
     createdBy: string
@@ -20994,7 +20989,7 @@ export namespace Prisma {
     number?: StringFieldUpdateOperationsInput | string
     regYear?: StringFieldUpdateOperationsInput | string
     districtCourtId?: NullableStringFieldUpdateOperationsInput | string | null
-    complexId?: NullableStringFieldUpdateOperationsInput | string | null
+    complexId?: StringFieldUpdateOperationsInput | string
     importStatus?: EnumCaseImportTaskStatusFieldUpdateOperationsInput | $Enums.CaseImportTaskStatus
     caseId?: NullableStringFieldUpdateOperationsInput | string | null
     createdBy?: StringFieldUpdateOperationsInput | string
@@ -21630,6 +21625,7 @@ export namespace Prisma {
     number?: SortOrder
     regYear?: SortOrder
     title?: SortOrder
+    customTitle?: SortOrder
     description?: SortOrder
     petitioner?: SortOrder
     petitionerLawyers?: SortOrder
@@ -21655,6 +21651,7 @@ export namespace Prisma {
     number?: SortOrder
     regYear?: SortOrder
     title?: SortOrder
+    customTitle?: SortOrder
     description?: SortOrder
     petitioner?: SortOrder
     petitionerLawyers?: SortOrder
@@ -21679,6 +21676,7 @@ export namespace Prisma {
     number?: SortOrder
     regYear?: SortOrder
     title?: SortOrder
+    customTitle?: SortOrder
     description?: SortOrder
     petitioner?: SortOrder
     petitionerLawyers?: SortOrder
@@ -21952,11 +21950,6 @@ export namespace Prisma {
     complexId?: SortOrder
     stateCode?: SortOrder
     districtCode?: SortOrder
-  }
-
-  export type CourtComplexNullableRelationFilter = {
-    is?: CourtComplexWhereInput | null
-    isNot?: CourtComplexWhereInput | null
   }
 
   export type CaseTypeComplexIdCodeCompoundUniqueInput = {
@@ -23262,12 +23255,10 @@ export namespace Prisma {
     deleteMany?: ManualCaseImportTaskScalarWhereInput | ManualCaseImportTaskScalarWhereInput[]
   }
 
-  export type CourtComplexUpdateOneWithoutCaseTypeNestedInput = {
+  export type CourtComplexUpdateOneRequiredWithoutCaseTypeNestedInput = {
     create?: XOR<CourtComplexCreateWithoutCaseTypeInput, CourtComplexUncheckedCreateWithoutCaseTypeInput>
     connectOrCreate?: CourtComplexCreateOrConnectWithoutCaseTypeInput
     upsert?: CourtComplexUpsertWithoutCaseTypeInput
-    disconnect?: CourtComplexWhereInput | boolean
-    delete?: CourtComplexWhereInput | boolean
     connect?: CourtComplexWhereUniqueInput
     update?: XOR<XOR<CourtComplexUpdateToOneWithWhereWithoutCaseTypeInput, CourtComplexUpdateWithoutCaseTypeInput>, CourtComplexUncheckedUpdateWithoutCaseTypeInput>
   }
@@ -23346,12 +23337,10 @@ export namespace Prisma {
     update?: XOR<XOR<DistrictCourtUpdateToOneWithWhereWithoutManualCaseImportTaskInput, DistrictCourtUpdateWithoutManualCaseImportTaskInput>, DistrictCourtUncheckedUpdateWithoutManualCaseImportTaskInput>
   }
 
-  export type CourtComplexUpdateOneWithoutManualCaseImportTaskNestedInput = {
+  export type CourtComplexUpdateOneRequiredWithoutManualCaseImportTaskNestedInput = {
     create?: XOR<CourtComplexCreateWithoutManualCaseImportTaskInput, CourtComplexUncheckedCreateWithoutManualCaseImportTaskInput>
     connectOrCreate?: CourtComplexCreateOrConnectWithoutManualCaseImportTaskInput
     upsert?: CourtComplexUpsertWithoutManualCaseImportTaskInput
-    disconnect?: CourtComplexWhereInput | boolean
-    delete?: CourtComplexWhereInput | boolean
     connect?: CourtComplexWhereUniqueInput
     update?: XOR<XOR<CourtComplexUpdateToOneWithWhereWithoutManualCaseImportTaskInput, CourtComplexUpdateWithoutManualCaseImportTaskInput>, CourtComplexUncheckedUpdateWithoutManualCaseImportTaskInput>
   }
@@ -24001,6 +23990,7 @@ export namespace Prisma {
     number: string
     regYear: string
     title: string
+    customTitle?: string | null
     description?: string | null
     petitioner: string
     petitionerLawyers: string
@@ -24028,6 +24018,7 @@ export namespace Prisma {
     number: string
     regYear: string
     title: string
+    customTitle?: string | null
     description?: string | null
     petitioner: string
     petitionerLawyers: string
@@ -24126,7 +24117,7 @@ export namespace Prisma {
     updatedAt?: Date | string | null
     CaseType?: CaseTypeCreateNestedOneWithoutManualCaseImportTaskInput
     districtCourt?: DistrictCourtCreateNestedOneWithoutManualCaseImportTaskInput
-    complex?: CourtComplexCreateNestedOneWithoutManualCaseImportTaskInput
+    complex: CourtComplexCreateNestedOneWithoutManualCaseImportTaskInput
     case?: CaseCreateNestedOneWithoutManualCaseImportTaskInput
     creator: OrganizationMembersCreateNestedOneWithoutManualCaseImportTaskInput
   }
@@ -24137,7 +24128,7 @@ export namespace Prisma {
     number: string
     regYear: string
     districtCourtId?: string | null
-    complexId?: string | null
+    complexId: string
     importStatus?: $Enums.CaseImportTaskStatus
     caseId?: string | null
     createdBy: string
@@ -24210,6 +24201,7 @@ export namespace Prisma {
     number?: StringFilter<"Case"> | string
     regYear?: StringFilter<"Case"> | string
     title?: StringFilter<"Case"> | string
+    customTitle?: StringNullableFilter<"Case"> | string | null
     description?: StringNullableFilter<"Case"> | string | null
     petitioner?: StringFilter<"Case"> | string
     petitionerLawyers?: StringFilter<"Case"> | string
@@ -24312,7 +24304,7 @@ export namespace Prisma {
     number?: StringFilter<"ManualCaseImportTask"> | string
     regYear?: StringFilter<"ManualCaseImportTask"> | string
     districtCourtId?: StringNullableFilter<"ManualCaseImportTask"> | string | null
-    complexId?: StringNullableFilter<"ManualCaseImportTask"> | string | null
+    complexId?: StringFilter<"ManualCaseImportTask"> | string
     importStatus?: EnumCaseImportTaskStatusFilter<"ManualCaseImportTask"> | $Enums.CaseImportTaskStatus
     caseId?: UuidNullableFilter<"ManualCaseImportTask"> | string | null
     createdBy?: StringFilter<"ManualCaseImportTask"> | string
@@ -24413,7 +24405,7 @@ export namespace Prisma {
     updatedAt?: Date | string | null
     CaseType?: CaseTypeCreateNestedOneWithoutManualCaseImportTaskInput
     districtCourt?: DistrictCourtCreateNestedOneWithoutManualCaseImportTaskInput
-    complex?: CourtComplexCreateNestedOneWithoutManualCaseImportTaskInput
+    complex: CourtComplexCreateNestedOneWithoutManualCaseImportTaskInput
     case?: CaseCreateNestedOneWithoutManualCaseImportTaskInput
     organization: OrganizationCreateNestedOneWithoutManualCaseImportTaskInput
   }
@@ -24424,7 +24416,7 @@ export namespace Prisma {
     number: string
     regYear: string
     districtCourtId?: string | null
-    complexId?: string | null
+    complexId: string
     importStatus?: $Enums.CaseImportTaskStatus
     caseId?: string | null
     response?: NullableJsonNullValueInput | InputJsonValue
@@ -24602,7 +24594,7 @@ export namespace Prisma {
     updatedAt?: Date | string | null
     CaseType?: CaseTypeCreateNestedOneWithoutManualCaseImportTaskInput
     districtCourt?: DistrictCourtCreateNestedOneWithoutManualCaseImportTaskInput
-    complex?: CourtComplexCreateNestedOneWithoutManualCaseImportTaskInput
+    complex: CourtComplexCreateNestedOneWithoutManualCaseImportTaskInput
     creator: OrganizationMembersCreateNestedOneWithoutManualCaseImportTaskInput
     organization: OrganizationCreateNestedOneWithoutManualCaseImportTaskInput
   }
@@ -24613,7 +24605,7 @@ export namespace Prisma {
     number: string
     regYear: string
     districtCourtId?: string | null
-    complexId?: string | null
+    complexId: string
     importStatus?: $Enums.CaseImportTaskStatus
     createdBy: string
     response?: NullableJsonNullValueInput | InputJsonValue
@@ -24730,6 +24722,7 @@ export namespace Prisma {
     number: string
     regYear: string
     title: string
+    customTitle?: string | null
     description?: string | null
     petitioner: string
     petitionerLawyers: string
@@ -24757,6 +24750,7 @@ export namespace Prisma {
     number: string
     regYear: string
     title: string
+    customTitle?: string | null
     description?: string | null
     petitioner: string
     petitionerLawyers: string
@@ -24846,6 +24840,7 @@ export namespace Prisma {
     number?: StringFieldUpdateOperationsInput | string
     regYear?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    customTitle?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     petitioner?: StringFieldUpdateOperationsInput | string
     petitionerLawyers?: StringFieldUpdateOperationsInput | string
@@ -24873,6 +24868,7 @@ export namespace Prisma {
     number?: StringFieldUpdateOperationsInput | string
     regYear?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    customTitle?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     petitioner?: StringFieldUpdateOperationsInput | string
     petitionerLawyers?: StringFieldUpdateOperationsInput | string
@@ -25335,7 +25331,7 @@ export namespace Prisma {
     id?: StringFilter<"CaseType"> | string
     label?: StringFilter<"CaseType"> | string
     code?: StringFilter<"CaseType"> | string
-    complexId?: StringNullableFilter<"CaseType"> | string | null
+    complexId?: StringFilter<"CaseType"> | string
   }
 
   export type ManualCaseImportTaskUpsertWithWhereUniqueWithoutComplexInput = {
@@ -25412,6 +25408,7 @@ export namespace Prisma {
     number: string
     regYear: string
     title: string
+    customTitle?: string | null
     description?: string | null
     petitioner: string
     petitionerLawyers: string
@@ -25438,6 +25435,7 @@ export namespace Prisma {
     number: string
     regYear: string
     title: string
+    customTitle?: string | null
     description?: string | null
     petitioner: string
     petitionerLawyers: string
@@ -25476,7 +25474,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string | null
     CaseType?: CaseTypeCreateNestedOneWithoutManualCaseImportTaskInput
-    complex?: CourtComplexCreateNestedOneWithoutManualCaseImportTaskInput
+    complex: CourtComplexCreateNestedOneWithoutManualCaseImportTaskInput
     case?: CaseCreateNestedOneWithoutManualCaseImportTaskInput
     creator: OrganizationMembersCreateNestedOneWithoutManualCaseImportTaskInput
     organization: OrganizationCreateNestedOneWithoutManualCaseImportTaskInput
@@ -25487,7 +25485,7 @@ export namespace Prisma {
     caseType: string
     number: string
     regYear: string
-    complexId?: string | null
+    complexId: string
     importStatus?: $Enums.CaseImportTaskStatus
     caseId?: string | null
     createdBy: string
@@ -25611,7 +25609,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string | null
     districtCourt?: DistrictCourtCreateNestedOneWithoutManualCaseImportTaskInput
-    complex?: CourtComplexCreateNestedOneWithoutManualCaseImportTaskInput
+    complex: CourtComplexCreateNestedOneWithoutManualCaseImportTaskInput
     case?: CaseCreateNestedOneWithoutManualCaseImportTaskInput
     creator: OrganizationMembersCreateNestedOneWithoutManualCaseImportTaskInput
     organization: OrganizationCreateNestedOneWithoutManualCaseImportTaskInput
@@ -25731,14 +25729,14 @@ export namespace Prisma {
     id: string
     label: string
     code: string
-    Complex?: CourtComplexCreateNestedOneWithoutCaseTypeInput
+    Complex: CourtComplexCreateNestedOneWithoutCaseTypeInput
   }
 
   export type CaseTypeUncheckedCreateWithoutManualCaseImportTaskInput = {
     id: string
     label: string
     code: string
-    complexId?: string | null
+    complexId: string
   }
 
   export type CaseTypeCreateOrConnectWithoutManualCaseImportTaskInput = {
@@ -25809,6 +25807,7 @@ export namespace Prisma {
     number: string
     regYear: string
     title: string
+    customTitle?: string | null
     description?: string | null
     petitioner: string
     petitionerLawyers: string
@@ -25836,6 +25835,7 @@ export namespace Prisma {
     number: string
     regYear: string
     title: string
+    customTitle?: string | null
     description?: string | null
     petitioner: string
     petitionerLawyers: string
@@ -25922,14 +25922,14 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     label?: StringFieldUpdateOperationsInput | string
     code?: StringFieldUpdateOperationsInput | string
-    Complex?: CourtComplexUpdateOneWithoutCaseTypeNestedInput
+    Complex?: CourtComplexUpdateOneRequiredWithoutCaseTypeNestedInput
   }
 
   export type CaseTypeUncheckedUpdateWithoutManualCaseImportTaskInput = {
     id?: StringFieldUpdateOperationsInput | string
     label?: StringFieldUpdateOperationsInput | string
     code?: StringFieldUpdateOperationsInput | string
-    complexId?: NullableStringFieldUpdateOperationsInput | string | null
+    complexId?: StringFieldUpdateOperationsInput | string
   }
 
   export type DistrictCourtUpsertWithoutManualCaseImportTaskInput = {
@@ -26018,6 +26018,7 @@ export namespace Prisma {
     number?: StringFieldUpdateOperationsInput | string
     regYear?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    customTitle?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     petitioner?: StringFieldUpdateOperationsInput | string
     petitionerLawyers?: StringFieldUpdateOperationsInput | string
@@ -26045,6 +26046,7 @@ export namespace Prisma {
     number?: StringFieldUpdateOperationsInput | string
     regYear?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    customTitle?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     petitioner?: StringFieldUpdateOperationsInput | string
     petitionerLawyers?: StringFieldUpdateOperationsInput | string
@@ -26318,6 +26320,7 @@ export namespace Prisma {
     number: string
     regYear: string
     title: string
+    customTitle?: string | null
     description?: string | null
     petitioner: string
     petitionerLawyers: string
@@ -26360,7 +26363,7 @@ export namespace Prisma {
     number: string
     regYear: string
     districtCourtId?: string | null
-    complexId?: string | null
+    complexId: string
     importStatus?: $Enums.CaseImportTaskStatus
     caseId?: string | null
     createdBy: string
@@ -26403,6 +26406,7 @@ export namespace Prisma {
     number?: StringFieldUpdateOperationsInput | string
     regYear?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    customTitle?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     petitioner?: StringFieldUpdateOperationsInput | string
     petitionerLawyers?: StringFieldUpdateOperationsInput | string
@@ -26430,6 +26434,7 @@ export namespace Prisma {
     number?: StringFieldUpdateOperationsInput | string
     regYear?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    customTitle?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     petitioner?: StringFieldUpdateOperationsInput | string
     petitionerLawyers?: StringFieldUpdateOperationsInput | string
@@ -26456,6 +26461,7 @@ export namespace Prisma {
     number?: StringFieldUpdateOperationsInput | string
     regYear?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    customTitle?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     petitioner?: StringFieldUpdateOperationsInput | string
     petitionerLawyers?: StringFieldUpdateOperationsInput | string
@@ -26542,7 +26548,7 @@ export namespace Prisma {
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     CaseType?: CaseTypeUpdateOneWithoutManualCaseImportTaskNestedInput
     districtCourt?: DistrictCourtUpdateOneWithoutManualCaseImportTaskNestedInput
-    complex?: CourtComplexUpdateOneWithoutManualCaseImportTaskNestedInput
+    complex?: CourtComplexUpdateOneRequiredWithoutManualCaseImportTaskNestedInput
     case?: CaseUpdateOneWithoutManualCaseImportTaskNestedInput
     creator?: OrganizationMembersUpdateOneRequiredWithoutManualCaseImportTaskNestedInput
   }
@@ -26553,7 +26559,7 @@ export namespace Prisma {
     number?: StringFieldUpdateOperationsInput | string
     regYear?: StringFieldUpdateOperationsInput | string
     districtCourtId?: NullableStringFieldUpdateOperationsInput | string | null
-    complexId?: NullableStringFieldUpdateOperationsInput | string | null
+    complexId?: StringFieldUpdateOperationsInput | string
     importStatus?: EnumCaseImportTaskStatusFieldUpdateOperationsInput | $Enums.CaseImportTaskStatus
     caseId?: NullableStringFieldUpdateOperationsInput | string | null
     createdBy?: StringFieldUpdateOperationsInput | string
@@ -26568,7 +26574,7 @@ export namespace Prisma {
     number?: StringFieldUpdateOperationsInput | string
     regYear?: StringFieldUpdateOperationsInput | string
     districtCourtId?: NullableStringFieldUpdateOperationsInput | string | null
-    complexId?: NullableStringFieldUpdateOperationsInput | string | null
+    complexId?: StringFieldUpdateOperationsInput | string
     importStatus?: EnumCaseImportTaskStatusFieldUpdateOperationsInput | $Enums.CaseImportTaskStatus
     caseId?: NullableStringFieldUpdateOperationsInput | string | null
     createdBy?: StringFieldUpdateOperationsInput | string
@@ -26601,7 +26607,7 @@ export namespace Prisma {
     number: string
     regYear: string
     districtCourtId?: string | null
-    complexId?: string | null
+    complexId: string
     importStatus?: $Enums.CaseImportTaskStatus
     caseId?: string | null
     response?: NullableJsonNullValueInput | InputJsonValue
@@ -26675,7 +26681,7 @@ export namespace Prisma {
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     CaseType?: CaseTypeUpdateOneWithoutManualCaseImportTaskNestedInput
     districtCourt?: DistrictCourtUpdateOneWithoutManualCaseImportTaskNestedInput
-    complex?: CourtComplexUpdateOneWithoutManualCaseImportTaskNestedInput
+    complex?: CourtComplexUpdateOneRequiredWithoutManualCaseImportTaskNestedInput
     case?: CaseUpdateOneWithoutManualCaseImportTaskNestedInput
     organization?: OrganizationUpdateOneRequiredWithoutManualCaseImportTaskNestedInput
   }
@@ -26686,7 +26692,7 @@ export namespace Prisma {
     number?: StringFieldUpdateOperationsInput | string
     regYear?: StringFieldUpdateOperationsInput | string
     districtCourtId?: NullableStringFieldUpdateOperationsInput | string | null
-    complexId?: NullableStringFieldUpdateOperationsInput | string | null
+    complexId?: StringFieldUpdateOperationsInput | string
     importStatus?: EnumCaseImportTaskStatusFieldUpdateOperationsInput | $Enums.CaseImportTaskStatus
     caseId?: NullableStringFieldUpdateOperationsInput | string | null
     response?: NullableJsonNullValueInput | InputJsonValue
@@ -26700,7 +26706,7 @@ export namespace Prisma {
     number?: StringFieldUpdateOperationsInput | string
     regYear?: StringFieldUpdateOperationsInput | string
     districtCourtId?: NullableStringFieldUpdateOperationsInput | string | null
-    complexId?: NullableStringFieldUpdateOperationsInput | string | null
+    complexId?: StringFieldUpdateOperationsInput | string
     importStatus?: EnumCaseImportTaskStatusFieldUpdateOperationsInput | $Enums.CaseImportTaskStatus
     caseId?: NullableStringFieldUpdateOperationsInput | string | null
     response?: NullableJsonNullValueInput | InputJsonValue
@@ -26722,7 +26728,7 @@ export namespace Prisma {
     number: string
     regYear: string
     districtCourtId?: string | null
-    complexId?: string | null
+    complexId: string
     importStatus?: $Enums.CaseImportTaskStatus
     createdBy: string
     response?: NullableJsonNullValueInput | InputJsonValue
@@ -26765,7 +26771,7 @@ export namespace Prisma {
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     CaseType?: CaseTypeUpdateOneWithoutManualCaseImportTaskNestedInput
     districtCourt?: DistrictCourtUpdateOneWithoutManualCaseImportTaskNestedInput
-    complex?: CourtComplexUpdateOneWithoutManualCaseImportTaskNestedInput
+    complex?: CourtComplexUpdateOneRequiredWithoutManualCaseImportTaskNestedInput
     creator?: OrganizationMembersUpdateOneRequiredWithoutManualCaseImportTaskNestedInput
     organization?: OrganizationUpdateOneRequiredWithoutManualCaseImportTaskNestedInput
   }
@@ -26776,7 +26782,7 @@ export namespace Prisma {
     number?: StringFieldUpdateOperationsInput | string
     regYear?: StringFieldUpdateOperationsInput | string
     districtCourtId?: NullableStringFieldUpdateOperationsInput | string | null
-    complexId?: NullableStringFieldUpdateOperationsInput | string | null
+    complexId?: StringFieldUpdateOperationsInput | string
     importStatus?: EnumCaseImportTaskStatusFieldUpdateOperationsInput | $Enums.CaseImportTaskStatus
     createdBy?: StringFieldUpdateOperationsInput | string
     response?: NullableJsonNullValueInput | InputJsonValue
@@ -26791,7 +26797,7 @@ export namespace Prisma {
     number?: StringFieldUpdateOperationsInput | string
     regYear?: StringFieldUpdateOperationsInput | string
     districtCourtId?: NullableStringFieldUpdateOperationsInput | string | null
-    complexId?: NullableStringFieldUpdateOperationsInput | string | null
+    complexId?: StringFieldUpdateOperationsInput | string
     importStatus?: EnumCaseImportTaskStatusFieldUpdateOperationsInput | $Enums.CaseImportTaskStatus
     createdBy?: StringFieldUpdateOperationsInput | string
     response?: NullableJsonNullValueInput | InputJsonValue
@@ -27030,6 +27036,7 @@ export namespace Prisma {
     number: string
     regYear: string
     title: string
+    customTitle?: string | null
     description?: string | null
     petitioner: string
     petitionerLawyers: string
@@ -27052,7 +27059,7 @@ export namespace Prisma {
     caseType: string
     number: string
     regYear: string
-    complexId?: string | null
+    complexId: string
     importStatus?: $Enums.CaseImportTaskStatus
     caseId?: string | null
     createdBy: string
@@ -27069,6 +27076,7 @@ export namespace Prisma {
     number?: StringFieldUpdateOperationsInput | string
     regYear?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    customTitle?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     petitioner?: StringFieldUpdateOperationsInput | string
     petitionerLawyers?: StringFieldUpdateOperationsInput | string
@@ -27095,6 +27103,7 @@ export namespace Prisma {
     number?: StringFieldUpdateOperationsInput | string
     regYear?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    customTitle?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     petitioner?: StringFieldUpdateOperationsInput | string
     petitionerLawyers?: StringFieldUpdateOperationsInput | string
@@ -27121,6 +27130,7 @@ export namespace Prisma {
     number?: StringFieldUpdateOperationsInput | string
     regYear?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    customTitle?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     petitioner?: StringFieldUpdateOperationsInput | string
     petitionerLawyers?: StringFieldUpdateOperationsInput | string
@@ -27147,7 +27157,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     CaseType?: CaseTypeUpdateOneWithoutManualCaseImportTaskNestedInput
-    complex?: CourtComplexUpdateOneWithoutManualCaseImportTaskNestedInput
+    complex?: CourtComplexUpdateOneRequiredWithoutManualCaseImportTaskNestedInput
     case?: CaseUpdateOneWithoutManualCaseImportTaskNestedInput
     creator?: OrganizationMembersUpdateOneRequiredWithoutManualCaseImportTaskNestedInput
     organization?: OrganizationUpdateOneRequiredWithoutManualCaseImportTaskNestedInput
@@ -27158,7 +27168,7 @@ export namespace Prisma {
     caseType?: StringFieldUpdateOperationsInput | string
     number?: StringFieldUpdateOperationsInput | string
     regYear?: StringFieldUpdateOperationsInput | string
-    complexId?: NullableStringFieldUpdateOperationsInput | string | null
+    complexId?: StringFieldUpdateOperationsInput | string
     importStatus?: EnumCaseImportTaskStatusFieldUpdateOperationsInput | $Enums.CaseImportTaskStatus
     caseId?: NullableStringFieldUpdateOperationsInput | string | null
     createdBy?: StringFieldUpdateOperationsInput | string
@@ -27173,7 +27183,7 @@ export namespace Prisma {
     caseType?: StringFieldUpdateOperationsInput | string
     number?: StringFieldUpdateOperationsInput | string
     regYear?: StringFieldUpdateOperationsInput | string
-    complexId?: NullableStringFieldUpdateOperationsInput | string | null
+    complexId?: StringFieldUpdateOperationsInput | string
     importStatus?: EnumCaseImportTaskStatusFieldUpdateOperationsInput | $Enums.CaseImportTaskStatus
     caseId?: NullableStringFieldUpdateOperationsInput | string | null
     createdBy?: StringFieldUpdateOperationsInput | string
@@ -27206,7 +27216,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     districtCourt?: DistrictCourtUpdateOneWithoutManualCaseImportTaskNestedInput
-    complex?: CourtComplexUpdateOneWithoutManualCaseImportTaskNestedInput
+    complex?: CourtComplexUpdateOneRequiredWithoutManualCaseImportTaskNestedInput
     case?: CaseUpdateOneWithoutManualCaseImportTaskNestedInput
     creator?: OrganizationMembersUpdateOneRequiredWithoutManualCaseImportTaskNestedInput
     organization?: OrganizationUpdateOneRequiredWithoutManualCaseImportTaskNestedInput

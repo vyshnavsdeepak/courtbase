@@ -48,6 +48,7 @@ const CaseSchema = z.object({
   number: z.string(),
   regYear: z.string(),
   title: z.string(),
+  customTitle: z.string().nullable(),
   petitioner: z.string(),
   respondent: z.string(),
   dateOfDecision: z.date().nullable(),
@@ -70,3 +71,8 @@ export const AllCaseResponseSchema = CaseSchemaExtended.array();
 export type CasesResponseTypeComplete = RouterOutputs["cases"]["all"];
 export type CasesResponseType = CasesResponseTypeComplete["data"];
 export type CaseResponseType = CasesResponseType[number];
+
+export const CaseUpdateTitleRequestSchema = z.object({
+  crn: z.string(),
+  title: z.string(),
+});

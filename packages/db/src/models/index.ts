@@ -128,6 +128,7 @@ export const CaseScalarFieldEnumSchema = z.enum([
   "number",
   "regYear",
   "title",
+  "customTitle",
   "description",
   "petitioner",
   "petitionerLawyers",
@@ -499,6 +500,7 @@ export const CaseSchema = z.object({
   number: z.string(),
   regYear: z.string(),
   title: z.string(),
+  customTitle: z.string().nullish(),
   description: z.string().nullish(),
   petitioner: z.string(),
   petitionerLawyers: z.string(),
@@ -728,7 +730,7 @@ export const CaseTypeSchema = z.object({
   id: z.string(),
   label: z.string(),
   code: z.string(),
-  complexId: z.string().nullish(),
+  complexId: z.string(),
 });
 
 export type CaseType = z.infer<typeof CaseTypeSchema>;
@@ -738,7 +740,7 @@ export type CaseType = z.infer<typeof CaseTypeSchema>;
 
 export type CaseTypeRelations = {
   ManualCaseImportTask: ManualCaseImportTaskWithRelations[];
-  Complex?: CourtComplexWithRelations | null;
+  Complex: CourtComplexWithRelations;
 };
 
 export type CaseTypeWithRelations = z.infer<typeof CaseTypeSchema> &
@@ -750,7 +752,7 @@ export const CaseTypeWithRelationsSchema: z.ZodType<CaseTypeWithRelations> =
       ManualCaseImportTask: z
         .lazy(() => ManualCaseImportTaskWithRelationsSchema)
         .array(),
-      Complex: z.lazy(() => CourtComplexWithRelationsSchema).nullish(),
+      Complex: z.lazy(() => CourtComplexWithRelationsSchema),
     }),
   );
 
@@ -765,7 +767,7 @@ export const ManualCaseImportTaskSchema = z.object({
   number: z.string(),
   regYear: z.string(),
   districtCourtId: z.string().nullish(),
-  complexId: z.string().nullish(),
+  complexId: z.string(),
   caseId: z.string().nullish(),
   createdBy: z.string(),
   response: JsonValueSchema.nullable(),
@@ -782,7 +784,7 @@ export type ManualCaseImportTask = z.infer<typeof ManualCaseImportTaskSchema>;
 export type ManualCaseImportTaskRelations = {
   CaseType?: CaseTypeWithRelations | null;
   districtCourt?: DistrictCourtWithRelations | null;
-  complex?: CourtComplexWithRelations | null;
+  complex: CourtComplexWithRelations;
   case?: CaseWithRelations | null;
   creator: OrganizationMembersWithRelations;
   organization: OrganizationWithRelations;
@@ -800,7 +802,7 @@ export const ManualCaseImportTaskWithRelationsSchema: z.ZodType<ManualCaseImport
     z.object({
       CaseType: z.lazy(() => CaseTypeWithRelationsSchema).nullish(),
       districtCourt: z.lazy(() => DistrictCourtWithRelationsSchema).nullish(),
-      complex: z.lazy(() => CourtComplexWithRelationsSchema).nullish(),
+      complex: z.lazy(() => CourtComplexWithRelationsSchema),
       case: z.lazy(() => CaseWithRelationsSchema).nullish(),
       creator: z.lazy(() => OrganizationMembersWithRelationsSchema),
       organization: z.lazy(() => OrganizationWithRelationsSchema),

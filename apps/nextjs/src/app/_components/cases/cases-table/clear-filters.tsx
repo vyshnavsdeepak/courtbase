@@ -18,7 +18,7 @@ export const ClearFiltersButton = () => {
 
   const filtersApplied = React.useMemo(() => {
     return allowedFilters.some((filter) => params[filter] !== undefined);
-  }, [searchParams]);
+  }, []);
 
   if (!filtersApplied) {
     return null;

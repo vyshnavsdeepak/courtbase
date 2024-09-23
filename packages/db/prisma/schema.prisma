@@ -142,6 +142,7 @@ model Case {
   regYear           String    @db.VarChar(4) // eg. 2021
   // typeName/number/regYear is unique in a court = eg. OP/232/2021
   title             String    @db.VarChar(255)
+  customTitle       String?   @db.VarChar(255)
   description       String?   @db.VarChar(255)
   petitioner        String    @db.VarChar(255)
   petitionerLawyers String    @db.VarChar(255)
@@ -242,9 +243,9 @@ model CaseType {
   id                   String                 @id
   label                String                 @db.VarChar(255)
   code                 String                 @db.VarChar(50)
-  complexId            String?
+  complexId            String
   ManualCaseImportTask ManualCaseImportTask[]
-  Complex              CourtComplex?          @relation(fields: [complexId], references: [id], onDelete: NoAction, onUpdate: Cascade)
+  Complex              CourtComplex           @relation(fields: [complexId], references: [id], onDelete: NoAction, onUpdate: Cascade)
 
   @@unique([complexId, code])
 }
@@ -266,10 +267,10 @@ model ManualCaseImportTask {
   // typeName/number/regYear is unique in a court = eg. OP/232/2021
   districtCourtId String?
   districtCourt   DistrictCourt? @relation(fields: [districtCourtId], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "manualCaseImportTask_districtCourtId_districtcourt_id_fk")
-  complexId       String?
+  complexId       String
   // Note: Complex id was introduced only for relation to CaseTypes using code and CaseType
   // Now, complex id is the only way to get courtCode if court selected is a masterComplex
-  complex         CourtComplex?  @relation(fields: [complexId], references: [id], onDelete: NoAction, onUpdate: Cascade)
+  complex         CourtComplex   @relation(fields: [complexId], references: [id], onDelete: NoAction, onUpdate: Cascade)
 
   importStatus CaseImportTaskStatus @default(PENDING)
 

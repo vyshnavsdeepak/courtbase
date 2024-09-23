@@ -31,7 +31,7 @@
     "db:generate:raw": "pnpm with-env prisma generate",
     "db:migrate:raw": "pnpm with-env prisma migrate dev",
     "db:generate": "pnpm db:format && pnpm db:generate:raw && pnpm format --write",
-    "db:migrate": "pnpm db:format && pnpm db:migrate:raw && pnpm format",
+    "db:migrate": "pnpm db:format && pnpm db:migrate:raw && pnpm format --write",
     "push": "pnpm with-env prisma db push --skip-generate",
     "pull": "pnpm with-env prisma db pull",
     "studio": "pnpm with-env prisma studio --port 5556",
