@@ -13,7 +13,7 @@ applications:
             - pwd
             - env >> .env.production
             - pnpm exec turbo run build --filter=@court-base/nextjs
-            - pnpm run db:migrate:deploy
+            - pnpm -w run db:migrate:deploy # -w because appRoot is not the root of the monorepo
       artifacts:
         baseDirectory: .next
         files:
