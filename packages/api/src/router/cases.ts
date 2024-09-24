@@ -65,6 +65,7 @@ const casesRouter = {
         ])
         .groupBy(["Case.id", "DistrictCourt.name"])
         .where("Case.organizationId", "=", orgId)
+        .where("Case.dateOfDecision", "is", null)
         .$if(typeof nextHearingDate !== "undefined", (query) => {
           if (!nextHearingDate) {
             throw new Error("[Never] Invalid next hearing date");
@@ -123,6 +124,7 @@ const casesRouter = {
       .selectFrom("Case")
       .select("id")
       .where("organizationId", "=", ctx.orgId)
+      .where("dateOfDecision", "is", null)
       .limit(1)
       .execute()
       .then((res) => res.length > 0)

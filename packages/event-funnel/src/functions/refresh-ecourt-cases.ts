@@ -24,7 +24,11 @@ export const refreshEcourtCases = inngest.createFunction(
   async ({ event, step, kysely }) => {
     let caseNos: string[];
     if ("cron" in event.data || "dev" in event.data) {
-      const records = await kysely.selectFrom("Case").select("crn").execute();
+      const records = await kysely
+        .selectFrom("Case")
+        .select("crn")
+        .where("dateOfDecision", "is", null)
+        .execute();
       caseNos = records.map((record) => record.crn);
     } else {
       caseNos = event.data.caseNos;
