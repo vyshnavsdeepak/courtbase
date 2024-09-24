@@ -59,6 +59,14 @@ export type Case = {
   updatedAt: Timestamp | null;
   organizationId: string;
 };
+export type CaseHistoryItem = {
+  crn: string;
+  businessOnDate: Timestamp;
+  purposeOfHearing: string;
+  hearingDate: Timestamp | null;
+  notes: string | null;
+  organizationId: string;
+};
 export type CaseImportTask = {
   id: Generated<string>;
   organizationId: string;
@@ -159,6 +167,7 @@ export type DB = {
   Account: Account;
   AdvocateCase: AdvocateCase;
   Case: Case;
+  CaseHistoryItem: CaseHistoryItem;
   CaseImportTask: CaseImportTask;
   CaseType: CaseType;
   CourtComplex: CourtComplex;

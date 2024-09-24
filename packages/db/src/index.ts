@@ -31,3 +31,7 @@ export const kysely = new KyselyAuth<DB, Codegen>({
     }
   })(),
 });
+
+export function isPostgresError(e: unknown): e is { code: string } {
+  return typeof e === "object" && e !== null && "code" in e;
+}

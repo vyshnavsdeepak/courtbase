@@ -146,6 +146,15 @@ export const CaseScalarFieldEnumSchema = z.enum([
   "organizationId",
 ]);
 
+export const CaseHistoryItemScalarFieldEnumSchema = z.enum([
+  "crn",
+  "businessOnDate",
+  "purposeOfHearing",
+  "hearingDate",
+  "notes",
+  "organizationId",
+]);
+
 export const AdvocateCaseScalarFieldEnumSchema = z.enum([
   "id",
   "caseId",
@@ -527,6 +536,7 @@ export type CaseRelations = {
   AdvocateCase: AdvocateCaseWithRelations[];
   organization: OrganizationWithRelations;
   ManualCaseImportTask: ManualCaseImportTaskWithRelations[];
+  CaseHistory: CaseHistoryItemWithRelations[];
 };
 
 export type CaseWithRelations = z.infer<typeof CaseSchema> & CaseRelations;
@@ -540,6 +550,41 @@ export const CaseWithRelationsSchema: z.ZodType<CaseWithRelations> =
       ManualCaseImportTask: z
         .lazy(() => ManualCaseImportTaskWithRelationsSchema)
         .array(),
+      CaseHistory: z.lazy(() => CaseHistoryItemWithRelationsSchema).array(),
+    }),
+  );
+
+/////////////////////////////////////////
+// CASE HISTORY ITEM SCHEMA
+/////////////////////////////////////////
+
+export const CaseHistoryItemSchema = z.object({
+  crn: z.string(),
+  businessOnDate: z.coerce.date(),
+  purposeOfHearing: z.string(),
+  hearingDate: z.coerce.date().nullish(),
+  notes: z.string().nullish(),
+  organizationId: z.string(),
+});
+
+export type CaseHistoryItem = z.infer<typeof CaseHistoryItemSchema>;
+
+// CASE HISTORY ITEM RELATION SCHEMA
+//------------------------------------------------------
+
+export type CaseHistoryItemRelations = {
+  case: CaseWithRelations;
+};
+
+export type CaseHistoryItemWithRelations = z.infer<
+  typeof CaseHistoryItemSchema
+> &
+  CaseHistoryItemRelations;
+
+export const CaseHistoryItemWithRelationsSchema: z.ZodType<CaseHistoryItemWithRelations> =
+  CaseHistoryItemSchema.merge(
+    z.object({
+      case: z.lazy(() => CaseWithRelationsSchema),
     }),
   );
 

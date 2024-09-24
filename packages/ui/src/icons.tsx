@@ -1,5 +1,6 @@
 import {
   ArrowRight,
+  Eye,
   Files,
   LoaderCircle,
   PanelsTopLeft,
@@ -12,4 +13,5 @@ export const Icons = {
   loading: LoaderCircle,
   sidebar: PanelsTopLeft,
   edit: Pencil,
+  view: Eye,
 };

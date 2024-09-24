@@ -168,10 +168,23 @@ model Case {
 
   organization         Organization           @relation(fields: [organizationId], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "case_organizationId_organization_id_fk")
   ManualCaseImportTask ManualCaseImportTask[]
+  CaseHistory          CaseHistoryItem[]
 
   // to lookup case by case number of type OP/232/2021, we need to have a unique constraint on typeName, caseNo, caseRegYear per court per organization
   @@unique([organizationId, typeName, number, regYear, courtId], map: "case_organization_typeName_number_regYear_courtId_unique")
   @@unique([organizationId, crn], map: "case_organization_organization_id_fk")
+}
+
+model CaseHistoryItem {
+  crn              String    @db.VarChar(16)
+  businessOnDate   DateTime  @db.Date
+  purposeOfHearing String    @db.VarChar(50)
+  hearingDate      DateTime? @db.Date
+  notes            String?   @db.VarChar(255)
+  organizationId   String
+  case             Case      @relation(fields: [organizationId, crn], references: [organizationId, crn], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([organizationId, crn, businessOnDate])
 }
 
 model AdvocateCase {

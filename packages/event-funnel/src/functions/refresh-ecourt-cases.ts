@@ -1,4 +1,5 @@
 import type { eCourtAPICallReturn } from "./ecourt";
+import insertHistory from "../actions/cases/insertHistory";
 import { inngest } from "../lib/inngest";
 import { ecourtAPI } from "./ecourt";
 
@@ -24,7 +25,11 @@ export const refreshEcourtCases = inngest.createFunction(
   async ({ event, step, kysely }) => {
     let caseNos: string[];
     if ("cron" in event.data || "dev" in event.data) {
-      const records = await kysely.selectFrom("Case").select("crn").execute();
+      const records = await kysely
+        .selectFrom("Case")
+        .select("crn")
+        .where("dateOfDecision", "is", null)
+        .execute();
       caseNos = records.map((record) => record.crn);
     } else {
       caseNos = event.data.caseNos;
@@ -44,18 +49,25 @@ export const refreshEcourtCases = inngest.createFunction(
           },
         });
 
-        await step.run(`db/update-case/${cino}`, async () => {
-          const body =
-            res.body as unknown as eCourtAPICallReturn["refresh-case"];
-          await kysely
+        const body = res.body as unknown as eCourtAPICallReturn["refresh-case"];
+        const orgs = await step.run(`db/update-case/${cino}`, async () => {
+          const caseUpdates = await kysely
             .updateTable("Case")
             .set({
               nextHearingDate: body.case.nextHearingDate,
               updatedAt: new Date(),
             })
             .where("crn", "=", cino)
+            .returning(["organizationId"])
             .execute();
-          return body;
+
+          return caseUpdates.map((update) => update.organizationId);
+        });
+
+        // Set history of case hearing to all orgs who are subscribed to this case in isolation
+        const historyOfCaseHearing = body.case.caseHistoryLog;
+        await step.run(`db/insert-case-history/${cino}`, async () => {
+          return insertHistory(historyOfCaseHearing, cino, orgs);
         });
       }),
     );
