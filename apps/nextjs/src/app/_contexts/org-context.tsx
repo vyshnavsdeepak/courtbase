@@ -3,6 +3,8 @@
 import React, { createContext, useContext, useMemo } from "react";
 import { usePathname } from "next/navigation";
 
+import { getOrgDashboardPath } from "~/utils";
+
 interface OrgContextType {
   orgId: string | null;
 }
@@ -37,6 +39,7 @@ export const useOrg = () => {
       }
       return context.orgId;
     },
+    dashboardUrl: () => context.orgId && getOrgDashboardPath(context.orgId),
     orgId: context.orgId,
   };
 };

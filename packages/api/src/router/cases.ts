@@ -1,5 +1,6 @@
 import type { TRPCRouterRecord } from "@trpc/server";
 import { sql } from "kysely";
+import { z } from "zod";
 
 import {
   AllCaseRequestSchema,
@@ -152,6 +153,50 @@ const casesRouter = {
         .catch((e) => {
           console.error(e);
           throw new Error("Failed to update case title. (E-1)");
+        });
+    }),
+  history: orgProtectedProcedure
+    .input(z.object({ crn: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const orgId = ctx.orgId;
+      const crn = input.crn;
+
+      const result = await ctx.kysely
+        .selectFrom("CaseHistoryItem")
+        .select(["businessOnDate", "purposeOfHearing", "hearingDate", "notes"])
+        .where("organizationId", "=", orgId)
+        .where("crn", "=", crn)
+        .orderBy("businessOnDate", "desc")
+        .execute()
+        .catch(() => {
+          throw new Error("Failed to fetch case history. (E-1)");
+        });
+
+      return result;
+    }),
+  updateHistoryNote: orgProtectedProcedure
+    .input(
+      z.object({ crn: z.string(), businessOnDate: z.date(), note: z.string() }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const orgId = ctx.orgId;
+      const { crn, businessOnDate, note } = input;
+
+      return ctx.kysely
+        .updateTable("CaseHistoryItem")
+        .set("notes", note)
+        .where("organizationId", "=", orgId)
+        .where("crn", "=", crn)
+        .where("businessOnDate", "=", businessOnDate)
+        .execute()
+        .then(() => {
+          return {
+            success: true,
+            message: "Case history note updated successfully.",
+          };
+        })
+        .catch(() => {
+          throw new Error("Failed to update case history note. (E-1)");
         });
     }),
 } satisfies TRPCRouterRecord;

@@ -76,3 +76,5 @@ export const CaseUpdateTitleRequestSchema = z.object({
   crn: z.string(),
   title: z.string(),
 });
+
+export type CaseHistoryResponse = RouterOutputs["cases"]["history"];

@@ -200,6 +200,15 @@ exports.Prisma.CaseScalarFieldEnum = {
   organizationId: 'organizationId'
 };
 
+exports.Prisma.CaseHistoryItemScalarFieldEnum = {
+  crn: 'crn',
+  businessOnDate: 'businessOnDate',
+  purposeOfHearing: 'purposeOfHearing',
+  hearingDate: 'hearingDate',
+  notes: 'notes',
+  organizationId: 'organizationId'
+};
+
 exports.Prisma.AdvocateCaseScalarFieldEnum = {
   id: 'id',
   caseId: 'caseId',
@@ -339,6 +348,7 @@ exports.Prisma.ModelName = {
   Organization: 'Organization',
   OrganizationMembers: 'OrganizationMembers',
   Case: 'Case',
+  CaseHistoryItem: 'CaseHistoryItem',
   AdvocateCase: 'AdvocateCase',
   State: 'State',
   District: 'District',

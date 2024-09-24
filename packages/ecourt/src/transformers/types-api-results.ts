@@ -1,3 +1,5 @@
+import type { CaseHistoryLog } from "../api/types";
+
 export interface CaseRaw {
   cino: string;
   case_no: string;
@@ -136,7 +138,10 @@ export interface CaseHistoryRawResult {
   hide_partyname_est: string;
 }
 
+export type { CaseHistoryLog };
+
 export interface CaseHistory extends Omit<Case, "rawData"> {
   nextHearingDate: Date;
+  caseHistoryLog: CaseHistoryLog;
   rawData: CaseHistoryRawResult;
 }

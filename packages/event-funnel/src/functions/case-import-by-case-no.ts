@@ -1,4 +1,5 @@
 import type { eCourtAPICallReturn } from "./ecourt";
+import insertHistory from "../actions/cases/insertHistory";
 import { inngest } from "../lib/inngest";
 import { ecourtAPI } from "./ecourt";
 
@@ -128,6 +129,12 @@ export const importCaseByCaseNo = inngest.createFunction(
         })
         .returning("id")
         .executeTakeFirstOrThrow();
+    });
+
+    await step.run("insert-case-history", async () => {
+      return insertHistory(caseHistory.case.caseHistoryLog, caseObj.crn, [
+        identity.orgId,
+      ]);
     });
 
     await step.run("mark-end-case-import-task", async () => {

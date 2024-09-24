@@ -54,6 +54,11 @@ export type OrganizationMembers = $Result.DefaultSelection<Prisma.$OrganizationM
  */
 export type Case = $Result.DefaultSelection<Prisma.$CasePayload>
 /**
+ * Model CaseHistoryItem
+ * 
+ */
+export type CaseHistoryItem = $Result.DefaultSelection<Prisma.$CaseHistoryItemPayload>
+/**
  * Model AdvocateCase
  * 
  */
@@ -352,6 +357,16 @@ export class PrismaClient<
     * ```
     */
   get case(): Prisma.CaseDelegate<ExtArgs>;
+
+  /**
+   * `prisma.caseHistoryItem`: Exposes CRUD operations for the **CaseHistoryItem** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more CaseHistoryItems
+    * const caseHistoryItems = await prisma.caseHistoryItem.findMany()
+    * ```
+    */
+  get caseHistoryItem(): Prisma.CaseHistoryItemDelegate<ExtArgs>;
 
   /**
    * `prisma.advocateCase`: Exposes CRUD operations for the **AdvocateCase** model.
@@ -917,6 +932,7 @@ export namespace Prisma {
     Organization: 'Organization',
     OrganizationMembers: 'OrganizationMembers',
     Case: 'Case',
+    CaseHistoryItem: 'CaseHistoryItem',
     AdvocateCase: 'AdvocateCase',
     State: 'State',
     District: 'District',
@@ -940,7 +956,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
     meta: {
-      modelProps: "account" | "post" | "session" | "user" | "verificationToken" | "organization" | "organizationMembers" | "case" | "advocateCase" | "state" | "district" | "courtComplex" | "districtCourt" | "caseType" | "manualCaseImportTask" | "caseImportTask"
+      modelProps: "account" | "post" | "session" | "user" | "verificationToken" | "organization" | "organizationMembers" | "case" | "caseHistoryItem" | "advocateCase" | "state" | "district" | "courtComplex" | "districtCourt" | "caseType" | "manualCaseImportTask" | "caseImportTask"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1501,6 +1517,76 @@ export namespace Prisma {
           count: {
             args: Prisma.CaseCountArgs<ExtArgs>
             result: $Utils.Optional<CaseCountAggregateOutputType> | number
+          }
+        }
+      }
+      CaseHistoryItem: {
+        payload: Prisma.$CaseHistoryItemPayload<ExtArgs>
+        fields: Prisma.CaseHistoryItemFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.CaseHistoryItemFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CaseHistoryItemPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.CaseHistoryItemFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CaseHistoryItemPayload>
+          }
+          findFirst: {
+            args: Prisma.CaseHistoryItemFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CaseHistoryItemPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.CaseHistoryItemFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CaseHistoryItemPayload>
+          }
+          findMany: {
+            args: Prisma.CaseHistoryItemFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CaseHistoryItemPayload>[]
+          }
+          create: {
+            args: Prisma.CaseHistoryItemCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CaseHistoryItemPayload>
+          }
+          createMany: {
+            args: Prisma.CaseHistoryItemCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.CaseHistoryItemCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CaseHistoryItemPayload>[]
+          }
+          delete: {
+            args: Prisma.CaseHistoryItemDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CaseHistoryItemPayload>
+          }
+          update: {
+            args: Prisma.CaseHistoryItemUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CaseHistoryItemPayload>
+          }
+          deleteMany: {
+            args: Prisma.CaseHistoryItemDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.CaseHistoryItemUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.CaseHistoryItemUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CaseHistoryItemPayload>
+          }
+          aggregate: {
+            args: Prisma.CaseHistoryItemAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCaseHistoryItem>
+          }
+          groupBy: {
+            args: Prisma.CaseHistoryItemGroupByArgs<ExtArgs>
+            result: $Utils.Optional<CaseHistoryItemGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.CaseHistoryItemCountArgs<ExtArgs>
+            result: $Utils.Optional<CaseHistoryItemCountAggregateOutputType> | number
           }
         }
       }
@@ -2383,11 +2469,13 @@ export namespace Prisma {
   export type CaseCountOutputType = {
     AdvocateCase: number
     ManualCaseImportTask: number
+    CaseHistory: number
   }
 
   export type CaseCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     AdvocateCase?: boolean | CaseCountOutputTypeCountAdvocateCaseArgs
     ManualCaseImportTask?: boolean | CaseCountOutputTypeCountManualCaseImportTaskArgs
+    CaseHistory?: boolean | CaseCountOutputTypeCountCaseHistoryArgs
   }
 
   // Custom InputTypes
@@ -2413,6 +2501,13 @@ export namespace Prisma {
    */
   export type CaseCountOutputTypeCountManualCaseImportTaskArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ManualCaseImportTaskWhereInput
+  }
+
+  /**
+   * CaseCountOutputType without action
+   */
+  export type CaseCountOutputTypeCountCaseHistoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CaseHistoryItemWhereInput
   }
 
 
@@ -9586,6 +9681,7 @@ export namespace Prisma {
     AdvocateCase?: boolean | Case$AdvocateCaseArgs<ExtArgs>
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
     ManualCaseImportTask?: boolean | Case$ManualCaseImportTaskArgs<ExtArgs>
+    CaseHistory?: boolean | Case$CaseHistoryArgs<ExtArgs>
     _count?: boolean | CaseCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["case"]>
 
@@ -9648,6 +9744,7 @@ export namespace Prisma {
     AdvocateCase?: boolean | Case$AdvocateCaseArgs<ExtArgs>
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
     ManualCaseImportTask?: boolean | Case$ManualCaseImportTaskArgs<ExtArgs>
+    CaseHistory?: boolean | Case$CaseHistoryArgs<ExtArgs>
     _count?: boolean | CaseCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type CaseIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -9662,6 +9759,7 @@ export namespace Prisma {
       AdvocateCase: Prisma.$AdvocateCasePayload<ExtArgs>[]
       organization: Prisma.$OrganizationPayload<ExtArgs>
       ManualCaseImportTask: Prisma.$ManualCaseImportTaskPayload<ExtArgs>[]
+      CaseHistory: Prisma.$CaseHistoryItemPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -10055,6 +10153,7 @@ export namespace Prisma {
     AdvocateCase<T extends Case$AdvocateCaseArgs<ExtArgs> = {}>(args?: Subset<T, Case$AdvocateCaseArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AdvocateCasePayload<ExtArgs>, T, "findMany"> | Null>
     organization<T extends OrganizationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrganizationDefaultArgs<ExtArgs>>): Prisma__OrganizationClient<$Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     ManualCaseImportTask<T extends Case$ManualCaseImportTaskArgs<ExtArgs> = {}>(args?: Subset<T, Case$ManualCaseImportTaskArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ManualCaseImportTaskPayload<ExtArgs>, T, "findMany"> | Null>
+    CaseHistory<T extends Case$CaseHistoryArgs<ExtArgs> = {}>(args?: Subset<T, Case$CaseHistoryArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CaseHistoryItemPayload<ExtArgs>, T, "findMany"> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -10465,6 +10564,26 @@ export namespace Prisma {
   }
 
   /**
+   * Case.CaseHistory
+   */
+  export type Case$CaseHistoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CaseHistoryItem
+     */
+    select?: CaseHistoryItemSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CaseHistoryItemInclude<ExtArgs> | null
+    where?: CaseHistoryItemWhereInput
+    orderBy?: CaseHistoryItemOrderByWithRelationInput | CaseHistoryItemOrderByWithRelationInput[]
+    cursor?: CaseHistoryItemWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CaseHistoryItemScalarFieldEnum | CaseHistoryItemScalarFieldEnum[]
+  }
+
+  /**
    * Case without action
    */
   export type CaseDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -10476,6 +10595,951 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: CaseInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model CaseHistoryItem
+   */
+
+  export type AggregateCaseHistoryItem = {
+    _count: CaseHistoryItemCountAggregateOutputType | null
+    _min: CaseHistoryItemMinAggregateOutputType | null
+    _max: CaseHistoryItemMaxAggregateOutputType | null
+  }
+
+  export type CaseHistoryItemMinAggregateOutputType = {
+    crn: string | null
+    businessOnDate: Date | null
+    purposeOfHearing: string | null
+    hearingDate: Date | null
+    notes: string | null
+    organizationId: string | null
+  }
+
+  export type CaseHistoryItemMaxAggregateOutputType = {
+    crn: string | null
+    businessOnDate: Date | null
+    purposeOfHearing: string | null
+    hearingDate: Date | null
+    notes: string | null
+    organizationId: string | null
+  }
+
+  export type CaseHistoryItemCountAggregateOutputType = {
+    crn: number
+    businessOnDate: number
+    purposeOfHearing: number
+    hearingDate: number
+    notes: number
+    organizationId: number
+    _all: number
+  }
+
+
+  export type CaseHistoryItemMinAggregateInputType = {
+    crn?: true
+    businessOnDate?: true
+    purposeOfHearing?: true
+    hearingDate?: true
+    notes?: true
+    organizationId?: true
+  }
+
+  export type CaseHistoryItemMaxAggregateInputType = {
+    crn?: true
+    businessOnDate?: true
+    purposeOfHearing?: true
+    hearingDate?: true
+    notes?: true
+    organizationId?: true
+  }
+
+  export type CaseHistoryItemCountAggregateInputType = {
+    crn?: true
+    businessOnDate?: true
+    purposeOfHearing?: true
+    hearingDate?: true
+    notes?: true
+    organizationId?: true
+    _all?: true
+  }
+
+  export type CaseHistoryItemAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CaseHistoryItem to aggregate.
+     */
+    where?: CaseHistoryItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CaseHistoryItems to fetch.
+     */
+    orderBy?: CaseHistoryItemOrderByWithRelationInput | CaseHistoryItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: CaseHistoryItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CaseHistoryItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CaseHistoryItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned CaseHistoryItems
+    **/
+    _count?: true | CaseHistoryItemCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: CaseHistoryItemMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: CaseHistoryItemMaxAggregateInputType
+  }
+
+  export type GetCaseHistoryItemAggregateType<T extends CaseHistoryItemAggregateArgs> = {
+        [P in keyof T & keyof AggregateCaseHistoryItem]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCaseHistoryItem[P]>
+      : GetScalarType<T[P], AggregateCaseHistoryItem[P]>
+  }
+
+
+
+
+  export type CaseHistoryItemGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CaseHistoryItemWhereInput
+    orderBy?: CaseHistoryItemOrderByWithAggregationInput | CaseHistoryItemOrderByWithAggregationInput[]
+    by: CaseHistoryItemScalarFieldEnum[] | CaseHistoryItemScalarFieldEnum
+    having?: CaseHistoryItemScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: CaseHistoryItemCountAggregateInputType | true
+    _min?: CaseHistoryItemMinAggregateInputType
+    _max?: CaseHistoryItemMaxAggregateInputType
+  }
+
+  export type CaseHistoryItemGroupByOutputType = {
+    crn: string
+    businessOnDate: Date
+    purposeOfHearing: string
+    hearingDate: Date | null
+    notes: string | null
+    organizationId: string
+    _count: CaseHistoryItemCountAggregateOutputType | null
+    _min: CaseHistoryItemMinAggregateOutputType | null
+    _max: CaseHistoryItemMaxAggregateOutputType | null
+  }
+
+  type GetCaseHistoryItemGroupByPayload<T extends CaseHistoryItemGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<CaseHistoryItemGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof CaseHistoryItemGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CaseHistoryItemGroupByOutputType[P]>
+            : GetScalarType<T[P], CaseHistoryItemGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type CaseHistoryItemSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    crn?: boolean
+    businessOnDate?: boolean
+    purposeOfHearing?: boolean
+    hearingDate?: boolean
+    notes?: boolean
+    organizationId?: boolean
+    case?: boolean | CaseDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["caseHistoryItem"]>
+
+  export type CaseHistoryItemSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    crn?: boolean
+    businessOnDate?: boolean
+    purposeOfHearing?: boolean
+    hearingDate?: boolean
+    notes?: boolean
+    organizationId?: boolean
+    case?: boolean | CaseDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["caseHistoryItem"]>
+
+  export type CaseHistoryItemSelectScalar = {
+    crn?: boolean
+    businessOnDate?: boolean
+    purposeOfHearing?: boolean
+    hearingDate?: boolean
+    notes?: boolean
+    organizationId?: boolean
+  }
+
+  export type CaseHistoryItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    case?: boolean | CaseDefaultArgs<ExtArgs>
+  }
+  export type CaseHistoryItemIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    case?: boolean | CaseDefaultArgs<ExtArgs>
+  }
+
+  export type $CaseHistoryItemPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "CaseHistoryItem"
+    objects: {
+      case: Prisma.$CasePayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      crn: string
+      businessOnDate: Date
+      purposeOfHearing: string
+      hearingDate: Date | null
+      notes: string | null
+      organizationId: string
+    }, ExtArgs["result"]["caseHistoryItem"]>
+    composites: {}
+  }
+
+  type CaseHistoryItemGetPayload<S extends boolean | null | undefined | CaseHistoryItemDefaultArgs> = $Result.GetResult<Prisma.$CaseHistoryItemPayload, S>
+
+  type CaseHistoryItemCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<CaseHistoryItemFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: CaseHistoryItemCountAggregateInputType | true
+    }
+
+  export interface CaseHistoryItemDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['CaseHistoryItem'], meta: { name: 'CaseHistoryItem' } }
+    /**
+     * Find zero or one CaseHistoryItem that matches the filter.
+     * @param {CaseHistoryItemFindUniqueArgs} args - Arguments to find a CaseHistoryItem
+     * @example
+     * // Get one CaseHistoryItem
+     * const caseHistoryItem = await prisma.caseHistoryItem.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends CaseHistoryItemFindUniqueArgs>(args: SelectSubset<T, CaseHistoryItemFindUniqueArgs<ExtArgs>>): Prisma__CaseHistoryItemClient<$Result.GetResult<Prisma.$CaseHistoryItemPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one CaseHistoryItem that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {CaseHistoryItemFindUniqueOrThrowArgs} args - Arguments to find a CaseHistoryItem
+     * @example
+     * // Get one CaseHistoryItem
+     * const caseHistoryItem = await prisma.caseHistoryItem.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends CaseHistoryItemFindUniqueOrThrowArgs>(args: SelectSubset<T, CaseHistoryItemFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CaseHistoryItemClient<$Result.GetResult<Prisma.$CaseHistoryItemPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first CaseHistoryItem that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CaseHistoryItemFindFirstArgs} args - Arguments to find a CaseHistoryItem
+     * @example
+     * // Get one CaseHistoryItem
+     * const caseHistoryItem = await prisma.caseHistoryItem.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends CaseHistoryItemFindFirstArgs>(args?: SelectSubset<T, CaseHistoryItemFindFirstArgs<ExtArgs>>): Prisma__CaseHistoryItemClient<$Result.GetResult<Prisma.$CaseHistoryItemPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first CaseHistoryItem that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CaseHistoryItemFindFirstOrThrowArgs} args - Arguments to find a CaseHistoryItem
+     * @example
+     * // Get one CaseHistoryItem
+     * const caseHistoryItem = await prisma.caseHistoryItem.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends CaseHistoryItemFindFirstOrThrowArgs>(args?: SelectSubset<T, CaseHistoryItemFindFirstOrThrowArgs<ExtArgs>>): Prisma__CaseHistoryItemClient<$Result.GetResult<Prisma.$CaseHistoryItemPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more CaseHistoryItems that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CaseHistoryItemFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all CaseHistoryItems
+     * const caseHistoryItems = await prisma.caseHistoryItem.findMany()
+     * 
+     * // Get first 10 CaseHistoryItems
+     * const caseHistoryItems = await prisma.caseHistoryItem.findMany({ take: 10 })
+     * 
+     * // Only select the `crn`
+     * const caseHistoryItemWithCrnOnly = await prisma.caseHistoryItem.findMany({ select: { crn: true } })
+     * 
+     */
+    findMany<T extends CaseHistoryItemFindManyArgs>(args?: SelectSubset<T, CaseHistoryItemFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CaseHistoryItemPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a CaseHistoryItem.
+     * @param {CaseHistoryItemCreateArgs} args - Arguments to create a CaseHistoryItem.
+     * @example
+     * // Create one CaseHistoryItem
+     * const CaseHistoryItem = await prisma.caseHistoryItem.create({
+     *   data: {
+     *     // ... data to create a CaseHistoryItem
+     *   }
+     * })
+     * 
+     */
+    create<T extends CaseHistoryItemCreateArgs>(args: SelectSubset<T, CaseHistoryItemCreateArgs<ExtArgs>>): Prisma__CaseHistoryItemClient<$Result.GetResult<Prisma.$CaseHistoryItemPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many CaseHistoryItems.
+     * @param {CaseHistoryItemCreateManyArgs} args - Arguments to create many CaseHistoryItems.
+     * @example
+     * // Create many CaseHistoryItems
+     * const caseHistoryItem = await prisma.caseHistoryItem.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends CaseHistoryItemCreateManyArgs>(args?: SelectSubset<T, CaseHistoryItemCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many CaseHistoryItems and returns the data saved in the database.
+     * @param {CaseHistoryItemCreateManyAndReturnArgs} args - Arguments to create many CaseHistoryItems.
+     * @example
+     * // Create many CaseHistoryItems
+     * const caseHistoryItem = await prisma.caseHistoryItem.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many CaseHistoryItems and only return the `crn`
+     * const caseHistoryItemWithCrnOnly = await prisma.caseHistoryItem.createManyAndReturn({ 
+     *   select: { crn: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends CaseHistoryItemCreateManyAndReturnArgs>(args?: SelectSubset<T, CaseHistoryItemCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CaseHistoryItemPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a CaseHistoryItem.
+     * @param {CaseHistoryItemDeleteArgs} args - Arguments to delete one CaseHistoryItem.
+     * @example
+     * // Delete one CaseHistoryItem
+     * const CaseHistoryItem = await prisma.caseHistoryItem.delete({
+     *   where: {
+     *     // ... filter to delete one CaseHistoryItem
+     *   }
+     * })
+     * 
+     */
+    delete<T extends CaseHistoryItemDeleteArgs>(args: SelectSubset<T, CaseHistoryItemDeleteArgs<ExtArgs>>): Prisma__CaseHistoryItemClient<$Result.GetResult<Prisma.$CaseHistoryItemPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one CaseHistoryItem.
+     * @param {CaseHistoryItemUpdateArgs} args - Arguments to update one CaseHistoryItem.
+     * @example
+     * // Update one CaseHistoryItem
+     * const caseHistoryItem = await prisma.caseHistoryItem.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends CaseHistoryItemUpdateArgs>(args: SelectSubset<T, CaseHistoryItemUpdateArgs<ExtArgs>>): Prisma__CaseHistoryItemClient<$Result.GetResult<Prisma.$CaseHistoryItemPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more CaseHistoryItems.
+     * @param {CaseHistoryItemDeleteManyArgs} args - Arguments to filter CaseHistoryItems to delete.
+     * @example
+     * // Delete a few CaseHistoryItems
+     * const { count } = await prisma.caseHistoryItem.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends CaseHistoryItemDeleteManyArgs>(args?: SelectSubset<T, CaseHistoryItemDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CaseHistoryItems.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CaseHistoryItemUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many CaseHistoryItems
+     * const caseHistoryItem = await prisma.caseHistoryItem.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends CaseHistoryItemUpdateManyArgs>(args: SelectSubset<T, CaseHistoryItemUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one CaseHistoryItem.
+     * @param {CaseHistoryItemUpsertArgs} args - Arguments to update or create a CaseHistoryItem.
+     * @example
+     * // Update or create a CaseHistoryItem
+     * const caseHistoryItem = await prisma.caseHistoryItem.upsert({
+     *   create: {
+     *     // ... data to create a CaseHistoryItem
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the CaseHistoryItem we want to update
+     *   }
+     * })
+     */
+    upsert<T extends CaseHistoryItemUpsertArgs>(args: SelectSubset<T, CaseHistoryItemUpsertArgs<ExtArgs>>): Prisma__CaseHistoryItemClient<$Result.GetResult<Prisma.$CaseHistoryItemPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of CaseHistoryItems.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CaseHistoryItemCountArgs} args - Arguments to filter CaseHistoryItems to count.
+     * @example
+     * // Count the number of CaseHistoryItems
+     * const count = await prisma.caseHistoryItem.count({
+     *   where: {
+     *     // ... the filter for the CaseHistoryItems we want to count
+     *   }
+     * })
+    **/
+    count<T extends CaseHistoryItemCountArgs>(
+      args?: Subset<T, CaseHistoryItemCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], CaseHistoryItemCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a CaseHistoryItem.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CaseHistoryItemAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends CaseHistoryItemAggregateArgs>(args: Subset<T, CaseHistoryItemAggregateArgs>): Prisma.PrismaPromise<GetCaseHistoryItemAggregateType<T>>
+
+    /**
+     * Group by CaseHistoryItem.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CaseHistoryItemGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends CaseHistoryItemGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: CaseHistoryItemGroupByArgs['orderBy'] }
+        : { orderBy?: CaseHistoryItemGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, CaseHistoryItemGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCaseHistoryItemGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the CaseHistoryItem model
+   */
+  readonly fields: CaseHistoryItemFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for CaseHistoryItem.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__CaseHistoryItemClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    case<T extends CaseDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CaseDefaultArgs<ExtArgs>>): Prisma__CaseClient<$Result.GetResult<Prisma.$CasePayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the CaseHistoryItem model
+   */ 
+  interface CaseHistoryItemFieldRefs {
+    readonly crn: FieldRef<"CaseHistoryItem", 'String'>
+    readonly businessOnDate: FieldRef<"CaseHistoryItem", 'DateTime'>
+    readonly purposeOfHearing: FieldRef<"CaseHistoryItem", 'String'>
+    readonly hearingDate: FieldRef<"CaseHistoryItem", 'DateTime'>
+    readonly notes: FieldRef<"CaseHistoryItem", 'String'>
+    readonly organizationId: FieldRef<"CaseHistoryItem", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * CaseHistoryItem findUnique
+   */
+  export type CaseHistoryItemFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CaseHistoryItem
+     */
+    select?: CaseHistoryItemSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CaseHistoryItemInclude<ExtArgs> | null
+    /**
+     * Filter, which CaseHistoryItem to fetch.
+     */
+    where: CaseHistoryItemWhereUniqueInput
+  }
+
+  /**
+   * CaseHistoryItem findUniqueOrThrow
+   */
+  export type CaseHistoryItemFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CaseHistoryItem
+     */
+    select?: CaseHistoryItemSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CaseHistoryItemInclude<ExtArgs> | null
+    /**
+     * Filter, which CaseHistoryItem to fetch.
+     */
+    where: CaseHistoryItemWhereUniqueInput
+  }
+
+  /**
+   * CaseHistoryItem findFirst
+   */
+  export type CaseHistoryItemFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CaseHistoryItem
+     */
+    select?: CaseHistoryItemSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CaseHistoryItemInclude<ExtArgs> | null
+    /**
+     * Filter, which CaseHistoryItem to fetch.
+     */
+    where?: CaseHistoryItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CaseHistoryItems to fetch.
+     */
+    orderBy?: CaseHistoryItemOrderByWithRelationInput | CaseHistoryItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CaseHistoryItems.
+     */
+    cursor?: CaseHistoryItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CaseHistoryItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CaseHistoryItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CaseHistoryItems.
+     */
+    distinct?: CaseHistoryItemScalarFieldEnum | CaseHistoryItemScalarFieldEnum[]
+  }
+
+  /**
+   * CaseHistoryItem findFirstOrThrow
+   */
+  export type CaseHistoryItemFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CaseHistoryItem
+     */
+    select?: CaseHistoryItemSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CaseHistoryItemInclude<ExtArgs> | null
+    /**
+     * Filter, which CaseHistoryItem to fetch.
+     */
+    where?: CaseHistoryItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CaseHistoryItems to fetch.
+     */
+    orderBy?: CaseHistoryItemOrderByWithRelationInput | CaseHistoryItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CaseHistoryItems.
+     */
+    cursor?: CaseHistoryItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CaseHistoryItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CaseHistoryItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CaseHistoryItems.
+     */
+    distinct?: CaseHistoryItemScalarFieldEnum | CaseHistoryItemScalarFieldEnum[]
+  }
+
+  /**
+   * CaseHistoryItem findMany
+   */
+  export type CaseHistoryItemFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CaseHistoryItem
+     */
+    select?: CaseHistoryItemSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CaseHistoryItemInclude<ExtArgs> | null
+    /**
+     * Filter, which CaseHistoryItems to fetch.
+     */
+    where?: CaseHistoryItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CaseHistoryItems to fetch.
+     */
+    orderBy?: CaseHistoryItemOrderByWithRelationInput | CaseHistoryItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing CaseHistoryItems.
+     */
+    cursor?: CaseHistoryItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CaseHistoryItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CaseHistoryItems.
+     */
+    skip?: number
+    distinct?: CaseHistoryItemScalarFieldEnum | CaseHistoryItemScalarFieldEnum[]
+  }
+
+  /**
+   * CaseHistoryItem create
+   */
+  export type CaseHistoryItemCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CaseHistoryItem
+     */
+    select?: CaseHistoryItemSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CaseHistoryItemInclude<ExtArgs> | null
+    /**
+     * The data needed to create a CaseHistoryItem.
+     */
+    data: XOR<CaseHistoryItemCreateInput, CaseHistoryItemUncheckedCreateInput>
+  }
+
+  /**
+   * CaseHistoryItem createMany
+   */
+  export type CaseHistoryItemCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many CaseHistoryItems.
+     */
+    data: CaseHistoryItemCreateManyInput | CaseHistoryItemCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * CaseHistoryItem createManyAndReturn
+   */
+  export type CaseHistoryItemCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CaseHistoryItem
+     */
+    select?: CaseHistoryItemSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many CaseHistoryItems.
+     */
+    data: CaseHistoryItemCreateManyInput | CaseHistoryItemCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CaseHistoryItemIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * CaseHistoryItem update
+   */
+  export type CaseHistoryItemUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CaseHistoryItem
+     */
+    select?: CaseHistoryItemSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CaseHistoryItemInclude<ExtArgs> | null
+    /**
+     * The data needed to update a CaseHistoryItem.
+     */
+    data: XOR<CaseHistoryItemUpdateInput, CaseHistoryItemUncheckedUpdateInput>
+    /**
+     * Choose, which CaseHistoryItem to update.
+     */
+    where: CaseHistoryItemWhereUniqueInput
+  }
+
+  /**
+   * CaseHistoryItem updateMany
+   */
+  export type CaseHistoryItemUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update CaseHistoryItems.
+     */
+    data: XOR<CaseHistoryItemUpdateManyMutationInput, CaseHistoryItemUncheckedUpdateManyInput>
+    /**
+     * Filter which CaseHistoryItems to update
+     */
+    where?: CaseHistoryItemWhereInput
+  }
+
+  /**
+   * CaseHistoryItem upsert
+   */
+  export type CaseHistoryItemUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CaseHistoryItem
+     */
+    select?: CaseHistoryItemSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CaseHistoryItemInclude<ExtArgs> | null
+    /**
+     * The filter to search for the CaseHistoryItem to update in case it exists.
+     */
+    where: CaseHistoryItemWhereUniqueInput
+    /**
+     * In case the CaseHistoryItem found by the `where` argument doesn't exist, create a new CaseHistoryItem with this data.
+     */
+    create: XOR<CaseHistoryItemCreateInput, CaseHistoryItemUncheckedCreateInput>
+    /**
+     * In case the CaseHistoryItem was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<CaseHistoryItemUpdateInput, CaseHistoryItemUncheckedUpdateInput>
+  }
+
+  /**
+   * CaseHistoryItem delete
+   */
+  export type CaseHistoryItemDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CaseHistoryItem
+     */
+    select?: CaseHistoryItemSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CaseHistoryItemInclude<ExtArgs> | null
+    /**
+     * Filter which CaseHistoryItem to delete.
+     */
+    where: CaseHistoryItemWhereUniqueInput
+  }
+
+  /**
+   * CaseHistoryItem deleteMany
+   */
+  export type CaseHistoryItemDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CaseHistoryItems to delete
+     */
+    where?: CaseHistoryItemWhereInput
+  }
+
+  /**
+   * CaseHistoryItem without action
+   */
+  export type CaseHistoryItemDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CaseHistoryItem
+     */
+    select?: CaseHistoryItemSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CaseHistoryItemInclude<ExtArgs> | null
   }
 
 
@@ -18520,6 +19584,18 @@ export namespace Prisma {
   export type CaseScalarFieldEnum = (typeof CaseScalarFieldEnum)[keyof typeof CaseScalarFieldEnum]
 
 
+  export const CaseHistoryItemScalarFieldEnum: {
+    crn: 'crn',
+    businessOnDate: 'businessOnDate',
+    purposeOfHearing: 'purposeOfHearing',
+    hearingDate: 'hearingDate',
+    notes: 'notes',
+    organizationId: 'organizationId'
+  };
+
+  export type CaseHistoryItemScalarFieldEnum = (typeof CaseHistoryItemScalarFieldEnum)[keyof typeof CaseHistoryItemScalarFieldEnum]
+
+
   export const AdvocateCaseScalarFieldEnum: {
     id: 'id',
     caseId: 'caseId',
@@ -19238,6 +20314,7 @@ export namespace Prisma {
     AdvocateCase?: AdvocateCaseListRelationFilter
     organization?: XOR<OrganizationRelationFilter, OrganizationWhereInput>
     ManualCaseImportTask?: ManualCaseImportTaskListRelationFilter
+    CaseHistory?: CaseHistoryItemListRelationFilter
   }
 
   export type CaseOrderByWithRelationInput = {
@@ -19268,6 +20345,7 @@ export namespace Prisma {
     AdvocateCase?: AdvocateCaseOrderByRelationAggregateInput
     organization?: OrganizationOrderByWithRelationInput
     ManualCaseImportTask?: ManualCaseImportTaskOrderByRelationAggregateInput
+    CaseHistory?: CaseHistoryItemOrderByRelationAggregateInput
   }
 
   export type CaseWhereUniqueInput = Prisma.AtLeast<{
@@ -19303,6 +20381,7 @@ export namespace Prisma {
     AdvocateCase?: AdvocateCaseListRelationFilter
     organization?: XOR<OrganizationRelationFilter, OrganizationWhereInput>
     ManualCaseImportTask?: ManualCaseImportTaskListRelationFilter
+    CaseHistory?: CaseHistoryItemListRelationFilter
   }, "id" | "organizationId_typeName_number_regYear_courtId" | "organizationId_crn">
 
   export type CaseOrderByWithAggregationInput = {
@@ -19361,6 +20440,67 @@ export namespace Prisma {
     created_at?: DateTimeWithAggregatesFilter<"Case"> | Date | string
     updatedAt?: DateTimeNullableWithAggregatesFilter<"Case"> | Date | string | null
     organizationId?: StringWithAggregatesFilter<"Case"> | string
+  }
+
+  export type CaseHistoryItemWhereInput = {
+    AND?: CaseHistoryItemWhereInput | CaseHistoryItemWhereInput[]
+    OR?: CaseHistoryItemWhereInput[]
+    NOT?: CaseHistoryItemWhereInput | CaseHistoryItemWhereInput[]
+    crn?: StringFilter<"CaseHistoryItem"> | string
+    businessOnDate?: DateTimeFilter<"CaseHistoryItem"> | Date | string
+    purposeOfHearing?: StringFilter<"CaseHistoryItem"> | string
+    hearingDate?: DateTimeNullableFilter<"CaseHistoryItem"> | Date | string | null
+    notes?: StringNullableFilter<"CaseHistoryItem"> | string | null
+    organizationId?: StringFilter<"CaseHistoryItem"> | string
+    case?: XOR<CaseRelationFilter, CaseWhereInput>
+  }
+
+  export type CaseHistoryItemOrderByWithRelationInput = {
+    crn?: SortOrder
+    businessOnDate?: SortOrder
+    purposeOfHearing?: SortOrder
+    hearingDate?: SortOrderInput | SortOrder
+    notes?: SortOrderInput | SortOrder
+    organizationId?: SortOrder
+    case?: CaseOrderByWithRelationInput
+  }
+
+  export type CaseHistoryItemWhereUniqueInput = Prisma.AtLeast<{
+    organizationId_crn_businessOnDate?: CaseHistoryItemOrganizationIdCrnBusinessOnDateCompoundUniqueInput
+    AND?: CaseHistoryItemWhereInput | CaseHistoryItemWhereInput[]
+    OR?: CaseHistoryItemWhereInput[]
+    NOT?: CaseHistoryItemWhereInput | CaseHistoryItemWhereInput[]
+    crn?: StringFilter<"CaseHistoryItem"> | string
+    businessOnDate?: DateTimeFilter<"CaseHistoryItem"> | Date | string
+    purposeOfHearing?: StringFilter<"CaseHistoryItem"> | string
+    hearingDate?: DateTimeNullableFilter<"CaseHistoryItem"> | Date | string | null
+    notes?: StringNullableFilter<"CaseHistoryItem"> | string | null
+    organizationId?: StringFilter<"CaseHistoryItem"> | string
+    case?: XOR<CaseRelationFilter, CaseWhereInput>
+  }, "organizationId_crn_businessOnDate">
+
+  export type CaseHistoryItemOrderByWithAggregationInput = {
+    crn?: SortOrder
+    businessOnDate?: SortOrder
+    purposeOfHearing?: SortOrder
+    hearingDate?: SortOrderInput | SortOrder
+    notes?: SortOrderInput | SortOrder
+    organizationId?: SortOrder
+    _count?: CaseHistoryItemCountOrderByAggregateInput
+    _max?: CaseHistoryItemMaxOrderByAggregateInput
+    _min?: CaseHistoryItemMinOrderByAggregateInput
+  }
+
+  export type CaseHistoryItemScalarWhereWithAggregatesInput = {
+    AND?: CaseHistoryItemScalarWhereWithAggregatesInput | CaseHistoryItemScalarWhereWithAggregatesInput[]
+    OR?: CaseHistoryItemScalarWhereWithAggregatesInput[]
+    NOT?: CaseHistoryItemScalarWhereWithAggregatesInput | CaseHistoryItemScalarWhereWithAggregatesInput[]
+    crn?: StringWithAggregatesFilter<"CaseHistoryItem"> | string
+    businessOnDate?: DateTimeWithAggregatesFilter<"CaseHistoryItem"> | Date | string
+    purposeOfHearing?: StringWithAggregatesFilter<"CaseHistoryItem"> | string
+    hearingDate?: DateTimeNullableWithAggregatesFilter<"CaseHistoryItem"> | Date | string | null
+    notes?: StringNullableWithAggregatesFilter<"CaseHistoryItem"> | string | null
+    organizationId?: StringWithAggregatesFilter<"CaseHistoryItem"> | string
   }
 
   export type AdvocateCaseWhereInput = {
@@ -20373,6 +21513,7 @@ export namespace Prisma {
     AdvocateCase?: AdvocateCaseCreateNestedManyWithoutCaseInput
     organization: OrganizationCreateNestedOneWithoutCaseInput
     ManualCaseImportTask?: ManualCaseImportTaskCreateNestedManyWithoutCaseInput
+    CaseHistory?: CaseHistoryItemCreateNestedManyWithoutCaseInput
   }
 
   export type CaseUncheckedCreateInput = {
@@ -20401,6 +21542,7 @@ export namespace Prisma {
     organizationId: string
     AdvocateCase?: AdvocateCaseUncheckedCreateNestedManyWithoutCaseInput
     ManualCaseImportTask?: ManualCaseImportTaskUncheckedCreateNestedManyWithoutCaseInput
+    CaseHistory?: CaseHistoryItemUncheckedCreateNestedManyWithoutCaseInput
   }
 
   export type CaseUpdateInput = {
@@ -20429,6 +21571,7 @@ export namespace Prisma {
     AdvocateCase?: AdvocateCaseUpdateManyWithoutCaseNestedInput
     organization?: OrganizationUpdateOneRequiredWithoutCaseNestedInput
     ManualCaseImportTask?: ManualCaseImportTaskUpdateManyWithoutCaseNestedInput
+    CaseHistory?: CaseHistoryItemUpdateManyWithoutCaseNestedInput
   }
 
   export type CaseUncheckedUpdateInput = {
@@ -20457,6 +21600,7 @@ export namespace Prisma {
     organizationId?: StringFieldUpdateOperationsInput | string
     AdvocateCase?: AdvocateCaseUncheckedUpdateManyWithoutCaseNestedInput
     ManualCaseImportTask?: ManualCaseImportTaskUncheckedUpdateManyWithoutCaseNestedInput
+    CaseHistory?: CaseHistoryItemUncheckedUpdateManyWithoutCaseNestedInput
   }
 
   export type CaseCreateManyInput = {
@@ -20532,6 +21676,65 @@ export namespace Prisma {
     rawData?: JsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    organizationId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type CaseHistoryItemCreateInput = {
+    businessOnDate: Date | string
+    purposeOfHearing: string
+    hearingDate?: Date | string | null
+    notes?: string | null
+    case: CaseCreateNestedOneWithoutCaseHistoryInput
+  }
+
+  export type CaseHistoryItemUncheckedCreateInput = {
+    crn: string
+    businessOnDate: Date | string
+    purposeOfHearing: string
+    hearingDate?: Date | string | null
+    notes?: string | null
+    organizationId: string
+  }
+
+  export type CaseHistoryItemUpdateInput = {
+    businessOnDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    purposeOfHearing?: StringFieldUpdateOperationsInput | string
+    hearingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    case?: CaseUpdateOneRequiredWithoutCaseHistoryNestedInput
+  }
+
+  export type CaseHistoryItemUncheckedUpdateInput = {
+    crn?: StringFieldUpdateOperationsInput | string
+    businessOnDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    purposeOfHearing?: StringFieldUpdateOperationsInput | string
+    hearingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    organizationId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type CaseHistoryItemCreateManyInput = {
+    crn: string
+    businessOnDate: Date | string
+    purposeOfHearing: string
+    hearingDate?: Date | string | null
+    notes?: string | null
+    organizationId: string
+  }
+
+  export type CaseHistoryItemUpdateManyMutationInput = {
+    businessOnDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    purposeOfHearing?: StringFieldUpdateOperationsInput | string
+    hearingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type CaseHistoryItemUncheckedUpdateManyInput = {
+    crn?: StringFieldUpdateOperationsInput | string
+    businessOnDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    purposeOfHearing?: StringFieldUpdateOperationsInput | string
+    hearingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     organizationId?: StringFieldUpdateOperationsInput | string
   }
 
@@ -21604,6 +22807,16 @@ export namespace Prisma {
     isNot?: DistrictCourtWhereInput
   }
 
+  export type CaseHistoryItemListRelationFilter = {
+    every?: CaseHistoryItemWhereInput
+    some?: CaseHistoryItemWhereInput
+    none?: CaseHistoryItemWhereInput
+  }
+
+  export type CaseHistoryItemOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type CaseOrganizationIdTypeNameNumberRegYearCourtIdCompoundUniqueInput = {
     organizationId: string
     typeName: string
@@ -21731,6 +22944,39 @@ export namespace Prisma {
   export type CaseRelationFilter = {
     is?: CaseWhereInput
     isNot?: CaseWhereInput
+  }
+
+  export type CaseHistoryItemOrganizationIdCrnBusinessOnDateCompoundUniqueInput = {
+    organizationId: string
+    crn: string
+    businessOnDate: Date | string
+  }
+
+  export type CaseHistoryItemCountOrderByAggregateInput = {
+    crn?: SortOrder
+    businessOnDate?: SortOrder
+    purposeOfHearing?: SortOrder
+    hearingDate?: SortOrder
+    notes?: SortOrder
+    organizationId?: SortOrder
+  }
+
+  export type CaseHistoryItemMaxOrderByAggregateInput = {
+    crn?: SortOrder
+    businessOnDate?: SortOrder
+    purposeOfHearing?: SortOrder
+    hearingDate?: SortOrder
+    notes?: SortOrder
+    organizationId?: SortOrder
+  }
+
+  export type CaseHistoryItemMinOrderByAggregateInput = {
+    crn?: SortOrder
+    businessOnDate?: SortOrder
+    purposeOfHearing?: SortOrder
+    hearingDate?: SortOrder
+    notes?: SortOrder
+    organizationId?: SortOrder
   }
 
   export type OrganizationMembersRelationFilter = {
@@ -22693,6 +23939,13 @@ export namespace Prisma {
     connect?: ManualCaseImportTaskWhereUniqueInput | ManualCaseImportTaskWhereUniqueInput[]
   }
 
+  export type CaseHistoryItemCreateNestedManyWithoutCaseInput = {
+    create?: XOR<CaseHistoryItemCreateWithoutCaseInput, CaseHistoryItemUncheckedCreateWithoutCaseInput> | CaseHistoryItemCreateWithoutCaseInput[] | CaseHistoryItemUncheckedCreateWithoutCaseInput[]
+    connectOrCreate?: CaseHistoryItemCreateOrConnectWithoutCaseInput | CaseHistoryItemCreateOrConnectWithoutCaseInput[]
+    createMany?: CaseHistoryItemCreateManyCaseInputEnvelope
+    connect?: CaseHistoryItemWhereUniqueInput | CaseHistoryItemWhereUniqueInput[]
+  }
+
   export type AdvocateCaseUncheckedCreateNestedManyWithoutCaseInput = {
     create?: XOR<AdvocateCaseCreateWithoutCaseInput, AdvocateCaseUncheckedCreateWithoutCaseInput> | AdvocateCaseCreateWithoutCaseInput[] | AdvocateCaseUncheckedCreateWithoutCaseInput[]
     connectOrCreate?: AdvocateCaseCreateOrConnectWithoutCaseInput | AdvocateCaseCreateOrConnectWithoutCaseInput[]
@@ -22705,6 +23958,13 @@ export namespace Prisma {
     connectOrCreate?: ManualCaseImportTaskCreateOrConnectWithoutCaseInput | ManualCaseImportTaskCreateOrConnectWithoutCaseInput[]
     createMany?: ManualCaseImportTaskCreateManyCaseInputEnvelope
     connect?: ManualCaseImportTaskWhereUniqueInput | ManualCaseImportTaskWhereUniqueInput[]
+  }
+
+  export type CaseHistoryItemUncheckedCreateNestedManyWithoutCaseInput = {
+    create?: XOR<CaseHistoryItemCreateWithoutCaseInput, CaseHistoryItemUncheckedCreateWithoutCaseInput> | CaseHistoryItemCreateWithoutCaseInput[] | CaseHistoryItemUncheckedCreateWithoutCaseInput[]
+    connectOrCreate?: CaseHistoryItemCreateOrConnectWithoutCaseInput | CaseHistoryItemCreateOrConnectWithoutCaseInput[]
+    createMany?: CaseHistoryItemCreateManyCaseInputEnvelope
+    connect?: CaseHistoryItemWhereUniqueInput | CaseHistoryItemWhereUniqueInput[]
   }
 
   export type EnumAdvocateCaseSideFieldUpdateOperationsInput = {
@@ -22755,6 +24015,20 @@ export namespace Prisma {
     deleteMany?: ManualCaseImportTaskScalarWhereInput | ManualCaseImportTaskScalarWhereInput[]
   }
 
+  export type CaseHistoryItemUpdateManyWithoutCaseNestedInput = {
+    create?: XOR<CaseHistoryItemCreateWithoutCaseInput, CaseHistoryItemUncheckedCreateWithoutCaseInput> | CaseHistoryItemCreateWithoutCaseInput[] | CaseHistoryItemUncheckedCreateWithoutCaseInput[]
+    connectOrCreate?: CaseHistoryItemCreateOrConnectWithoutCaseInput | CaseHistoryItemCreateOrConnectWithoutCaseInput[]
+    upsert?: CaseHistoryItemUpsertWithWhereUniqueWithoutCaseInput | CaseHistoryItemUpsertWithWhereUniqueWithoutCaseInput[]
+    createMany?: CaseHistoryItemCreateManyCaseInputEnvelope
+    set?: CaseHistoryItemWhereUniqueInput | CaseHistoryItemWhereUniqueInput[]
+    disconnect?: CaseHistoryItemWhereUniqueInput | CaseHistoryItemWhereUniqueInput[]
+    delete?: CaseHistoryItemWhereUniqueInput | CaseHistoryItemWhereUniqueInput[]
+    connect?: CaseHistoryItemWhereUniqueInput | CaseHistoryItemWhereUniqueInput[]
+    update?: CaseHistoryItemUpdateWithWhereUniqueWithoutCaseInput | CaseHistoryItemUpdateWithWhereUniqueWithoutCaseInput[]
+    updateMany?: CaseHistoryItemUpdateManyWithWhereWithoutCaseInput | CaseHistoryItemUpdateManyWithWhereWithoutCaseInput[]
+    deleteMany?: CaseHistoryItemScalarWhereInput | CaseHistoryItemScalarWhereInput[]
+  }
+
   export type AdvocateCaseUncheckedUpdateManyWithoutCaseNestedInput = {
     create?: XOR<AdvocateCaseCreateWithoutCaseInput, AdvocateCaseUncheckedCreateWithoutCaseInput> | AdvocateCaseCreateWithoutCaseInput[] | AdvocateCaseUncheckedCreateWithoutCaseInput[]
     connectOrCreate?: AdvocateCaseCreateOrConnectWithoutCaseInput | AdvocateCaseCreateOrConnectWithoutCaseInput[]
@@ -22781,6 +24055,34 @@ export namespace Prisma {
     update?: ManualCaseImportTaskUpdateWithWhereUniqueWithoutCaseInput | ManualCaseImportTaskUpdateWithWhereUniqueWithoutCaseInput[]
     updateMany?: ManualCaseImportTaskUpdateManyWithWhereWithoutCaseInput | ManualCaseImportTaskUpdateManyWithWhereWithoutCaseInput[]
     deleteMany?: ManualCaseImportTaskScalarWhereInput | ManualCaseImportTaskScalarWhereInput[]
+  }
+
+  export type CaseHistoryItemUncheckedUpdateManyWithoutCaseNestedInput = {
+    create?: XOR<CaseHistoryItemCreateWithoutCaseInput, CaseHistoryItemUncheckedCreateWithoutCaseInput> | CaseHistoryItemCreateWithoutCaseInput[] | CaseHistoryItemUncheckedCreateWithoutCaseInput[]
+    connectOrCreate?: CaseHistoryItemCreateOrConnectWithoutCaseInput | CaseHistoryItemCreateOrConnectWithoutCaseInput[]
+    upsert?: CaseHistoryItemUpsertWithWhereUniqueWithoutCaseInput | CaseHistoryItemUpsertWithWhereUniqueWithoutCaseInput[]
+    createMany?: CaseHistoryItemCreateManyCaseInputEnvelope
+    set?: CaseHistoryItemWhereUniqueInput | CaseHistoryItemWhereUniqueInput[]
+    disconnect?: CaseHistoryItemWhereUniqueInput | CaseHistoryItemWhereUniqueInput[]
+    delete?: CaseHistoryItemWhereUniqueInput | CaseHistoryItemWhereUniqueInput[]
+    connect?: CaseHistoryItemWhereUniqueInput | CaseHistoryItemWhereUniqueInput[]
+    update?: CaseHistoryItemUpdateWithWhereUniqueWithoutCaseInput | CaseHistoryItemUpdateWithWhereUniqueWithoutCaseInput[]
+    updateMany?: CaseHistoryItemUpdateManyWithWhereWithoutCaseInput | CaseHistoryItemUpdateManyWithWhereWithoutCaseInput[]
+    deleteMany?: CaseHistoryItemScalarWhereInput | CaseHistoryItemScalarWhereInput[]
+  }
+
+  export type CaseCreateNestedOneWithoutCaseHistoryInput = {
+    create?: XOR<CaseCreateWithoutCaseHistoryInput, CaseUncheckedCreateWithoutCaseHistoryInput>
+    connectOrCreate?: CaseCreateOrConnectWithoutCaseHistoryInput
+    connect?: CaseWhereUniqueInput
+  }
+
+  export type CaseUpdateOneRequiredWithoutCaseHistoryNestedInput = {
+    create?: XOR<CaseCreateWithoutCaseHistoryInput, CaseUncheckedCreateWithoutCaseHistoryInput>
+    connectOrCreate?: CaseCreateOrConnectWithoutCaseHistoryInput
+    upsert?: CaseUpsertWithoutCaseHistoryInput
+    connect?: CaseWhereUniqueInput
+    update?: XOR<XOR<CaseUpdateToOneWithWhereWithoutCaseHistoryInput, CaseUpdateWithoutCaseHistoryInput>, CaseUncheckedUpdateWithoutCaseHistoryInput>
   }
 
   export type CaseCreateNestedOneWithoutAdvocateCaseInput = {
@@ -24008,6 +25310,7 @@ export namespace Prisma {
     DistrictCourt: DistrictCourtCreateNestedOneWithoutCasesInput
     AdvocateCase?: AdvocateCaseCreateNestedManyWithoutCaseInput
     ManualCaseImportTask?: ManualCaseImportTaskCreateNestedManyWithoutCaseInput
+    CaseHistory?: CaseHistoryItemCreateNestedManyWithoutCaseInput
   }
 
   export type CaseUncheckedCreateWithoutOrganizationInput = {
@@ -24035,6 +25338,7 @@ export namespace Prisma {
     updatedAt?: Date | string | null
     AdvocateCase?: AdvocateCaseUncheckedCreateNestedManyWithoutCaseInput
     ManualCaseImportTask?: ManualCaseImportTaskUncheckedCreateNestedManyWithoutCaseInput
+    CaseHistory?: CaseHistoryItemUncheckedCreateNestedManyWithoutCaseInput
   }
 
   export type CaseCreateOrConnectWithoutOrganizationInput = {
@@ -24624,6 +25928,30 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type CaseHistoryItemCreateWithoutCaseInput = {
+    businessOnDate: Date | string
+    purposeOfHearing: string
+    hearingDate?: Date | string | null
+    notes?: string | null
+  }
+
+  export type CaseHistoryItemUncheckedCreateWithoutCaseInput = {
+    businessOnDate: Date | string
+    purposeOfHearing: string
+    hearingDate?: Date | string | null
+    notes?: string | null
+  }
+
+  export type CaseHistoryItemCreateOrConnectWithoutCaseInput = {
+    where: CaseHistoryItemWhereUniqueInput
+    create: XOR<CaseHistoryItemCreateWithoutCaseInput, CaseHistoryItemUncheckedCreateWithoutCaseInput>
+  }
+
+  export type CaseHistoryItemCreateManyCaseInputEnvelope = {
+    data: CaseHistoryItemCreateManyCaseInput | CaseHistoryItemCreateManyCaseInput[]
+    skipDuplicates?: boolean
+  }
+
   export type DistrictCourtUpsertWithoutCasesInput = {
     update: XOR<DistrictCourtUpdateWithoutCasesInput, DistrictCourtUncheckedUpdateWithoutCasesInput>
     create: XOR<DistrictCourtCreateWithoutCasesInput, DistrictCourtUncheckedCreateWithoutCasesInput>
@@ -24715,6 +26043,162 @@ export namespace Prisma {
     data: XOR<ManualCaseImportTaskUpdateManyMutationInput, ManualCaseImportTaskUncheckedUpdateManyWithoutCaseInput>
   }
 
+  export type CaseHistoryItemUpsertWithWhereUniqueWithoutCaseInput = {
+    where: CaseHistoryItemWhereUniqueInput
+    update: XOR<CaseHistoryItemUpdateWithoutCaseInput, CaseHistoryItemUncheckedUpdateWithoutCaseInput>
+    create: XOR<CaseHistoryItemCreateWithoutCaseInput, CaseHistoryItemUncheckedCreateWithoutCaseInput>
+  }
+
+  export type CaseHistoryItemUpdateWithWhereUniqueWithoutCaseInput = {
+    where: CaseHistoryItemWhereUniqueInput
+    data: XOR<CaseHistoryItemUpdateWithoutCaseInput, CaseHistoryItemUncheckedUpdateWithoutCaseInput>
+  }
+
+  export type CaseHistoryItemUpdateManyWithWhereWithoutCaseInput = {
+    where: CaseHistoryItemScalarWhereInput
+    data: XOR<CaseHistoryItemUpdateManyMutationInput, CaseHistoryItemUncheckedUpdateManyWithoutCaseInput>
+  }
+
+  export type CaseHistoryItemScalarWhereInput = {
+    AND?: CaseHistoryItemScalarWhereInput | CaseHistoryItemScalarWhereInput[]
+    OR?: CaseHistoryItemScalarWhereInput[]
+    NOT?: CaseHistoryItemScalarWhereInput | CaseHistoryItemScalarWhereInput[]
+    crn?: StringFilter<"CaseHistoryItem"> | string
+    businessOnDate?: DateTimeFilter<"CaseHistoryItem"> | Date | string
+    purposeOfHearing?: StringFilter<"CaseHistoryItem"> | string
+    hearingDate?: DateTimeNullableFilter<"CaseHistoryItem"> | Date | string | null
+    notes?: StringNullableFilter<"CaseHistoryItem"> | string | null
+    organizationId?: StringFilter<"CaseHistoryItem"> | string
+  }
+
+  export type CaseCreateWithoutCaseHistoryInput = {
+    id?: string
+    crn: string
+    typeName: string
+    number: string
+    regYear: string
+    title: string
+    customTitle?: string | null
+    description?: string | null
+    petitioner: string
+    petitionerLawyers: string
+    respondent: string
+    respondentLawyers?: string | null
+    dateOfDecision?: Date | string | null
+    nextHearingDate?: Date | string | null
+    side: $Enums.AdvocateCaseSide
+    extraPetitioners?: string | null
+    extraRespondents?: string | null
+    extraParties?: string | null
+    rawData: JsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    updatedAt?: Date | string | null
+    DistrictCourt: DistrictCourtCreateNestedOneWithoutCasesInput
+    AdvocateCase?: AdvocateCaseCreateNestedManyWithoutCaseInput
+    organization: OrganizationCreateNestedOneWithoutCaseInput
+    ManualCaseImportTask?: ManualCaseImportTaskCreateNestedManyWithoutCaseInput
+  }
+
+  export type CaseUncheckedCreateWithoutCaseHistoryInput = {
+    id?: string
+    crn: string
+    courtId: string
+    typeName: string
+    number: string
+    regYear: string
+    title: string
+    customTitle?: string | null
+    description?: string | null
+    petitioner: string
+    petitionerLawyers: string
+    respondent: string
+    respondentLawyers?: string | null
+    dateOfDecision?: Date | string | null
+    nextHearingDate?: Date | string | null
+    side: $Enums.AdvocateCaseSide
+    extraPetitioners?: string | null
+    extraRespondents?: string | null
+    extraParties?: string | null
+    rawData: JsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    updatedAt?: Date | string | null
+    organizationId: string
+    AdvocateCase?: AdvocateCaseUncheckedCreateNestedManyWithoutCaseInput
+    ManualCaseImportTask?: ManualCaseImportTaskUncheckedCreateNestedManyWithoutCaseInput
+  }
+
+  export type CaseCreateOrConnectWithoutCaseHistoryInput = {
+    where: CaseWhereUniqueInput
+    create: XOR<CaseCreateWithoutCaseHistoryInput, CaseUncheckedCreateWithoutCaseHistoryInput>
+  }
+
+  export type CaseUpsertWithoutCaseHistoryInput = {
+    update: XOR<CaseUpdateWithoutCaseHistoryInput, CaseUncheckedUpdateWithoutCaseHistoryInput>
+    create: XOR<CaseCreateWithoutCaseHistoryInput, CaseUncheckedCreateWithoutCaseHistoryInput>
+    where?: CaseWhereInput
+  }
+
+  export type CaseUpdateToOneWithWhereWithoutCaseHistoryInput = {
+    where?: CaseWhereInput
+    data: XOR<CaseUpdateWithoutCaseHistoryInput, CaseUncheckedUpdateWithoutCaseHistoryInput>
+  }
+
+  export type CaseUpdateWithoutCaseHistoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    crn?: StringFieldUpdateOperationsInput | string
+    typeName?: StringFieldUpdateOperationsInput | string
+    number?: StringFieldUpdateOperationsInput | string
+    regYear?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    customTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    petitioner?: StringFieldUpdateOperationsInput | string
+    petitionerLawyers?: StringFieldUpdateOperationsInput | string
+    respondent?: StringFieldUpdateOperationsInput | string
+    respondentLawyers?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfDecision?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nextHearingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    side?: EnumAdvocateCaseSideFieldUpdateOperationsInput | $Enums.AdvocateCaseSide
+    extraPetitioners?: NullableStringFieldUpdateOperationsInput | string | null
+    extraRespondents?: NullableStringFieldUpdateOperationsInput | string | null
+    extraParties?: NullableStringFieldUpdateOperationsInput | string | null
+    rawData?: JsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    DistrictCourt?: DistrictCourtUpdateOneRequiredWithoutCasesNestedInput
+    AdvocateCase?: AdvocateCaseUpdateManyWithoutCaseNestedInput
+    organization?: OrganizationUpdateOneRequiredWithoutCaseNestedInput
+    ManualCaseImportTask?: ManualCaseImportTaskUpdateManyWithoutCaseNestedInput
+  }
+
+  export type CaseUncheckedUpdateWithoutCaseHistoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    crn?: StringFieldUpdateOperationsInput | string
+    courtId?: StringFieldUpdateOperationsInput | string
+    typeName?: StringFieldUpdateOperationsInput | string
+    number?: StringFieldUpdateOperationsInput | string
+    regYear?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    customTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    petitioner?: StringFieldUpdateOperationsInput | string
+    petitionerLawyers?: StringFieldUpdateOperationsInput | string
+    respondent?: StringFieldUpdateOperationsInput | string
+    respondentLawyers?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfDecision?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    nextHearingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    side?: EnumAdvocateCaseSideFieldUpdateOperationsInput | $Enums.AdvocateCaseSide
+    extraPetitioners?: NullableStringFieldUpdateOperationsInput | string | null
+    extraRespondents?: NullableStringFieldUpdateOperationsInput | string | null
+    extraParties?: NullableStringFieldUpdateOperationsInput | string | null
+    rawData?: JsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    organizationId?: StringFieldUpdateOperationsInput | string
+    AdvocateCase?: AdvocateCaseUncheckedUpdateManyWithoutCaseNestedInput
+    ManualCaseImportTask?: ManualCaseImportTaskUncheckedUpdateManyWithoutCaseNestedInput
+  }
+
   export type CaseCreateWithoutAdvocateCaseInput = {
     id?: string
     crn: string
@@ -24740,6 +26224,7 @@ export namespace Prisma {
     DistrictCourt: DistrictCourtCreateNestedOneWithoutCasesInput
     organization: OrganizationCreateNestedOneWithoutCaseInput
     ManualCaseImportTask?: ManualCaseImportTaskCreateNestedManyWithoutCaseInput
+    CaseHistory?: CaseHistoryItemCreateNestedManyWithoutCaseInput
   }
 
   export type CaseUncheckedCreateWithoutAdvocateCaseInput = {
@@ -24767,6 +26252,7 @@ export namespace Prisma {
     updatedAt?: Date | string | null
     organizationId: string
     ManualCaseImportTask?: ManualCaseImportTaskUncheckedCreateNestedManyWithoutCaseInput
+    CaseHistory?: CaseHistoryItemUncheckedCreateNestedManyWithoutCaseInput
   }
 
   export type CaseCreateOrConnectWithoutAdvocateCaseInput = {
@@ -24858,6 +26344,7 @@ export namespace Prisma {
     DistrictCourt?: DistrictCourtUpdateOneRequiredWithoutCasesNestedInput
     organization?: OrganizationUpdateOneRequiredWithoutCaseNestedInput
     ManualCaseImportTask?: ManualCaseImportTaskUpdateManyWithoutCaseNestedInput
+    CaseHistory?: CaseHistoryItemUpdateManyWithoutCaseNestedInput
   }
 
   export type CaseUncheckedUpdateWithoutAdvocateCaseInput = {
@@ -24885,6 +26372,7 @@ export namespace Prisma {
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     organizationId?: StringFieldUpdateOperationsInput | string
     ManualCaseImportTask?: ManualCaseImportTaskUncheckedUpdateManyWithoutCaseNestedInput
+    CaseHistory?: CaseHistoryItemUncheckedUpdateManyWithoutCaseNestedInput
   }
 
   export type OrganizationMembersUpsertWithoutAdvocateCaseInput = {
@@ -25426,6 +26914,7 @@ export namespace Prisma {
     AdvocateCase?: AdvocateCaseCreateNestedManyWithoutCaseInput
     organization: OrganizationCreateNestedOneWithoutCaseInput
     ManualCaseImportTask?: ManualCaseImportTaskCreateNestedManyWithoutCaseInput
+    CaseHistory?: CaseHistoryItemCreateNestedManyWithoutCaseInput
   }
 
   export type CaseUncheckedCreateWithoutDistrictCourtInput = {
@@ -25453,6 +26942,7 @@ export namespace Prisma {
     organizationId: string
     AdvocateCase?: AdvocateCaseUncheckedCreateNestedManyWithoutCaseInput
     ManualCaseImportTask?: ManualCaseImportTaskUncheckedCreateNestedManyWithoutCaseInput
+    CaseHistory?: CaseHistoryItemUncheckedCreateNestedManyWithoutCaseInput
   }
 
   export type CaseCreateOrConnectWithoutDistrictCourtInput = {
@@ -25825,6 +27315,7 @@ export namespace Prisma {
     DistrictCourt: DistrictCourtCreateNestedOneWithoutCasesInput
     AdvocateCase?: AdvocateCaseCreateNestedManyWithoutCaseInput
     organization: OrganizationCreateNestedOneWithoutCaseInput
+    CaseHistory?: CaseHistoryItemCreateNestedManyWithoutCaseInput
   }
 
   export type CaseUncheckedCreateWithoutManualCaseImportTaskInput = {
@@ -25852,6 +27343,7 @@ export namespace Prisma {
     updatedAt?: Date | string | null
     organizationId: string
     AdvocateCase?: AdvocateCaseUncheckedCreateNestedManyWithoutCaseInput
+    CaseHistory?: CaseHistoryItemUncheckedCreateNestedManyWithoutCaseInput
   }
 
   export type CaseCreateOrConnectWithoutManualCaseImportTaskInput = {
@@ -26036,6 +27528,7 @@ export namespace Prisma {
     DistrictCourt?: DistrictCourtUpdateOneRequiredWithoutCasesNestedInput
     AdvocateCase?: AdvocateCaseUpdateManyWithoutCaseNestedInput
     organization?: OrganizationUpdateOneRequiredWithoutCaseNestedInput
+    CaseHistory?: CaseHistoryItemUpdateManyWithoutCaseNestedInput
   }
 
   export type CaseUncheckedUpdateWithoutManualCaseImportTaskInput = {
@@ -26063,6 +27556,7 @@ export namespace Prisma {
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     organizationId?: StringFieldUpdateOperationsInput | string
     AdvocateCase?: AdvocateCaseUncheckedUpdateManyWithoutCaseNestedInput
+    CaseHistory?: CaseHistoryItemUncheckedUpdateManyWithoutCaseNestedInput
   }
 
   export type OrganizationMembersUpsertWithoutManualCaseImportTaskInput = {
@@ -26424,6 +27918,7 @@ export namespace Prisma {
     DistrictCourt?: DistrictCourtUpdateOneRequiredWithoutCasesNestedInput
     AdvocateCase?: AdvocateCaseUpdateManyWithoutCaseNestedInput
     ManualCaseImportTask?: ManualCaseImportTaskUpdateManyWithoutCaseNestedInput
+    CaseHistory?: CaseHistoryItemUpdateManyWithoutCaseNestedInput
   }
 
   export type CaseUncheckedUpdateWithoutOrganizationInput = {
@@ -26451,6 +27946,7 @@ export namespace Prisma {
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     AdvocateCase?: AdvocateCaseUncheckedUpdateManyWithoutCaseNestedInput
     ManualCaseImportTask?: ManualCaseImportTaskUncheckedUpdateManyWithoutCaseNestedInput
+    CaseHistory?: CaseHistoryItemUncheckedUpdateManyWithoutCaseNestedInput
   }
 
   export type CaseUncheckedUpdateManyWithoutOrganizationInput = {
@@ -26737,6 +28233,13 @@ export namespace Prisma {
     organizationId: string
   }
 
+  export type CaseHistoryItemCreateManyCaseInput = {
+    businessOnDate: Date | string
+    purposeOfHearing: string
+    hearingDate?: Date | string | null
+    notes?: string | null
+  }
+
   export type AdvocateCaseUpdateWithoutCaseInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26804,6 +28307,27 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     organizationId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type CaseHistoryItemUpdateWithoutCaseInput = {
+    businessOnDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    purposeOfHearing?: StringFieldUpdateOperationsInput | string
+    hearingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type CaseHistoryItemUncheckedUpdateWithoutCaseInput = {
+    businessOnDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    purposeOfHearing?: StringFieldUpdateOperationsInput | string
+    hearingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type CaseHistoryItemUncheckedUpdateManyWithoutCaseInput = {
+    businessOnDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    purposeOfHearing?: StringFieldUpdateOperationsInput | string
+    hearingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type DistrictCreateManyStateInput = {
@@ -27094,6 +28618,7 @@ export namespace Prisma {
     AdvocateCase?: AdvocateCaseUpdateManyWithoutCaseNestedInput
     organization?: OrganizationUpdateOneRequiredWithoutCaseNestedInput
     ManualCaseImportTask?: ManualCaseImportTaskUpdateManyWithoutCaseNestedInput
+    CaseHistory?: CaseHistoryItemUpdateManyWithoutCaseNestedInput
   }
 
   export type CaseUncheckedUpdateWithoutDistrictCourtInput = {
@@ -27121,6 +28646,7 @@ export namespace Prisma {
     organizationId?: StringFieldUpdateOperationsInput | string
     AdvocateCase?: AdvocateCaseUncheckedUpdateManyWithoutCaseNestedInput
     ManualCaseImportTask?: ManualCaseImportTaskUncheckedUpdateManyWithoutCaseNestedInput
+    CaseHistory?: CaseHistoryItemUncheckedUpdateManyWithoutCaseNestedInput
   }
 
   export type CaseUncheckedUpdateManyWithoutDistrictCourtInput = {
@@ -27323,6 +28849,10 @@ export namespace Prisma {
      * @deprecated Use CaseDefaultArgs instead
      */
     export type CaseArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = CaseDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use CaseHistoryItemDefaultArgs instead
+     */
+    export type CaseHistoryItemArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = CaseHistoryItemDefaultArgs<ExtArgs>
     /**
      * @deprecated Use AdvocateCaseDefaultArgs instead
      */

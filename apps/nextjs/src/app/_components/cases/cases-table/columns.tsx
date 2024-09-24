@@ -8,6 +8,7 @@ import { AllCaseResponseSchema } from "@court-base/api/schemas/cases";
 import { Button } from "@court-base/ui/button";
 import { Icons } from "@court-base/ui/icons";
 
+import { CaseDetailViewLink } from "./case-detail-view-link";
 import { CaseEditDialog } from "./case-title-edit";
 
 const _CaseTableRowsSchema = AllCaseResponseSchema.element.pick({
@@ -61,7 +62,7 @@ export const columns: ColumnDef<CaseTableRows>[] = [
     },
   },
   {
-    id: "edit",
+    id: "buttons",
     header: "",
     cell: ({ row }) => {
       return (
@@ -76,6 +77,19 @@ export const columns: ColumnDef<CaseTableRows>[] = [
             <Icons.edit size={10} />
           </Button>
         </CaseEditDialog>
+      );
+    },
+  },
+  {
+    id: "view-details",
+    header: "",
+    cell: ({ row }) => {
+      return (
+        <CaseDetailViewLink crn={row.original.crn}>
+          <Button variant={"outline"} size={"icon"} className="ml-2 min-w-10">
+            <Icons.view size={10} />
+          </Button>
+        </CaseDetailViewLink>
       );
     },
   },

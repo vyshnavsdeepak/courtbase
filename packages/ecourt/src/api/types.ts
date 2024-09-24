@@ -30,3 +30,10 @@ export const DistrictCourtCaseByCaseNoParamsSchema = z.object({
 export type DistrictCourtCaseByCaseNoParams = z.infer<
   typeof DistrictCourtCaseByCaseNoParamsSchema
 >;
+
+export type CaseHistoryLog = {
+  judge: string;
+  businessOnDate: Date;
+  hearingDate?: Date;
+  purposeOfHearing: string;
+}[];
