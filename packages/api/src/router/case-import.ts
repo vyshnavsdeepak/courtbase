@@ -1,6 +1,7 @@
 import type { TRPCRouterRecord } from "@trpc/server";
 import { TRPCError } from "@trpc/server";
 
+import { isPostgresError } from "@court-base/db";
 import { inngest } from "@court-base/event-funnel";
 
 import {
@@ -179,7 +180,20 @@ export const caseImportRouter = {
             createdBy: ctx.memberId,
           })
           .returning("id")
-          .executeTakeFirstOrThrow();
+          .executeTakeFirstOrThrow()
+          .catch((e: unknown) => {
+            if (isPostgresError(e) && e.code === "23505") {
+              throw new TRPCError({
+                code: "CONFLICT",
+                message: "Case already imported.",
+              });
+            }
+            throw new TRPCError({
+              code: "INTERNAL_SERVER_ERROR",
+              message:
+                "Something went wrong in inserting manual case import task", // Never
+            });
+          });
 
         await inngest.send({
           name: "app/case-import-by-case-no",
@@ -207,6 +221,9 @@ export const caseImportRouter = {
           importTaskId: insertRes.id,
         };
       } catch (e) {
+        if (e instanceof TRPCError) {
+          throw e;
+        }
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: (e as Error).message || "An error occurred",

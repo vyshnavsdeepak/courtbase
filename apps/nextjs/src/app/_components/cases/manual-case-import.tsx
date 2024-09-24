@@ -201,10 +201,15 @@ function ManualCaseImportDialog({
         onSuccess?.();
       },
       onError: (err) => {
-        const messages = err.data?.zodError?.formErrors;
-        toast.error(
-          messages?.join("\n") ?? "Failed to create case import task",
-        );
+        const zodMessages = err.data?.zodError?.formErrors;
+        const message = err.message;
+        if (zodMessages) {
+          toast.error(zodMessages.join("\n"));
+        } else if (message) {
+          toast.error(message);
+        } else {
+          toast.error("Failed to create case import task");
+        }
       },
     });
 
