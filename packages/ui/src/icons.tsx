@@ -1,10 +1,16 @@
 import {
   ArrowRight,
+  CalendarIcon,
   Eye,
   Files,
+  FileTextIcon,
+  LibraryIcon,
   LoaderCircle,
   PanelsTopLeft,
   Pencil,
+  ScaleIcon,
+  UserIcon,
+  UsersIcon,
 } from "lucide-react";
 
 export const Icons = {
@@ -14,4 +20,12 @@ export const Icons = {
   sidebar: PanelsTopLeft,
   edit: Pencil,
   view: Eye,
+  date: CalendarIcon,
+  caseNumber: ScaleIcon,
+  user: UserIcon,
+  parties: UserIcon,
+  advocates: UsersIcon,
+  advocate: UserIcon,
+  court: LibraryIcon,
+  caseFile: FileTextIcon,
 };
