@@ -174,9 +174,32 @@ const casesRouter = {
 
       return result;
     }),
+  historyItem: orgProtectedProcedure
+    .input(z.object({ crn: z.string(), businessOnDate: z.date() }))
+    .query(async ({ ctx, input }) => {
+      const orgId = ctx.orgId;
+      const crn = input.crn;
+
+      const result = await ctx.kysely
+        .selectFrom("CaseHistoryItem")
+        .select(["businessOnDate", "purposeOfHearing", "hearingDate", "notes"])
+        .where("organizationId", "=", orgId)
+        .where("crn", "=", crn)
+        .where("businessOnDate", "=", input.businessOnDate)
+        .executeTakeFirstOrThrow()
+        .catch(() => {
+          throw new Error("Failed to fetch case history. (E-1)");
+        });
+
+      return result;
+    }),
   updateHistoryNote: orgProtectedProcedure
     .input(
-      z.object({ crn: z.string(), businessOnDate: z.date(), note: z.string() }),
+      z.object({
+        crn: z.string(),
+        businessOnDate: z.string().pipe(z.coerce.date()),
+        note: z.string(),
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       const orgId = ctx.orgId;

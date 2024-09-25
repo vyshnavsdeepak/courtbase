@@ -1,7 +1,5 @@
 import * as cheerio from "cheerio";
 
-import { parseISTDate } from "@court-base/ecourt/lib/time";
-
 import type {
   Case,
   CaseHistory,
@@ -9,6 +7,7 @@ import type {
   CaseHistoryRawResult,
   CaseRaw,
 } from "./types-api-results";
+import { parseISTDate } from "../lib/time";
 
 export function transformCase(rawCase: CaseRaw): Case {
   let title;

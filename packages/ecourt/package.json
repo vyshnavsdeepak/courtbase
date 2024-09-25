@@ -4,8 +4,7 @@
   "version": "0.1.0",
   "type": "module",
   "exports": {
-    "./*": "./src/api/*.ts",
-    "./lib/*": "./src/lib/*.ts"
+    "./*": "./src/api/*.ts"
   },
   "license": "MIT",
   "scripts": {
