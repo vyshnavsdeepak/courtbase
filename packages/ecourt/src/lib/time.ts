@@ -8,5 +8,9 @@ export function parseISTDate(dateString: string, formatStr = "dd-MM-yyyy") {
     timeZone,
   });
 
+  if (isNaN(istDate.getTime())) {
+    throw new Error(`Invalid date string: ${dateString}`);
+  }
+
   return istDate;
 }
