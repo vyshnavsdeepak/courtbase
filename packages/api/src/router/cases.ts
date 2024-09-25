@@ -5,6 +5,7 @@ import { z } from "zod";
 import {
   AllCaseRequestSchema,
   AllCaseResponseSchema,
+  CaseSchemaExtended,
   CaseUpdateTitleRequestSchema,
 } from "../schemas/cases";
 // import type { Case } from "@court-base/db/types";
@@ -101,6 +102,55 @@ const casesRouter = {
       // Then, use this schema to validate the result of your query
       const queryResponse = await query.execute();
       const result = AllCaseResponseSchema.parse(queryResponse);
+      return {
+        data: result,
+      };
+    }),
+  byCrn: orgProtectedProcedure
+    .input(z.object({ crn: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const { crn } = input;
+      const orgId = ctx.orgId;
+      const query = ctx.kysely
+        .selectFrom("Case")
+        .leftJoin("AdvocateCase", "Case.id", "AdvocateCase.caseId")
+        .leftJoin("DistrictCourt", "Case.courtId", "DistrictCourt.id")
+        .leftJoin("OrganizationMembers", (join) =>
+          join
+            .onRef(
+              "OrganizationMembers.memberId",
+              "=",
+              "AdvocateCase.advocateId",
+            )
+            .on("OrganizationMembers.organizationId", "=", orgId),
+        )
+        .leftJoin("User", "User.id", "OrganizationMembers.userId") // TODO: Remove this join, as name is moved to OrganizationMembers table
+        .select([
+          "Case.id",
+          sql`ARRAY_AGG("User"."name")`.as("advocateNames"), // Aggregate advocate names
+          "crn",
+          "Case.courtId",
+          "DistrictCourt.name as courtName",
+          "typeName",
+          "number",
+          "regYear",
+          "title",
+          "customTitle",
+          "petitioner",
+          "respondent",
+          "dateOfDecision",
+          "nextHearingDate",
+          "side",
+          "extraPetitioners",
+          "extraRespondents",
+          "extraParties",
+          "Case.updatedAt as updatedAt",
+        ])
+        .groupBy(["Case.id", "DistrictCourt.name"])
+        .where("Case.organizationId", "=", orgId)
+        .where("Case.crn", "=", crn);
+      const queryResponse = await query.executeTakeFirstOrThrow();
+      const result = CaseSchemaExtended.parse(queryResponse);
       return {
         data: result,
       };

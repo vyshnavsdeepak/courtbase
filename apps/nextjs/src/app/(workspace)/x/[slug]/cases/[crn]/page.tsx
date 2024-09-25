@@ -1,4 +1,6 @@
 import CaseHistory from "~/app/_components/cases/case-details/case-history";
+import CaseOverview from "~/app/_components/cases/case-details/case-overview";
+import { api } from "~/trpc/server";
 
 interface Props {
   params: {
@@ -6,10 +8,14 @@ interface Props {
   };
 }
 
-export default function CaseDetailsPage(props: Props) {
+export default async function CaseDetailsPage(props: Props) {
+  const { crn } = props.params;
+  const cases = await api.cases.byCrn({ crn });
+
   return (
     <div className="container mx-auto space-y-4 p-4">
-      <CaseHistory crn={props.params.crn} />
+      <CaseOverview caseData={cases.data} />
+      <CaseHistory crn={crn} />
     </div>
   );
 }
