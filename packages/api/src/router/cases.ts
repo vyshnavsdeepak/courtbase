@@ -5,6 +5,7 @@ import { z } from "zod";
 import {
   AllCaseRequestSchema,
   AllCaseResponseSchema,
+  CaseSchemaExtended,
   CaseUpdateTitleRequestSchema,
 } from "../schemas/cases";
 // import type { Case } from "@court-base/db/types";
@@ -105,6 +106,55 @@ const casesRouter = {
         data: result,
       };
     }),
+  byCrn: orgProtectedProcedure
+    .input(z.object({ crn: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const { crn } = input;
+      const orgId = ctx.orgId;
+      const query = ctx.kysely
+        .selectFrom("Case")
+        .leftJoin("AdvocateCase", "Case.id", "AdvocateCase.caseId")
+        .leftJoin("DistrictCourt", "Case.courtId", "DistrictCourt.id")
+        .leftJoin("OrganizationMembers", (join) =>
+          join
+            .onRef(
+              "OrganizationMembers.memberId",
+              "=",
+              "AdvocateCase.advocateId",
+            )
+            .on("OrganizationMembers.organizationId", "=", orgId),
+        )
+        .leftJoin("User", "User.id", "OrganizationMembers.userId") // TODO: Remove this join, as name is moved to OrganizationMembers table
+        .select([
+          "Case.id",
+          sql`ARRAY_AGG("User"."name")`.as("advocateNames"), // Aggregate advocate names
+          "crn",
+          "Case.courtId",
+          "DistrictCourt.name as courtName",
+          "typeName",
+          "number",
+          "regYear",
+          "title",
+          "customTitle",
+          "petitioner",
+          "respondent",
+          "dateOfDecision",
+          "nextHearingDate",
+          "side",
+          "extraPetitioners",
+          "extraRespondents",
+          "extraParties",
+          "Case.updatedAt as updatedAt",
+        ])
+        .groupBy(["Case.id", "DistrictCourt.name"])
+        .where("Case.organizationId", "=", orgId)
+        .where("Case.crn", "=", crn);
+      const queryResponse = await query.executeTakeFirstOrThrow();
+      const result = CaseSchemaExtended.parse(queryResponse);
+      return {
+        data: result,
+      };
+    }),
   count: orgProtectedProcedure.query(async ({ ctx }) => {
     const orgId = ctx.orgId;
 
@@ -174,9 +224,32 @@ const casesRouter = {
 
       return result;
     }),
+  historyItem: orgProtectedProcedure
+    .input(z.object({ crn: z.string(), businessOnDate: z.date() }))
+    .query(async ({ ctx, input }) => {
+      const orgId = ctx.orgId;
+      const crn = input.crn;
+
+      const result = await ctx.kysely
+        .selectFrom("CaseHistoryItem")
+        .select(["businessOnDate", "purposeOfHearing", "hearingDate", "notes"])
+        .where("organizationId", "=", orgId)
+        .where("crn", "=", crn)
+        .where("businessOnDate", "=", input.businessOnDate)
+        .executeTakeFirstOrThrow()
+        .catch(() => {
+          throw new Error("Failed to fetch case history. (E-1)");
+        });
+
+      return result;
+    }),
   updateHistoryNote: orgProtectedProcedure
     .input(
-      z.object({ crn: z.string(), businessOnDate: z.date(), note: z.string() }),
+      z.object({
+        crn: z.string(),
+        businessOnDate: z.string().pipe(z.coerce.date()),
+        note: z.string(),
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       const orgId = ctx.orgId;

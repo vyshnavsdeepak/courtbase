@@ -1,5 +1,4 @@
 import * as cheerio from "cheerio";
-import { parse } from "date-fns";
 
 import type {
   Case,
@@ -8,6 +7,7 @@ import type {
   CaseHistoryRawResult,
   CaseRaw,
 } from "./types-api-results";
+import { parseISTDate } from "../lib/time";
 
 export function transformCase(rawCase: CaseRaw): Case {
   let title;
@@ -57,16 +57,11 @@ function parseTableToJson(html: string): CaseHistoryLog {
     const businessOnDate = $(element).find("td").eq(1).text().trim();
     const hearingDate = $(element).find("td").eq(2).text().trim();
     const purposeOfHearing = $(element).find("td").eq(3).text().trim();
-    const parsedBusinessOnDate = parse(
-      businessOnDate,
-      "dd-MM-yyyy",
-      new Date(),
-    );
-    const parsedHearingDate =
-      hearingDate.length > 0
-        ? parse(hearingDate, "dd-MM-yyyy", new Date())
-        : undefined;
 
+    const parsedBusinessOnDate = parseISTDate(businessOnDate);
+    const parsedHearingDate = hearingDate
+      ? parseISTDate(hearingDate)
+      : undefined;
     result.push({
       judge,
       businessOnDate: parsedBusinessOnDate,
@@ -96,7 +91,7 @@ export function transformCaseHistory(
       number: rawCase.reg_no,
       year: rawCase.reg_year,
     },
-    nextHearingDate: new Date(rawCase.date_next_list),
+    nextHearingDate: parseISTDate(rawCase.date_next_list),
     petitioner: rawCase.pet_name,
     petitionerLawyers: rawCase.pet_adv,
     respondent: rawCase.res_name,
