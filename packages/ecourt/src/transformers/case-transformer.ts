@@ -58,6 +58,13 @@ function parseTableToJson(html: string): CaseHistoryLog {
     const hearingDate = $(element).find("td").eq(2).text().trim();
     const purposeOfHearing = $(element).find("td").eq(3).text().trim();
 
+    if (businessOnDate.trim().length === 0) {
+      /*
+        ചില Cases അങ്ങനെ ഉണ്ടാകും. dismiss ആയോ മറ്റോ തീരുന്ന case പിന്നീട് revive ചെയ്യും.
+      */
+      return;
+    }
+
     const parsedBusinessOnDate = parseISTDate(businessOnDate);
     const parsedHearingDate =
       hearingDate.trim().length > 0 ? parseISTDate(hearingDate) : undefined;
