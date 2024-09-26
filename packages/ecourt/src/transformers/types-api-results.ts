@@ -51,7 +51,7 @@ export interface CaseHistoryRawResult {
   reg_no: number;
   reg_year: number;
   date_first_list: string;
-  date_next_list: string; // 2024-09-03// nexthearing date
+  date_next_list: string; // 2024-09-03// nexthearing date, 03-09-2024 format is also seen, use new Date() to parse
   archive: string;
   date_of_decision: string | null;
   disp_nature: number;
