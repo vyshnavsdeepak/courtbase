@@ -3,8 +3,10 @@
 import type { z } from "zod";
 import React from "react";
 
-import type { AllCaseRequestSchema } from "@court-base/api/schemas/cases";
-import { DataTableSkeleton } from "@court-base/ui/data-table/data-table-skeleton";
+import type {
+  AllCaseRequestSchema,
+  AllCaseResponseSchema,
+} from "@court-base/api/schemas/cases";
 
 import { CaseTable } from "~/app/_components/cases/cases-table";
 import { ClearFiltersButton } from "~/app/_components/cases/cases-table/clear-filters";
@@ -16,37 +18,16 @@ import { api } from "~/trpc/react";
 export const CasesTableRenderClient = ({
   children,
   caseConditions,
+  initialData,
 }: {
   children: React.ReactNode;
   caseConditions: z.infer<typeof AllCaseRequestSchema>;
+  initialData: { data: z.infer<typeof AllCaseResponseSchema> };
 }) => {
-  const { isLoading, data } = api.cases.all.useQuery(caseConditions);
-  if (isLoading) {
-    return (
-      <DataTableSkeleton
-        columnCount={7}
-        searchableColumnCount={1}
-        filterableColumnCount={2}
-        cellWidths={[
-          "10rem",
-          "10rem",
-          "10rem",
-          "20rem",
-          "8rem",
-          "8rem",
-          "8rem",
-        ]}
-      />
-    );
-  }
+  const { data } = api.cases.all.useQuery(caseConditions, {
+    initialData,
+  });
 
-  if (!data?.data) {
-    return (
-      <div className="flex h-full items-center justify-center">
-        <p>Something went wrong. Please contact support.</p>
-      </div>
-    );
-  }
   return (
     <div className="flex flex-1 flex-col">
       <div className="sticky top-0 z-10 flex justify-stretch bg-shade">
