@@ -1,15 +1,26 @@
+import { parse } from "date-fns";
 import { toDate } from "date-fns-tz";
 
 export function parseISTDate(dateString: string) {
-  const parsedDate = new Date(dateString);
+  const formats = ["dd-MM-yyyy", "yyyy-MM-dd"];
   const timeZone = "Asia/Kolkata";
-  const istDate = toDate(parsedDate, {
-    timeZone,
-  });
+  let parsedDate: Date | null = null;
 
-  if (isNaN(istDate.getTime())) {
+  for (const format of formats) {
+    try {
+      const parsed = parse(dateString, format, new Date());
+      parsedDate = toDate(parsed, { timeZone });
+      if (!isNaN(parsedDate.getTime())) {
+        break;
+      }
+    } catch {
+      // Ignore parsing errors and try the next format
+    }
+  }
+
+  if (!parsedDate || isNaN(parsedDate.getTime())) {
     throw new Error(`Invalid date string: ${dateString}`);
   }
 
-  return istDate;
+  return parsedDate;
 }

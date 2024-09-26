@@ -59,9 +59,8 @@ function parseTableToJson(html: string): CaseHistoryLog {
     const purposeOfHearing = $(element).find("td").eq(3).text().trim();
 
     const parsedBusinessOnDate = parseISTDate(businessOnDate);
-    const parsedHearingDate = hearingDate
-      ? parseISTDate(hearingDate)
-      : undefined;
+    const parsedHearingDate =
+      hearingDate.trim().length > 0 ? parseISTDate(hearingDate) : undefined;
     result.push({
       judge,
       businessOnDate: parsedBusinessOnDate,
