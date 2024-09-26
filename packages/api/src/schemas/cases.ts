@@ -78,3 +78,6 @@ export const CaseUpdateTitleRequestSchema = z.object({
 });
 
 export type CaseHistoryResponse = RouterOutputs["cases"]["history"];
+
+export type CaseImportJobsResponseType =
+  RouterOutputs["caseImport"]["importJobsByCaseNumber"];
