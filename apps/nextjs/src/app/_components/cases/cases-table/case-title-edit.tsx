@@ -82,8 +82,8 @@ function CaseEditForm({
   const disabled = isSubmitting || isSubmitted;
   const utils = api.useUtils();
   const updateTitle = api.cases.updateTitle.useMutation({
-    onSuccess: async () => {
-      await utils.cases.all.invalidate();
+    onSuccess: () => {
+      void utils.cases.all.invalidate();
       onSuccess?.();
       toast.success("Case title has been updated.");
     },
