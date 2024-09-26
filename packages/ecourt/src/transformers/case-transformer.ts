@@ -91,7 +91,7 @@ export function transformCaseHistory(
       number: rawCase.reg_no,
       year: rawCase.reg_year,
     },
-    nextHearingDate: parseISTDate(rawCase.date_next_list, "yyyy-MM-dd"),
+    nextHearingDate: parseISTDate(rawCase.date_next_list),
     petitioner: rawCase.pet_name,
     petitionerLawyers: rawCase.pet_adv,
     respondent: rawCase.res_name,

@@ -1,8 +1,7 @@
-import { parse } from "date-fns";
 import { toDate } from "date-fns-tz";
 
-export function parseISTDate(dateString: string, formatStr = "dd-MM-yyyy") {
-  const parsedDate = parse(dateString, formatStr, new Date());
+export function parseISTDate(dateString: string) {
+  const parsedDate = new Date(dateString);
   const timeZone = "Asia/Kolkata";
   const istDate = toDate(parsedDate, {
     timeZone,
