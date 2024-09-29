@@ -169,11 +169,20 @@ export const caseImportRouter = {
           .returning("id")
           .executeTakeFirstOrThrow()
           .catch((e: unknown) => {
-            if (isPostgresError(e) && e.code === "23505") {
-              throw new TRPCError({
-                code: "CONFLICT",
-                message: "Case already imported.",
-              });
+            if (isPostgresError(e)) {
+              if (e.code === "23505") {
+                throw new TRPCError({
+                  code: "CONFLICT",
+                  message: "Case already imported.",
+                });
+              } else if (e.code === "22001") {
+                // PostgreSQL error code for value too long for type
+                throw new TRPCError({
+                  code: "BAD_REQUEST",
+                  message:
+                    "Input exceeds the allowed limit. If this is unexpected, please contact support for assistance.",
+                });
+              }
             }
             throw new TRPCError({
               code: "INTERNAL_SERVER_ERROR",
