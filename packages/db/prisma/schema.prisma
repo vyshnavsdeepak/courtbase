@@ -276,7 +276,7 @@ model ManualCaseImportTask {
   caseType        String // eg. 47
   number          String         @db.VarChar(10) // eg. 232
   regYear         String         @db.VarChar(4) // eg. 2021
-  CaseType        CaseType?      @relation(fields: [complexId, caseType], references: [complexId, code], onDelete: NoAction, onUpdate: Cascade)
+  CaseType        CaseType       @relation(fields: [complexId, caseType], references: [complexId, code], onDelete: NoAction, onUpdate: Cascade)
   // typeName/number/regYear is unique in a court = eg. OP/232/2021
   districtCourtId String?
   districtCourt   DistrictCourt? @relation(fields: [districtCourtId], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "manualCaseImportTask_districtCourtId_districtcourt_id_fk")

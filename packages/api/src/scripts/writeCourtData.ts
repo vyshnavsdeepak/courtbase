@@ -328,6 +328,17 @@
 //   console.log(`Processing complex ${index + 1} of ${flatComplexes.length}`);
 //   if (complex.courts.length === 0) {
 //     console.log(`No courts found for ${complex.name}`);
+//     if (complex.isMasterCourtComplex) {
+//       await kysely.insertInto("DistrictCourt").values({
+//         id: slugifyCourtName(complex.name, complex.district),
+//         courtCode: complex.masterComplexCourtCode.toString(),
+//         name: complex.name,
+//         complexId: slugifyCourtComplex(complex.name, complex.district),
+//         stateCode: complex.stateCode.toString(),
+//         districtCode: complex.districtCode.toString(),
+//       }).execute();
+//       console.log("Inserted master court complex as court");
+//     }
 //     continue;
 //   }
 //   await kysely

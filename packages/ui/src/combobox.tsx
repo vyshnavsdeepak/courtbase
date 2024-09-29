@@ -115,6 +115,7 @@ export const Combobox: React.FC<ComboboxProps> = ({
                 <CommandItem
                   key={item.value}
                   value={item.value}
+                  disabled={!item.selectable}
                   onSelect={
                     item.isHeader
                       ? item.selectable
