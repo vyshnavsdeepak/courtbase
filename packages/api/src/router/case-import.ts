@@ -4,6 +4,7 @@ import { TRPCError } from "@trpc/server";
 import { isPostgresError } from "@court-base/db";
 import { inngest } from "@court-base/event-funnel";
 
+import casesDal from "../dal/cases-dal";
 import {
   CreateCaseImportTaskParamsSchema,
   ImportByCaseNumberParamsSchema,
@@ -116,56 +117,42 @@ export const caseImportRouter = {
       const { districtCourt: districtCourtInput, caseNumber } = input;
       const { number, caseTypeId, regYear } = caseNumber;
 
-      let courtCode: string;
-      let stateCode: string;
-      let districtCode: string;
-      let complexId: string;
-
-      if (districtCourtInput.courtId) {
-        const court = await ctx.kysely
-          .selectFrom("DistrictCourt")
-          .select(["stateCode", "complexId", "districtCode", "courtCode"])
-          .where("DistrictCourt.id", "=", districtCourtInput.courtId)
-          .executeTakeFirstOrThrow();
-        courtCode = court.courtCode;
-        stateCode = court.stateCode;
-        districtCode = court.districtCode;
-        complexId = court.complexId;
-      } else {
-        const complex = await ctx.kysely
-          .selectFrom("CourtComplex")
-          .select([
-            "masterComplexCourtCode as courtCode",
-            "districtCode",
-            "stateCode",
-          ])
-          .where("id", "=", districtCourtInput.complexId)
-          .where("isMasterCourtComplex", "=", true)
-          .executeTakeFirstOrThrow()
-          .catch(() => {
-            throw new TRPCError({
-              code: "BAD_REQUEST",
-              message: "Complex not found",
-            });
-          });
-        if (!complex.courtCode) {
+      const caseType = await ctx.kysely
+        .selectFrom("CaseType")
+        .where("id", "=", caseTypeId)
+        .select(["code", "label"])
+        .executeTakeFirstOrThrow()
+        .catch(() => {
           throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            message: "E1-Something went wrong in finding court complex", // Never
+            code: "BAD_REQUEST",
+            message: "Case type not found",
           });
-        }
-        complexId = districtCourtInput.complexId;
-        courtCode = complex.courtCode;
-        stateCode = complex.stateCode;
-        districtCode = complex.districtCode;
+        });
+
+      const courtId = districtCourtInput.courtId;
+
+      const existingCase = await casesDal.getCaseByCaseNo({
+        typeName: caseType.label,
+        number,
+        regYear,
+        courtId,
+        organizationId: ctx.orgId,
+      });
+
+      if (existingCase) {
+        throw new TRPCError({
+          code: "CONFLICT",
+          message: "Case already imported.",
+        });
       }
 
+      const { courtCode, stateCode, districtCode, complexId } = await ctx.kysely
+        .selectFrom("DistrictCourt")
+        .select(["stateCode", "complexId", "districtCode", "courtCode"])
+        .where("DistrictCourt.id", "=", courtId)
+        .executeTakeFirstOrThrow();
+
       try {
-        const caseType = await ctx.kysely
-          .selectFrom("CaseType")
-          .where("id", "=", caseTypeId)
-          .select("code")
-          .executeTakeFirstOrThrow();
         const caseTypeCode = caseType.code;
 
         const insertRes = await ctx.kysely
@@ -176,7 +163,7 @@ export const caseImportRouter = {
             number,
             regYear,
             complexId,
-            districtCourtId: districtCourtInput.courtId,
+            districtCourtId: courtId,
             createdBy: ctx.memberId,
           })
           .returning("id")
