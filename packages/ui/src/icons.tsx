@@ -1,16 +1,21 @@
 import {
   ArrowRight,
   CalendarIcon,
+  CheckCircle,
+  Clock,
   Eye,
   Files,
   FileTextIcon,
   LibraryIcon,
+  Loader2,
   LoaderCircle,
   PanelsTopLeft,
   Pencil,
+  RefreshCw,
   ScaleIcon,
   UserIcon,
   UsersIcon,
+  XCircle,
 } from "lucide-react";
 
 export const Icons = {
@@ -28,4 +33,10 @@ export const Icons = {
   advocate: UserIcon,
   court: LibraryIcon,
   caseFile: FileTextIcon,
+  caseImportPending: Clock,
+  caseImportInProgress: Loader2,
+  caseImportCompleted: CheckCircle,
+  caseImportFailed: XCircle,
+  caseImportRefresh: RefreshCw,
+  caseImportRefreshLoading: Loader2,
 };
