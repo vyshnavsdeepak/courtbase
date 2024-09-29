@@ -85,7 +85,7 @@ export const caseImportRouter = {
       .select(["id", "taskStatus", "caseStatus", "created_at"])
       .execute();
   }),
-  importJobsByCaseNumber: orgProtectedProcedure.query(async ({ ctx }) => {
+  importJobsByCaseNumber: orgProtectedProcedure.query(({ ctx }) => {
     return ctx.kysely
       .selectFrom("ManualCaseImportTask")
       .leftJoin(
@@ -93,6 +93,7 @@ export const caseImportRouter = {
         "DistrictCourt.id",
         "ManualCaseImportTask.districtCourtId",
       )
+      .leftJoin("Case", "ManualCaseImportTask.caseId", "Case.id")
       .innerJoin("CaseType", (qb) => {
         return qb
           .onRef("CaseType.code", "=", "ManualCaseImportTask.caseType")
@@ -106,8 +107,10 @@ export const caseImportRouter = {
         "DistrictCourt.name as courtName",
         "ManualCaseImportTask.importStatus",
         "ManualCaseImportTask.createdAt",
+        "Case.id as caseId",
+        "Case.crn as crn",
       ])
-      .where("organizationId", "=", ctx.orgId)
+      .where("ManualCaseImportTask.organizationId", "=", ctx.orgId)
       .orderBy("ManualCaseImportTask.createdAt desc")
       .execute();
   }),

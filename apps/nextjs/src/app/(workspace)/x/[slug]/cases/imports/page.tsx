@@ -3,7 +3,9 @@ import React, { Suspense } from "react";
 import { Button } from "@court-base/ui/button";
 
 import ManualCaseImportDialogButton from "~/app/_components/cases/manual-case-import";
-import { ManualCaseImportJobs } from "~/app/_components/cases/manual-case-import-jobs";
+import ManualCaseImportJobs, {
+  Shimmer,
+} from "~/app/_components/cases/manual-case-import-jobs";
 import SidebarToggle from "~/app/_components/sidebar-toggle";
 import { api } from "~/trpc/server";
 
@@ -11,11 +13,7 @@ function CaseImportsDataFetcher() {
   const dataPromise = api.caseImport.importJobsByCaseNumber();
   const data = React.use(dataPromise);
 
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <ManualCaseImportJobs initialData={data} />
-    </Suspense>
-  );
+  return <ManualCaseImportJobs initialData={data} />;
 }
 
 export default function CasesImportsPage() {
@@ -30,7 +28,9 @@ export default function CasesImportsPage() {
           </ManualCaseImportDialogButton>
         </div>
       </div>
-      <CaseImportsDataFetcher />
+      <Suspense fallback={<Shimmer />}>
+        <CaseImportsDataFetcher />
+      </Suspense>
     </div>
   );
 }
