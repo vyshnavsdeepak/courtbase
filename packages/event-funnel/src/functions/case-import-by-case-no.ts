@@ -1,3 +1,5 @@
+import { kysely } from "@court-base/db";
+
 import type { eCourtAPICallReturn } from "./ecourt";
 import insertHistory from "../actions/cases/insertHistory";
 import { inngest } from "../lib/inngest";
@@ -38,7 +40,19 @@ export interface ImportCaseByCaseNoParams {
 }
 
 export const importCaseByCaseNo = inngest.createFunction(
-  { id: "case-import-by-case-no" },
+  {
+    id: "case-import-by-case-no",
+    onFailure: async ({ event, error }) => {
+      const caseImportTaskId = event.data.event.data.tracking.caseImportTaskId;
+
+      await kysely
+        .updateTable("ManualCaseImportTask")
+        .set("importStatus", "FAILED")
+        .set("response", { message: error.message, stack: error.stack })
+        .where("id", "=", caseImportTaskId)
+        .execute();
+    },
+  },
   { event: "app/case-import-by-case-no" },
   async ({ event, step, kysely }) => {
     if (!event.id) {
