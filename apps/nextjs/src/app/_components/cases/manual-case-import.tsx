@@ -155,8 +155,18 @@ function ManualCaseImportDialog({
 
     districtCourtsSource.forEach((complex) => {
       // Add complex name as header
+      const valueObj = { complexId: complex.id, courtId: "" };
+      // complex Id is always need to get case types
+      if (complex.isMasterCourtComplex) {
+        if (complex.courts.length !== 1) {
+          throw new Error(
+            `Master court complex ${complex.name} should have exactly one court`,
+          );
+        }
+        valueObj.courtId = complex.courts[0]?.id ?? "";
+      }
       items.push({
-        value: JSON.stringify({ complexId: complex.id }),
+        value: JSON.stringify(valueObj),
         label: complex.name,
         isHeader: true,
         selectable: complex.isMasterCourtComplex,

@@ -17598,7 +17598,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     organizationId?: boolean
-    CaseType?: boolean | ManualCaseImportTask$CaseTypeArgs<ExtArgs>
+    CaseType?: boolean | CaseTypeDefaultArgs<ExtArgs>
     districtCourt?: boolean | ManualCaseImportTask$districtCourtArgs<ExtArgs>
     complex?: boolean | CourtComplexDefaultArgs<ExtArgs>
     case?: boolean | ManualCaseImportTask$caseArgs<ExtArgs>
@@ -17620,7 +17620,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     organizationId?: boolean
-    CaseType?: boolean | ManualCaseImportTask$CaseTypeArgs<ExtArgs>
+    CaseType?: boolean | CaseTypeDefaultArgs<ExtArgs>
     districtCourt?: boolean | ManualCaseImportTask$districtCourtArgs<ExtArgs>
     complex?: boolean | CourtComplexDefaultArgs<ExtArgs>
     case?: boolean | ManualCaseImportTask$caseArgs<ExtArgs>
@@ -17645,7 +17645,7 @@ export namespace Prisma {
   }
 
   export type ManualCaseImportTaskInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    CaseType?: boolean | ManualCaseImportTask$CaseTypeArgs<ExtArgs>
+    CaseType?: boolean | CaseTypeDefaultArgs<ExtArgs>
     districtCourt?: boolean | ManualCaseImportTask$districtCourtArgs<ExtArgs>
     complex?: boolean | CourtComplexDefaultArgs<ExtArgs>
     case?: boolean | ManualCaseImportTask$caseArgs<ExtArgs>
@@ -17653,7 +17653,7 @@ export namespace Prisma {
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
   }
   export type ManualCaseImportTaskIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    CaseType?: boolean | ManualCaseImportTask$CaseTypeArgs<ExtArgs>
+    CaseType?: boolean | CaseTypeDefaultArgs<ExtArgs>
     districtCourt?: boolean | ManualCaseImportTask$districtCourtArgs<ExtArgs>
     complex?: boolean | CourtComplexDefaultArgs<ExtArgs>
     case?: boolean | ManualCaseImportTask$caseArgs<ExtArgs>
@@ -17664,7 +17664,7 @@ export namespace Prisma {
   export type $ManualCaseImportTaskPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "ManualCaseImportTask"
     objects: {
-      CaseType: Prisma.$CaseTypePayload<ExtArgs> | null
+      CaseType: Prisma.$CaseTypePayload<ExtArgs>
       districtCourt: Prisma.$DistrictCourtPayload<ExtArgs> | null
       complex: Prisma.$CourtComplexPayload<ExtArgs>
       case: Prisma.$CasePayload<ExtArgs> | null
@@ -18049,7 +18049,7 @@ export namespace Prisma {
    */
   export interface Prisma__ManualCaseImportTaskClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    CaseType<T extends ManualCaseImportTask$CaseTypeArgs<ExtArgs> = {}>(args?: Subset<T, ManualCaseImportTask$CaseTypeArgs<ExtArgs>>): Prisma__CaseTypeClient<$Result.GetResult<Prisma.$CaseTypePayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    CaseType<T extends CaseTypeDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CaseTypeDefaultArgs<ExtArgs>>): Prisma__CaseTypeClient<$Result.GetResult<Prisma.$CaseTypePayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     districtCourt<T extends ManualCaseImportTask$districtCourtArgs<ExtArgs> = {}>(args?: Subset<T, ManualCaseImportTask$districtCourtArgs<ExtArgs>>): Prisma__DistrictCourtClient<$Result.GetResult<Prisma.$DistrictCourtPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     complex<T extends CourtComplexDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CourtComplexDefaultArgs<ExtArgs>>): Prisma__CourtComplexClient<$Result.GetResult<Prisma.$CourtComplexPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     case<T extends ManualCaseImportTask$caseArgs<ExtArgs> = {}>(args?: Subset<T, ManualCaseImportTask$caseArgs<ExtArgs>>): Prisma__CaseClient<$Result.GetResult<Prisma.$CasePayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
@@ -18412,21 +18412,6 @@ export namespace Prisma {
      * Filter which ManualCaseImportTasks to delete
      */
     where?: ManualCaseImportTaskWhereInput
-  }
-
-  /**
-   * ManualCaseImportTask.CaseType
-   */
-  export type ManualCaseImportTask$CaseTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the CaseType
-     */
-    select?: CaseTypeSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CaseTypeInclude<ExtArgs> | null
-    where?: CaseTypeWhereInput
   }
 
   /**
@@ -20888,7 +20873,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"ManualCaseImportTask"> | Date | string
     updatedAt?: DateTimeNullableFilter<"ManualCaseImportTask"> | Date | string | null
     organizationId?: StringFilter<"ManualCaseImportTask"> | string
-    CaseType?: XOR<CaseTypeNullableRelationFilter, CaseTypeWhereInput> | null
+    CaseType?: XOR<CaseTypeRelationFilter, CaseTypeWhereInput>
     districtCourt?: XOR<DistrictCourtNullableRelationFilter, DistrictCourtWhereInput> | null
     complex?: XOR<CourtComplexRelationFilter, CourtComplexWhereInput>
     case?: XOR<CaseNullableRelationFilter, CaseWhereInput> | null
@@ -20936,7 +20921,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"ManualCaseImportTask"> | Date | string
     updatedAt?: DateTimeNullableFilter<"ManualCaseImportTask"> | Date | string | null
     organizationId?: StringFilter<"ManualCaseImportTask"> | string
-    CaseType?: XOR<CaseTypeNullableRelationFilter, CaseTypeWhereInput> | null
+    CaseType?: XOR<CaseTypeRelationFilter, CaseTypeWhereInput>
     districtCourt?: XOR<DistrictCourtNullableRelationFilter, DistrictCourtWhereInput> | null
     complex?: XOR<CourtComplexRelationFilter, CourtComplexWhereInput>
     case?: XOR<CaseNullableRelationFilter, CaseWhereInput> | null
@@ -22104,7 +22089,7 @@ export namespace Prisma {
     response?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string | null
-    CaseType?: CaseTypeCreateNestedOneWithoutManualCaseImportTaskInput
+    CaseType: CaseTypeCreateNestedOneWithoutManualCaseImportTaskInput
     districtCourt?: DistrictCourtCreateNestedOneWithoutManualCaseImportTaskInput
     complex: CourtComplexCreateNestedOneWithoutManualCaseImportTaskInput
     case?: CaseCreateNestedOneWithoutManualCaseImportTaskInput
@@ -22136,7 +22121,7 @@ export namespace Prisma {
     response?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    CaseType?: CaseTypeUpdateOneWithoutManualCaseImportTaskNestedInput
+    CaseType?: CaseTypeUpdateOneRequiredWithoutManualCaseImportTaskNestedInput
     districtCourt?: DistrictCourtUpdateOneWithoutManualCaseImportTaskNestedInput
     complex?: CourtComplexUpdateOneRequiredWithoutManualCaseImportTaskNestedInput
     case?: CaseUpdateOneWithoutManualCaseImportTaskNestedInput
@@ -23265,9 +23250,9 @@ export namespace Prisma {
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
-  export type CaseTypeNullableRelationFilter = {
-    is?: CaseTypeWhereInput | null
-    isNot?: CaseTypeWhereInput | null
+  export type CaseTypeRelationFilter = {
+    is?: CaseTypeWhereInput
+    isNot?: CaseTypeWhereInput
   }
 
   export type DistrictCourtNullableRelationFilter = {
@@ -24619,12 +24604,10 @@ export namespace Prisma {
     set?: $Enums.CaseImportTaskStatus
   }
 
-  export type CaseTypeUpdateOneWithoutManualCaseImportTaskNestedInput = {
+  export type CaseTypeUpdateOneRequiredWithoutManualCaseImportTaskNestedInput = {
     create?: XOR<CaseTypeCreateWithoutManualCaseImportTaskInput, CaseTypeUncheckedCreateWithoutManualCaseImportTaskInput>
     connectOrCreate?: CaseTypeCreateOrConnectWithoutManualCaseImportTaskInput
     upsert?: CaseTypeUpsertWithoutManualCaseImportTaskInput
-    disconnect?: CaseTypeWhereInput | boolean
-    delete?: CaseTypeWhereInput | boolean
     connect?: CaseTypeWhereUniqueInput
     update?: XOR<XOR<CaseTypeUpdateToOneWithWhereWithoutManualCaseImportTaskInput, CaseTypeUpdateWithoutManualCaseImportTaskInput>, CaseTypeUncheckedUpdateWithoutManualCaseImportTaskInput>
   }
@@ -25419,7 +25402,7 @@ export namespace Prisma {
     response?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string | null
-    CaseType?: CaseTypeCreateNestedOneWithoutManualCaseImportTaskInput
+    CaseType: CaseTypeCreateNestedOneWithoutManualCaseImportTaskInput
     districtCourt?: DistrictCourtCreateNestedOneWithoutManualCaseImportTaskInput
     complex: CourtComplexCreateNestedOneWithoutManualCaseImportTaskInput
     case?: CaseCreateNestedOneWithoutManualCaseImportTaskInput
@@ -25707,7 +25690,7 @@ export namespace Prisma {
     response?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string | null
-    CaseType?: CaseTypeCreateNestedOneWithoutManualCaseImportTaskInput
+    CaseType: CaseTypeCreateNestedOneWithoutManualCaseImportTaskInput
     districtCourt?: DistrictCourtCreateNestedOneWithoutManualCaseImportTaskInput
     complex: CourtComplexCreateNestedOneWithoutManualCaseImportTaskInput
     case?: CaseCreateNestedOneWithoutManualCaseImportTaskInput
@@ -25896,7 +25879,7 @@ export namespace Prisma {
     response?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string | null
-    CaseType?: CaseTypeCreateNestedOneWithoutManualCaseImportTaskInput
+    CaseType: CaseTypeCreateNestedOneWithoutManualCaseImportTaskInput
     districtCourt?: DistrictCourtCreateNestedOneWithoutManualCaseImportTaskInput
     complex: CourtComplexCreateNestedOneWithoutManualCaseImportTaskInput
     creator: OrganizationMembersCreateNestedOneWithoutManualCaseImportTaskInput
@@ -26723,7 +26706,7 @@ export namespace Prisma {
     response?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string | null
-    CaseType?: CaseTypeCreateNestedOneWithoutManualCaseImportTaskInput
+    CaseType: CaseTypeCreateNestedOneWithoutManualCaseImportTaskInput
     districtCourt?: DistrictCourtCreateNestedOneWithoutManualCaseImportTaskInput
     case?: CaseCreateNestedOneWithoutManualCaseImportTaskInput
     creator: OrganizationMembersCreateNestedOneWithoutManualCaseImportTaskInput
@@ -26963,7 +26946,7 @@ export namespace Prisma {
     response?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string | null
-    CaseType?: CaseTypeCreateNestedOneWithoutManualCaseImportTaskInput
+    CaseType: CaseTypeCreateNestedOneWithoutManualCaseImportTaskInput
     complex: CourtComplexCreateNestedOneWithoutManualCaseImportTaskInput
     case?: CaseCreateNestedOneWithoutManualCaseImportTaskInput
     creator: OrganizationMembersCreateNestedOneWithoutManualCaseImportTaskInput
@@ -28042,7 +28025,7 @@ export namespace Prisma {
     response?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    CaseType?: CaseTypeUpdateOneWithoutManualCaseImportTaskNestedInput
+    CaseType?: CaseTypeUpdateOneRequiredWithoutManualCaseImportTaskNestedInput
     districtCourt?: DistrictCourtUpdateOneWithoutManualCaseImportTaskNestedInput
     complex?: CourtComplexUpdateOneRequiredWithoutManualCaseImportTaskNestedInput
     case?: CaseUpdateOneWithoutManualCaseImportTaskNestedInput
@@ -28175,7 +28158,7 @@ export namespace Prisma {
     response?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    CaseType?: CaseTypeUpdateOneWithoutManualCaseImportTaskNestedInput
+    CaseType?: CaseTypeUpdateOneRequiredWithoutManualCaseImportTaskNestedInput
     districtCourt?: DistrictCourtUpdateOneWithoutManualCaseImportTaskNestedInput
     complex?: CourtComplexUpdateOneRequiredWithoutManualCaseImportTaskNestedInput
     case?: CaseUpdateOneWithoutManualCaseImportTaskNestedInput
@@ -28272,7 +28255,7 @@ export namespace Prisma {
     response?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    CaseType?: CaseTypeUpdateOneWithoutManualCaseImportTaskNestedInput
+    CaseType?: CaseTypeUpdateOneRequiredWithoutManualCaseImportTaskNestedInput
     districtCourt?: DistrictCourtUpdateOneWithoutManualCaseImportTaskNestedInput
     complex?: CourtComplexUpdateOneRequiredWithoutManualCaseImportTaskNestedInput
     creator?: OrganizationMembersUpdateOneRequiredWithoutManualCaseImportTaskNestedInput
@@ -28516,7 +28499,7 @@ export namespace Prisma {
     response?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    CaseType?: CaseTypeUpdateOneWithoutManualCaseImportTaskNestedInput
+    CaseType?: CaseTypeUpdateOneRequiredWithoutManualCaseImportTaskNestedInput
     districtCourt?: DistrictCourtUpdateOneWithoutManualCaseImportTaskNestedInput
     case?: CaseUpdateOneWithoutManualCaseImportTaskNestedInput
     creator?: OrganizationMembersUpdateOneRequiredWithoutManualCaseImportTaskNestedInput
@@ -28682,7 +28665,7 @@ export namespace Prisma {
     response?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    CaseType?: CaseTypeUpdateOneWithoutManualCaseImportTaskNestedInput
+    CaseType?: CaseTypeUpdateOneRequiredWithoutManualCaseImportTaskNestedInput
     complex?: CourtComplexUpdateOneRequiredWithoutManualCaseImportTaskNestedInput
     case?: CaseUpdateOneWithoutManualCaseImportTaskNestedInput
     creator?: OrganizationMembersUpdateOneRequiredWithoutManualCaseImportTaskNestedInput

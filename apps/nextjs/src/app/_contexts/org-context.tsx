@@ -32,6 +32,13 @@ export const OrgProvider: React.FC<{ children: React.ReactNode }> = ({
 export const useOrg = () => {
   const context = useContext(OrgContext);
 
+  const dashboardUrl = () => {
+    if (!context.orgId) {
+      throw new Error("orgSlug is null");
+    }
+    return getOrgDashboardPath(context.orgId);
+  };
+
   return {
     nonNull: () => {
       if (!context.orgId) {
@@ -39,7 +46,10 @@ export const useOrg = () => {
       }
       return context.orgId;
     },
-    dashboardUrl: () => context.orgId && getOrgDashboardPath(context.orgId),
+    dashboardUrl,
+    getPath: (path: string) => {
+      return [dashboardUrl(), path].join("");
+    },
     orgId: context.orgId,
   };
 };

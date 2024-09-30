@@ -827,7 +827,7 @@ export type ManualCaseImportTask = z.infer<typeof ManualCaseImportTaskSchema>;
 //------------------------------------------------------
 
 export type ManualCaseImportTaskRelations = {
-  CaseType?: CaseTypeWithRelations | null;
+  CaseType: CaseTypeWithRelations;
   districtCourt?: DistrictCourtWithRelations | null;
   complex: CourtComplexWithRelations;
   case?: CaseWithRelations | null;
@@ -845,7 +845,7 @@ export type ManualCaseImportTaskWithRelations = Omit<
 export const ManualCaseImportTaskWithRelationsSchema: z.ZodType<ManualCaseImportTaskWithRelations> =
   ManualCaseImportTaskSchema.merge(
     z.object({
-      CaseType: z.lazy(() => CaseTypeWithRelationsSchema).nullish(),
+      CaseType: z.lazy(() => CaseTypeWithRelationsSchema),
       districtCourt: z.lazy(() => DistrictCourtWithRelationsSchema).nullish(),
       complex: z.lazy(() => CourtComplexWithRelationsSchema),
       case: z.lazy(() => CaseWithRelationsSchema).nullish(),
