@@ -36,7 +36,7 @@ export interface Case {
   respondent: string;
   respondentLawyers: string;
   typeName: string;
-  dateOfDecision: string | null;
+  dateOfDecision: Date | null;
   title: string;
   rawData: CaseRaw;
 }

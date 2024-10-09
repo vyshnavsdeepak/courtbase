@@ -29,7 +29,9 @@ export function transformCase(rawCase: CaseRaw): Case {
     respondentLawyers: rawCase.adv_name2,
     typeName: rawCase.type_name,
     title,
-    dateOfDecision: rawCase.date_of_decision,
+    dateOfDecision: rawCase.date_of_decision
+      ? parseISTDate(rawCase.date_of_decision)
+      : null,
     rawData: rawCase, // Storing the raw data for reference
   };
 }
@@ -104,7 +106,9 @@ export function transformCaseHistory(
     respondentLawyers: rawCase.res_adv,
     typeName: rawCase.type_name,
     title,
-    dateOfDecision: rawCase.date_of_decision,
+    dateOfDecision: rawCase.date_of_decision
+      ? parseISTDate(rawCase.date_of_decision)
+      : null,
     caseHistoryLog,
     rawData: rawCase,
   };
