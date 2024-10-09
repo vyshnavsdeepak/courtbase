@@ -12,7 +12,7 @@ import { CaseTable } from "~/app/_components/cases/cases-table";
 import { ClearFiltersButton } from "~/app/_components/cases/cases-table/clear-filters";
 import { columns } from "~/app/_components/cases/cases-table/columns";
 import { DatePickerWithPresets } from "~/app/_components/cases/cases-table/date-range-picker";
-import { ManualCaseImportInCasePage } from "~/app/_components/cases/manual-case-import";
+import { ManualCaseImportTrigger } from "~/app/_components/cases/manual-case-import";
 import { api } from "~/trpc/react";
 
 export const CasesTableRenderClient = ({
@@ -37,7 +37,7 @@ export const CasesTableRenderClient = ({
           <ClearFiltersButton />
         </div>
         <div className="flex items-center">
-          <ManualCaseImportInCasePage />
+          <ManualCaseImportTrigger />
         </div>
       </div>
       <div className="flex flex-col">
