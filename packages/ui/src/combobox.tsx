@@ -26,20 +26,23 @@ interface ComboboxProps {
     isHeader?: boolean;
     selectable?: boolean;
   }[];
+  selectedValue?: string | null;
   placeholder?: string;
   onSelect?: (value: string) => void;
   disabled?: boolean;
   allowDeselect?: boolean;
 }
+
 export const Combobox: React.FC<ComboboxProps> = ({
   items: itemsInput,
   placeholder = "Select an item...",
   onSelect,
   disabled = false,
   allowDeselect = false,
+  selectedValue,
 }) => {
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState("");
+  const [value, setValue] = React.useState<string>(selectedValue ?? "");
   const buttonRef = React.useRef<HTMLButtonElement>(null);
   const [popoverWidth, setPopoverWidth] = React.useState<string | number>(
     "auto",
@@ -55,6 +58,10 @@ export const Combobox: React.FC<ComboboxProps> = ({
       setPopoverWidth(buttonRef.current.offsetWidth);
     }
   }, [buttonRef.current?.offsetWidth]);
+
+  React.useEffect(() => {
+    setValue(selectedValue ?? "");
+  }, [selectedValue]);
 
   const handleSelect = (currentValue: string) => {
     let newValue;

@@ -50,7 +50,7 @@ export const importCaseByCourtComplex = inngest.createFunction(
         .execute(),
       kysely
         .selectFrom("OrganizationMembers")
-        .innerJoin("User", "User.id", "OrganizationMembers.userId")
+        .leftJoin("User", "User.id", "OrganizationMembers.userId")
         .select("User.name")
         .where("OrganizationMembers.memberId", "=", payload.advocateId) // Remove this once we have user name in OrganizationMembers
         .where("OrganizationMembers.organizationId", "=", identity.orgId)

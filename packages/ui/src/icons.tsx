@@ -12,9 +12,11 @@ import {
   PanelsTopLeft,
   Pencil,
   RefreshCw,
+  RotateCw,
   ScaleIcon,
   UserIcon,
   UsersIcon,
+  X,
   XCircle,
 } from "lucide-react";
 
@@ -39,4 +41,6 @@ export const Icons = {
   caseImportFailed: XCircle,
   caseImportRefresh: RefreshCw,
   caseImportRefreshLoading: Loader2,
+  caseImportRetry: RotateCw,
+  caseImportCancel: X,
 };

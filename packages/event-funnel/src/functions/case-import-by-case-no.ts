@@ -39,6 +39,14 @@ export interface ImportCaseByCaseNoParams {
   };
 }
 
+export interface ImportCaseByCaseNoAbort {
+  data: {
+    tracking: {
+      caseImportTaskId: string;
+    };
+  };
+}
+
 export const importCaseByCaseNo = inngest.createFunction(
   {
     id: "case-import-by-case-no",
@@ -52,6 +60,12 @@ export const importCaseByCaseNo = inngest.createFunction(
         .where("id", "=", caseImportTaskId)
         .execute();
     },
+    cancelOn: [
+      {
+        event: "app/case-import-by-case-no/abort",
+        if: "async.data.tracking.caseImportTaskId == event.data.tracking.caseImportTaskId",
+      },
+    ],
   },
   { event: "app/case-import-by-case-no" },
   async ({ event, step, kysely }) => {
