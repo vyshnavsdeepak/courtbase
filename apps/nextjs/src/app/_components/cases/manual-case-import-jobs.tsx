@@ -147,10 +147,16 @@ export default function ManualCaseImportJobs({
                       cancelJobMutation.mutate({ taskId: task.id })
                     }
                     disabled={
-                      !["PENDING", "IN_PROGRESS"].includes(task.importStatus)
+                      !["PENDING", "IN_PROGRESS"].includes(task.importStatus) ||
+                      cancelJobMutation.isPending
+                    }
+                    className={
+                      cancelJobMutation.isPending
+                        ? "cursor-not-allowed opacity-50"
+                        : ""
                     }
                   >
-                    <Icons.caseImportCancel className="h-4 w-4" />
+                    <Icons.caseImportCancel className={"h-4 w-4"} />
                   </Button>
                 </div>
               </TableCell>
