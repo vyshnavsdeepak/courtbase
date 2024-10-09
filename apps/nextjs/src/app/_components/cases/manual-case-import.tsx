@@ -25,7 +25,10 @@ import { getOrgDashboardPath } from "~/utils";
 import ErrorDisplay from "../ErrorDisplay";
 import CaseNumberInput from "./case-number-input";
 
-export function ManualCaseImportInCasePage() {
+export function ManualCaseImportTrigger(props: {
+  className?: string;
+  label?: string;
+}) {
   const router = useRouter();
   const orgSlug = useOrg().nonNull();
 
@@ -37,7 +40,9 @@ export function ManualCaseImportInCasePage() {
         );
       }}
     >
-      <Button className="">Import Case</Button>
+      <Button className={props.className}>
+        {props.label ?? "Import Case"}
+      </Button>
     </ManualCaseImportDialogButton>
   );
 }
