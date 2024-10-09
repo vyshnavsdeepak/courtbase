@@ -55,6 +55,7 @@ export const refreshEcourtCases = inngest.createFunction(
             .updateTable("Case")
             .set({
               nextHearingDate: body.case.nextHearingDate,
+              dateOfDecision: body.case.dateOfDecision,
               updatedAt: new Date(),
             })
             .where("crn", "=", cino)
