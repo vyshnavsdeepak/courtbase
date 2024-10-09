@@ -1,12 +1,17 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import { Combobox } from "@court-base/ui/combobox";
 import { Input } from "@court-base/ui/input";
 
 interface CaseNumberInputProps {
   caseTypeOptions: { value: string; label: string }[];
+  selectedValue?: {
+    caseTypeId: string;
+    number: string;
+    regYear: string;
+  } | null;
   onChange: (value: {
-    typeName: string;
+    caseTypeId: string;
     number: string;
     regYear: string;
   }) => void;
@@ -15,18 +20,26 @@ interface CaseNumberInputProps {
 
 const CaseNumberInput = ({
   caseTypeOptions,
+  selectedValue,
   disabled,
   onChange,
 }: CaseNumberInputProps) => {
-  const [typeName, setTypeName] = useState("");
-  const [number, setNumber] = useState("");
-  const [regYear, setRegYear] = useState("");
+  const [caseTypeId, setCaseTypeId] = useState(selectedValue?.caseTypeId ?? "");
+  const [number, setNumber] = useState(selectedValue?.number ?? "");
+  const [regYear, setRegYear] = useState(selectedValue?.regYear ?? "");
 
   const regYearRef = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    if (selectedValue) {
+      setCaseTypeId(selectedValue.caseTypeId);
+      setNumber(selectedValue.number);
+      setRegYear(selectedValue.regYear);
+    }
+  }, [selectedValue]);
 
   const handleCaseTypeChange = (value: string) => {
-    setTypeName(value);
-    onChange({ typeName: value, number, regYear });
+    setCaseTypeId(value);
+    onChange({ caseTypeId: value, number, regYear });
   };
 
   const handleCaseRegNoChange = (
@@ -35,23 +48,26 @@ const CaseNumberInput = ({
     const newRegNo = event.target.value;
     if (newRegNo.includes("/")) {
       const split = newRegNo.split("/");
-      console.log("split", split);
       if (split.length === 2 && split[0] && split[1]) {
         setNumber(split[0]);
         setRegYear(split[1]);
-        onChange({ typeName, number: split[0], regYear: split[1] });
+        onChange({
+          caseTypeId: caseTypeId,
+          number: split[0],
+          regYear: split[1],
+        });
       }
       regYearRef.current?.focus();
       return;
     }
     setNumber(newRegNo);
-    onChange({ typeName, number: newRegNo, regYear });
+    onChange({ caseTypeId: caseTypeId, number: newRegNo, regYear });
   };
 
   const handleYearChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newYear = event.target.value;
     setRegYear(newYear);
-    onChange({ typeName, number, regYear: newYear });
+    onChange({ caseTypeId: caseTypeId, number, regYear: newYear });
   };
 
   return (
@@ -62,6 +78,7 @@ const CaseNumberInput = ({
           <Combobox
             placeholder="Type"
             items={caseTypeOptions}
+            selectedValue={caseTypeId}
             onSelect={handleCaseTypeChange}
             disabled={disabled}
           />

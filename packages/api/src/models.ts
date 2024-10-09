@@ -29,6 +29,7 @@ export const CreateCaseImportTaskParamsSchema = z.object({
 });
 
 export const ImportByCaseNumberParamsSchema = z.object({
+  id: z.string().nullable().optional(),
   districtCourt: z.object({
     courtId: z.string(),
     complexId: z.string({

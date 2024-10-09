@@ -114,7 +114,7 @@ export type ManualCaseImportTask = {
   caseType: string;
   number: string;
   regYear: string;
-  districtCourtId: string | null;
+  districtCourtId: string;
   complexId: string;
   importStatus: Generated<CaseImportTaskStatus>;
   caseId: string | null;

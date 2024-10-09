@@ -1,7 +1,7 @@
 "use client";
 
 import type { z } from "zod";
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
@@ -23,6 +23,7 @@ import { useOrg } from "~/app/_contexts/org-context";
 import { api } from "~/trpc/react";
 import { getOrgDashboardPath } from "~/utils";
 import ErrorDisplay from "../ErrorDisplay";
+import DistrictCourtInput from "./case-district-court-input";
 import CaseNumberInput from "./case-number-input";
 
 export function ManualCaseImportTrigger(props: {
@@ -50,6 +51,7 @@ export function ManualCaseImportTrigger(props: {
 export default function ManualCaseImportDialogButton(props: {
   children: React.ReactNode;
   onSuccess?: () => void;
+  jobId?: string;
 }) {
   const [open, setOpen] = useState(false);
   return (
@@ -65,6 +67,7 @@ export default function ManualCaseImportDialogButton(props: {
         <ManualCaseImportDialog
           close={() => setOpen(false)}
           onSuccess={props.onSuccess}
+          jobId={props.jobId}
         />
       </DialogContent>
     </Dialog>
@@ -76,21 +79,42 @@ type FormData = z.infer<typeof ImportByCaseNumberParamsSchema>;
 function ManualCaseImportDialog({
   close,
   onSuccess,
+  jobId,
 }: {
   close: () => void;
   onSuccess?: () => void;
+  jobId?: string;
 }) {
+  const { data: job, isLoading: isExistingJobLoading } =
+    api.caseImport.manualCaseImportTaskById.useQuery(
+      {
+        id: jobId ?? "",
+      },
+      { enabled: !!jobId },
+    );
+
   const {
     control,
-    watch,
     handleSubmit,
+    reset,
     formState: { errors, isSubmitting },
   } = useForm<FormData>({
     resolver: zodResolver(ImportByCaseNumberParamsSchema),
-    defaultValues: {
-      districtCourt: {},
-      caseNumber: {},
-    },
+    defaultValues: useMemo(
+      () => ({
+        districtCourt: job
+          ? { complexId: job.complexId, courtId: job.districtCourtId }
+          : {},
+        caseNumber: job
+          ? {
+              caseTypeId: job.caseTypeId,
+              number: job.number,
+              regYear: job.regYear,
+            }
+          : {},
+      }),
+      [job],
+    ),
   });
 
   const [selectedStateCode, setSelectedStateCode] = useState<string | null>(
@@ -100,7 +124,43 @@ function ManualCaseImportDialog({
     string | null
   >(null);
 
-  const selectedDistrictCourt = watch("districtCourt");
+  const [selectedDistrictCourt, setSelectedDistrictCourt] = useState<{
+    complexId: string;
+    courtId: string;
+  } | null>(null);
+
+  const [selectedCaseNumber, setSelectedCaseNumber] = useState<{
+    caseTypeId: string;
+    number: string;
+    regYear: string;
+  } | null>(null);
+
+  useEffect(() => {
+    if (job) {
+      reset({
+        districtCourt: {
+          complexId: job.complexId,
+          courtId: job.districtCourtId,
+        },
+        caseNumber: {
+          caseTypeId: job.caseTypeId,
+          number: job.number,
+          regYear: job.regYear,
+        },
+      });
+      setSelectedStateCode(job.stateCode);
+      setSelectedDistrictCode(job.districtCode);
+      setSelectedDistrictCourt({
+        complexId: job.complexId,
+        courtId: job.districtCourtId,
+      });
+      setSelectedCaseNumber({
+        caseTypeId: job.caseTypeId,
+        number: job.number,
+        regYear: job.regYear,
+      });
+    }
+  }, [job, reset]);
 
   const apiUtils = api.useUtils();
 
@@ -134,69 +194,11 @@ function ManualCaseImportDialog({
       { enabled: !!selectedStateCode && !!selectedDistrictCode },
     );
 
-  // Transform districtCourts before sending to Combobox
-  const transformDistrictCourts = () => {
-    if (districtCourtsLoading) {
-      return [
-        { value: "", label: "Loading...", isHeader: false, selectable: false },
-      ];
-    }
-    if (!districtCourtsSource) {
-      return [
-        {
-          value: "",
-          label: "No courts found",
-          isHeader: false,
-          selectable: false,
-        },
-      ];
-    }
-    const items: {
-      value: string;
-      label: string;
-      isHeader: boolean;
-      selectable: boolean;
-    }[] = [];
-
-    districtCourtsSource.forEach((complex) => {
-      // Add complex name as header
-      const valueObj = { complexId: complex.id, courtId: "" };
-      // complex Id is always need to get case types
-      if (complex.isMasterCourtComplex) {
-        if (complex.courts.length !== 1) {
-          throw new Error(
-            `Master court complex ${complex.name} should have exactly one court`,
-          );
-        }
-        valueObj.courtId = complex.courts[0]?.id ?? "";
-      }
-      items.push({
-        value: JSON.stringify(valueObj),
-        label: complex.name,
-        isHeader: true,
-        selectable: complex.isMasterCourtComplex,
-      });
-
-      // Add courts under the complex if it's not a master court complex
-      if (!complex.isMasterCourtComplex) {
-        complex.courts.forEach((court) => {
-          items.push({
-            value: JSON.stringify({ courtId: court.id, complexId: complex.id }),
-            label: court.name,
-            isHeader: false,
-            selectable: true,
-          });
-        });
-      }
-    });
-    return items;
-  };
-  const districtCourts = transformDistrictCourts();
-  const complexId = selectedDistrictCourt.complexId;
+  const complexId = selectedDistrictCourt?.complexId;
   // Fetch case types based on highCourtId and availability of districtCourts
   const { data: caseTypesSource, isLoading: caseTypesLoading } =
     api.court.getCaseTypes.useQuery(
-      { complexId: complexId },
+      { complexId: complexId ?? "" },
       { enabled: !!complexId },
     );
 
@@ -220,7 +222,7 @@ function ManualCaseImportDialog({
         const message = err.message;
         if (zodMessages) {
           toast.error(zodMessages.join("\n"));
-        } else if (message) {
+        } else if (message.length > 0) {
           toast.error(message);
         } else {
           toast.error("Failed to create case import task");
@@ -228,18 +230,31 @@ function ManualCaseImportDialog({
       },
     });
 
+  const title = jobId ? "Update case import task" : "Import cases from courts";
+  const description = jobId
+    ? "Edit case details to update the task."
+    : "Enter case number, court name to search for cases.";
+  const actionButtonText = jobId ? "Update" : "Import";
   return (
     <>
       <DialogHeader>
-        <DialogTitle>Import cases from courts</DialogTitle>
-        <DialogDescription>
-          Enter case number, court name to search for cases.
-        </DialogDescription>
+        <DialogTitle>{title}</DialogTitle>
+        <DialogDescription>{description}</DialogDescription>
       </DialogHeader>
       <form
-        onSubmit={handleSubmit((data) => createCaseImportTask(data))}
+        onSubmit={handleSubmit((data) =>
+          createCaseImportTask({
+            id: jobId,
+            ...data,
+          }),
+        )}
         className="grid gap-4 py-4"
       >
+        {isExistingJobLoading && (
+          <div className="text-center text-gray-500">
+            Please wait, loading the necessary data...
+          </div>
+        )}
         <div className="grid grid-cols-2 gap-4">
           <Combobox
             placeholder="Select State"
@@ -247,7 +262,9 @@ function ManualCaseImportDialog({
               value: state.stateCode,
               label: state.name,
             }))}
+            selectedValue={selectedStateCode}
             onSelect={setSelectedStateCode}
+            disabled={isExistingJobLoading}
           />
           <Combobox
             placeholder="Select District"
@@ -255,8 +272,9 @@ function ManualCaseImportDialog({
               value: district.districtCode,
               label: district.name,
             }))}
+            selectedValue={selectedDistrictCode}
             onSelect={setSelectedDistrictCode}
-            disabled={!selectedStateCode}
+            disabled={!selectedStateCode || isExistingJobLoading}
           />
         </div>
         <div className="grid">
@@ -264,13 +282,19 @@ function ManualCaseImportDialog({
             name="districtCourt"
             control={control}
             render={({ field }) => (
-              <Combobox
-                placeholder="Select Court"
-                items={districtCourts}
-                onSelect={(val) => {
-                  field.onChange(JSON.parse(val));
+              <DistrictCourtInput
+                data={districtCourtsSource ?? []}
+                isLoading={districtCourtsLoading}
+                selected={selectedDistrictCourt}
+                onChange={(value) => {
+                  setSelectedDistrictCourt(value);
+                  field.onChange({
+                    target: {
+                      value,
+                    },
+                  });
                 }}
-                disabled={!selectedDistrictCode}
+                disabled={!selectedDistrictCode || isExistingJobLoading}
               />
             )}
           />
@@ -285,25 +309,30 @@ function ManualCaseImportDialog({
                   value: caseType.id,
                   label: caseType.label,
                 }))}
+                selectedValue={selectedCaseNumber}
                 onChange={(value) => {
+                  setSelectedCaseNumber(value);
                   field.onChange({
                     target: {
                       value: {
-                        caseTypeId: value.typeName,
+                        caseTypeId: value.caseTypeId,
                         number: value.number,
                         regYear: value.regYear,
                       },
                     },
                   });
                 }}
-                disabled={!selectedDistrictCourt}
+                disabled={!selectedDistrictCourt || isExistingJobLoading}
               />
             )}
           />
         </div>
         <ErrorDisplay errors={errors} />
-        <Button type="submit" disabled={isSubmitting || isPending}>
-          {isSubmitting || isPending ? "Submitting..." : "Import"}
+        <Button
+          type="submit"
+          disabled={isSubmitting || isPending || isExistingJobLoading}
+        >
+          {isSubmitting || isPending ? "Submitting..." : actionButtonText}
         </Button>
       </form>
     </>

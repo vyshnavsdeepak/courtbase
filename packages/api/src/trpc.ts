@@ -36,7 +36,7 @@ const getUserInOrg = async (userId: string, orgId: string) => {
   try {
     const result = await kysely
       .selectFrom("Organization")
-      .innerJoin(
+      .leftJoin(
         "OrganizationMembers",
         "Organization.id",
         "OrganizationMembers.organizationId",
@@ -50,8 +50,13 @@ const getUserInOrg = async (userId: string, orgId: string) => {
       .where("OrganizationMembers.userId", "=", userId)
       .executeTakeFirstOrThrow();
 
+    const memberId = result.memberId;
+    if (!memberId) {
+      throw new Error("No member id found");
+    }
+
     return {
-      memberId: result.memberId,
+      memberId,
       role: result.role,
       orgId: result.id,
     };

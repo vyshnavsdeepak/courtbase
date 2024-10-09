@@ -23,7 +23,7 @@ export const organizationRouter = {
   getAllByUser: protectedProcedure.query(async ({ ctx }) => {
     return ctx.kysely
       .selectFrom("Organization")
-      .innerJoin(
+      .leftJoin(
         "OrganizationMembers",
         "Organization.id",
         "OrganizationMembers.organizationId",
@@ -65,7 +65,7 @@ export const organizationRouter = {
   getAdvocates: orgProtectedProcedure.query(async ({ ctx }) => {
     return ctx.kysely
       .selectFrom("OrganizationMembers")
-      .innerJoin("User", "OrganizationMembers.userId", "User.id")
+      .leftJoin("User", "OrganizationMembers.userId", "User.id")
       .where("OrganizationMembers.designation", "=", "ADVOCATE")
       .where("OrganizationMembers.organizationId", "=", ctx.orgId)
       .select(["OrganizationMembers.memberId as id", "User.name as name"]) // TODO: Bring name to OrganizationMembers

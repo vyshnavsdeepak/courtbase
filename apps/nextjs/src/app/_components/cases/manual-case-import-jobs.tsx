@@ -21,9 +21,11 @@ import {
   TableHeader,
   TableRow,
 } from "@court-base/ui/table";
+import { toast } from "@court-base/ui/toast";
 
 import { useOrg } from "~/app/_contexts/org-context";
 import { api } from "~/trpc/react";
+import ManualCaseImportDialogButton from "./manual-case-import";
 
 const getStatusIcon = (status: CaseImportTaskStatusType) => {
   switch (status) {
@@ -63,6 +65,13 @@ export default function ManualCaseImportJobs({
     isFetching,
   } = api.caseImport.importJobsByCaseNumber.useQuery(undefined, {
     initialData,
+  });
+
+  const cancelJobMutation = api.caseImport.cancelImportJob.useMutation({
+    onSuccess: () => {
+      toast.success("Job cancelled successfully");
+      void refetch();
+    },
   });
 
   const org = useOrg();
@@ -122,6 +131,27 @@ export default function ManualCaseImportJobs({
               <TableCell>
                 <div className="flex items-center gap-2">
                   {getStatusIcon(task.importStatus)}
+                  <ManualCaseImportDialogButton jobId={task.id}>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      disabled={task.importStatus !== "FAILED"}
+                    >
+                      <Icons.caseImportRetry className="h-4 w-4" />
+                    </Button>
+                  </ManualCaseImportDialogButton>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() =>
+                      cancelJobMutation.mutate({ taskId: task.id })
+                    }
+                    disabled={
+                      !["PENDING", "IN_PROGRESS"].includes(task.importStatus)
+                    }
+                  >
+                    <Icons.caseImportCancel className="h-4 w-4" />
+                  </Button>
                 </div>
               </TableCell>
             </TableRow>
