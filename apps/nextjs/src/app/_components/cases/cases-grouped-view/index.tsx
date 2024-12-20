@@ -1,7 +1,7 @@
 "use client";
 
 import type { z } from "zod";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import moment from "moment";
 
 import type { AllCaseRequestSchema } from "@court-base/api/schemas/cases";
@@ -35,27 +35,19 @@ const _CaseTableRowsSchema = AllCaseResponseSchema.element.pick({
 });
 type CaseTableRows = z.infer<typeof _CaseTableRowsSchema>;
 
-// type CaseTableRows = {
-//   crn: string
-//   courtName: string
-//   typeName: string
-//   number: string
-//   regYear: string
-//   title: string
-//   customTitle: string | null
-//   nextHearingDate: string | null
-//   advocateNames: string[]
-//   updatedAt: string
-// }
-
 export default function CaseGroupedView({
   caseConditions,
 }: {
   caseConditions: z.infer<typeof AllCaseRequestSchema>;
 }) {
   const { isLoading, data } = api.cases.all.useQuery(caseConditions);
-
   const [expandedDate, setExpandedDate] = useState<string | null>(null);
+
+  useEffect(() => {
+    const today = moment().format("YYYY-MM-DD");
+    setExpandedDate(today);
+  }, []);
+
   const groupedCases = useMemo(() => {
     const cases = data?.data ?? [];
     const grouped = cases.reduce(
@@ -83,6 +75,44 @@ export default function CaseGroupedView({
     return <div>Loading...</div>;
   }
 
+  const printCases = (date: string, casesForDate: CaseTableRows[]) => {
+    const content = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>Cases for ${date}</title>
+          <style>
+            body { font-family: Arial, sans-serif; padding: 20px; }
+            .case { margin: 20px 0; padding: 10px; border-bottom: 1px solid #ccc; }
+            .title { font-size: 18px; font-weight: bold; }
+            .details { margin-top: 10px; }
+            .label { font-weight: bold; }
+          </style>
+        </head>
+        <body>
+          <h1>Cases for ${date === "No Date" ? "No Hearing Date" : moment(date).format("dddd, MMMM D, YYYY")}</h1>
+          ${casesForDate
+            .map(
+              (caseItem) => `
+            <div class="case">
+              <div class="title">${caseItem.customTitle ?? caseItem.title}</div>
+              <div class="details">
+                <p><span class="label">Case No:</span> ${caseItem.typeName}/${caseItem.number}/${caseItem.regYear}</p>
+                <p><span class="label">Court:</span> ${caseItem.courtName}</p>
+                <p><span class="label">Advocate(s):</span> ${caseItem.advocateNames.join(", ")}</p>
+              </div>
+            </div>
+          `,
+            )
+            .join("")}
+        </body>
+      </html>
+    `;
+    const printWindow = window.open("", "_blank");
+    printWindow?.document.write(content);
+    printWindow?.print();
+  };
+
   return (
     <div className="space-y-4">
       {groupedCases.map(([date, casesForDate]) => (
@@ -94,15 +124,27 @@ export default function CaseGroupedView({
                 setExpandedDate(expandedDate === date ? null : date)
               }
             >
-              <span>
+              <div className="flex items-center gap-2">
                 {date === "No Date"
                   ? "No Hearing Date"
                   : moment(date).format("dddd, MMMM D, YYYY")}
-              </span>
-              <span className="text-muted-foreground">
-                ({casesForDate.length}{" "}
-                {casesForDate.length === 1 ? "case" : "cases"})
-              </span>
+                <span className="ml-2 text-muted-foreground">
+                  ({casesForDate.length}{" "}
+                  {casesForDate.length === 1 ? "case" : "cases"})
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    printCases(date, casesForDate);
+                  }}
+                >
+                  <Icons.print className="h-4 w-4" />
+                </Button>
+              </div>
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -155,16 +197,12 @@ export default function CaseGroupedView({
                         <CardContent>
                           <dl className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
                             <div>
-                              <dt className="font-medium">Court</dt>
-                              <dd>{caseItem.courtName}</dd>
-                            </div>
-                            <div>
                               <dt className="font-medium">Case No</dt>
                               <dd>{`${caseItem.typeName}/${caseItem.number}/${caseItem.regYear}`}</dd>
                             </div>
                             <div>
-                              <dt className="font-medium">CRN</dt>
-                              <dd>{caseItem.crn}</dd>
+                              <dt className="font-medium">Court</dt>
+                              <dd>{caseItem.courtName}</dd>
                             </div>
                             <div>
                               <dt className="font-medium">Advocate(s)</dt>

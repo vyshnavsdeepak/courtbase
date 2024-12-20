@@ -29,11 +29,11 @@
   },
   "devDependencies": {
     "@court-base/prettier-config": "workspace:*",
-    "@turbo/gen": "v2.0.15-canary.3",
-    "husky": "^9.1.5",
-    "lint-staged": "^15.2.9",
+    "@turbo/gen": "2.0.15-canary.3",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.2.11",
     "prettier": "catalog:",
-    "turbo": "v2.0.15-canary.3",
+    "turbo": "2.0.15-canary.3",
     "typescript": "catalog:"
   },
   "prettier": "@court-base/prettier-config"
