@@ -1,7 +1,7 @@
 "use client";
 
 import type { z } from "zod";
-import { useMemo, useState, useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import moment from "moment";
 
 import type { AllCaseRequestSchema } from "@court-base/api/schemas/cases";
@@ -75,6 +75,44 @@ export default function CaseGroupedView({
     return <div>Loading...</div>;
   }
 
+  const printCases = (date: string, casesForDate: CaseTableRows[]) => {
+    const content = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>Cases for ${date}</title>
+          <style>
+            body { font-family: Arial, sans-serif; padding: 20px; }
+            .case { margin: 20px 0; padding: 10px; border-bottom: 1px solid #ccc; }
+            .title { font-size: 18px; font-weight: bold; }
+            .details { margin-top: 10px; }
+            .label { font-weight: bold; }
+          </style>
+        </head>
+        <body>
+          <h1>Cases for ${date === "No Date" ? "No Hearing Date" : moment(date).format("dddd, MMMM D, YYYY")}</h1>
+          ${casesForDate
+            .map(
+              (caseItem) => `
+            <div class="case">
+              <div class="title">${caseItem.customTitle ?? caseItem.title}</div>
+              <div class="details">
+                <p><span class="label">Case No:</span> ${caseItem.typeName}/${caseItem.number}/${caseItem.regYear}</p>
+                <p><span class="label">Court:</span> ${caseItem.courtName}</p>
+                <p><span class="label">Advocate(s):</span> ${caseItem.advocateNames.join(", ")}</p>
+              </div>
+            </div>
+          `,
+            )
+            .join("")}
+        </body>
+      </html>
+    `;
+    const printWindow = window.open("", "_blank");
+    printWindow?.document.write(content);
+    printWindow?.print();
+  };
+
   return (
     <div className="space-y-4">
       {groupedCases.map(([date, casesForDate]) => (
@@ -86,13 +124,27 @@ export default function CaseGroupedView({
                 setExpandedDate(expandedDate === date ? null : date)
               }
             >
-              {date === "No Date"
-                ? "No Hearing Date"
-                : moment(date).format("dddd, MMMM D, YYYY")}
-              <span className="text-muted-foreground ml-2">
-                ({casesForDate.length}{" "}
-                {casesForDate.length === 1 ? "case" : "cases"})
-              </span>
+              <div className="flex items-center gap-2">
+                {date === "No Date"
+                  ? "No Hearing Date"
+                  : moment(date).format("dddd, MMMM D, YYYY")}
+                <span className="ml-2 text-muted-foreground">
+                  ({casesForDate.length}{" "}
+                  {casesForDate.length === 1 ? "case" : "cases"})
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    printCases(date, casesForDate);
+                  }}
+                >
+                  <Icons.print className="h-4 w-4" />
+                </Button>
+              </div>
             </CardTitle>
           </CardHeader>
           <CardContent>
