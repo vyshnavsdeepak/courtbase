@@ -1,7 +1,7 @@
 "use client";
 
 import type { z } from "zod";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import moment from "moment";
 
 import type { AllCaseRequestSchema } from "@court-base/api/schemas/cases";
@@ -35,27 +35,19 @@ const _CaseTableRowsSchema = AllCaseResponseSchema.element.pick({
 });
 type CaseTableRows = z.infer<typeof _CaseTableRowsSchema>;
 
-// type CaseTableRows = {
-//   crn: string
-//   courtName: string
-//   typeName: string
-//   number: string
-//   regYear: string
-//   title: string
-//   customTitle: string | null
-//   nextHearingDate: string | null
-//   advocateNames: string[]
-//   updatedAt: string
-// }
-
 export default function CaseGroupedView({
   caseConditions,
 }: {
   caseConditions: z.infer<typeof AllCaseRequestSchema>;
 }) {
   const { isLoading, data } = api.cases.all.useQuery(caseConditions);
-
   const [expandedDate, setExpandedDate] = useState<string | null>(null);
+
+  useEffect(() => {
+    const today = moment().format("YYYY-MM-DD");
+    setExpandedDate(today);
+  }, []);
+
   const groupedCases = useMemo(() => {
     const cases = data?.data ?? [];
     const grouped = cases.reduce(
@@ -94,12 +86,10 @@ export default function CaseGroupedView({
                 setExpandedDate(expandedDate === date ? null : date)
               }
             >
-              <span>
-                {date === "No Date"
-                  ? "No Hearing Date"
-                  : moment(date).format("dddd, MMMM D, YYYY")}
-              </span>
-              <span className="text-muted-foreground">
+              {date === "No Date"
+                ? "No Hearing Date"
+                : moment(date).format("dddd, MMMM D, YYYY")}
+              <span className="text-muted-foreground ml-2">
                 ({casesForDate.length}{" "}
                 {casesForDate.length === 1 ? "case" : "cases"})
               </span>
@@ -155,16 +145,12 @@ export default function CaseGroupedView({
                         <CardContent>
                           <dl className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
                             <div>
-                              <dt className="font-medium">Court</dt>
-                              <dd>{caseItem.courtName}</dd>
-                            </div>
-                            <div>
                               <dt className="font-medium">Case No</dt>
                               <dd>{`${caseItem.typeName}/${caseItem.number}/${caseItem.regYear}`}</dd>
                             </div>
                             <div>
-                              <dt className="font-medium">CRN</dt>
-                              <dd>{caseItem.crn}</dd>
+                              <dt className="font-medium">Court</dt>
+                              <dd>{caseItem.courtName}</dd>
                             </div>
                             <div>
                               <dt className="font-medium">Advocate(s)</dt>
