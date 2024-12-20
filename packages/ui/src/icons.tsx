@@ -11,6 +11,7 @@ import {
   LoaderCircle,
   PanelsTopLeft,
   Pencil,
+  Printer,
   RefreshCw,
   RotateCw,
   ScaleIcon,
@@ -43,4 +44,5 @@ export const Icons = {
   caseImportRefreshLoading: Loader2,
   caseImportRetry: RotateCw,
   caseImportCancel: X,
+  print: Printer,
 };
