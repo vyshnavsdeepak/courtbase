@@ -3,7 +3,11 @@ import Link from "next/link";
 import { Button } from "@court-base/ui/button";
 import { Icons } from "@court-base/ui/icons";
 
-export function CTA() {
+import { getDashboardRedirect } from "~/app/_lib/dashboard";
+
+export async function CTA() {
+  const { url: dashboardUrl, isAuthenticated } = await getDashboardRedirect();
+
   return (
     <section className="container py-24 sm:py-32">
       <div className="mx-auto flex max-w-[58rem] flex-col items-center justify-center gap-4 text-center">
@@ -14,8 +18,9 @@ export function CTA() {
           Join thousands of legal professionals who trust CourtBase
         </p>
         <Button asChild size="lg" className="mt-4">
-          <Link href="/login">
-            Start Now <Icons.rightArrow className="ml-2 h-4 w-4" />
+          <Link href={dashboardUrl}>
+            {isAuthenticated ? "Open Dashboard" : "Start Now"}{" "}
+            <Icons.rightArrow className="ml-2 h-4 w-4" />
           </Link>
         </Button>
       </div>

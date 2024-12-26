@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowUpRight, Building2 } from "lucide-react";
 
 import type { RouterOutputs } from "@court-base/api";
 import { Button } from "@court-base/ui/button";
@@ -8,7 +9,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@court-base/ui/dropdown-menu";
-import { Icons } from "@court-base/ui/icons";
 
 import { getOrgDashboardPath } from "~/utils";
 
@@ -34,9 +34,9 @@ export function AuthNav({ orgs }: AuthNavProps) {
                 href={getOrgDashboardPath(org.id)}
                 className="flex items-center gap-2"
               >
-                <Icons.organization className="h-4 w-4" />
+                <Building2 className="h-4 w-4" />
                 <span>{org.name}</span>
-                <Icons.externalLink className="h-4 w-4" />
+                <ArrowUpRight className="h-4 w-4" />
               </Link>
             </Button>
           </nav>
@@ -57,9 +57,9 @@ export function AuthNav({ orgs }: AuthNavProps) {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="flex items-center gap-2">
-                <Icons.organization className="h-4 w-4" />
+                <Building2 className="h-4 w-4" />
                 <span>Your Organizations</span>
-                <Icons.externalLink className="h-4 w-4" />
+                <ArrowUpRight className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
