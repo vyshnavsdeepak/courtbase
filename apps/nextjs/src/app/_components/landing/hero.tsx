@@ -3,7 +3,11 @@ import Link from "next/link";
 import { Button } from "@court-base/ui/button";
 import { Icons } from "@court-base/ui/icons";
 
-export function Hero() {
+import { getDashboardRedirect } from "~/app/_lib/dashboard";
+
+export async function Hero() {
+  const { url: dashboardUrl, isAuthenticated } = await getDashboardRedirect();
+
   return (
     <section className="container space-y-6 py-24 sm:py-32">
       <div className="mx-auto flex max-w-[64rem] flex-col items-center gap-4 text-center">
@@ -17,8 +21,9 @@ export function Hero() {
         </p>
         <div className="flex gap-4">
           <Button asChild size="lg">
-            <Link href="/login">
-              Get Started <Icons.rightArrow className="ml-2 h-4 w-4" />
+            <Link href={dashboardUrl}>
+              {isAuthenticated ? "Open Dashboard" : "Get Started"}{" "}
+              <Icons.rightArrow className="ml-2 h-4 w-4" />
             </Link>
           </Button>
           <Button variant="outline" size="lg" asChild>
