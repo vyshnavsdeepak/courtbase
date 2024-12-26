@@ -1,7 +1,10 @@
-generator client {
-  provider = "prisma-client-js"
-  output   = "./generated/client"
-}
+// generator client {
+//   provider = "prisma-client-js"
+//   output   = "./generated/client"
+// }
+// Prisma client was generated with models commented out, prisma generate  --allow-no-models
+// The generated client is being used by zod type for some basic types like JSONNull
+// We don't generate it again because we use kysely instead
 
 datasource db {
   provider  = "postgresql"
