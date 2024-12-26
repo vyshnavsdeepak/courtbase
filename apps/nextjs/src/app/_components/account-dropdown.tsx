@@ -11,6 +11,8 @@ import {
   DropdownMenuTrigger,
 } from "@court-base/ui/dropdown-menu";
 
+import { routes } from "~/config/routes";
+
 export default function AccountDropdown({ user }: { user: User }) {
   const nameLogo = user.name
     ? user.name
@@ -29,7 +31,9 @@ export default function AccountDropdown({ user }: { user: User }) {
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="ml-1 w-56">
-        <DropdownMenuItem onClick={() => signOut()}>Logout</DropdownMenuItem>
+        <DropdownMenuItem onClick={() => signOut({ callbackUrl: routes.home })}>
+          Logout
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
