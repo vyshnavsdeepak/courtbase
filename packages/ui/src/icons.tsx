@@ -1,10 +1,15 @@
 import {
   ArrowRight,
+  ArrowUpRight,
+  BarChart3,
+  Building2,
+  Calendar,
   CalendarIcon,
   CheckCircle,
   Clock,
   Eye,
   Files,
+  FileText,
   FileTextIcon,
   LibraryIcon,
   Loader2,
@@ -16,6 +21,7 @@ import {
   RotateCw,
   ScaleIcon,
   UserIcon,
+  Users,
   UsersIcon,
   X,
   XCircle,
@@ -24,6 +30,8 @@ import {
 export const Icons = {
   cases: Files,
   rightArrow: ArrowRight,
+  externalLink: ArrowUpRight,
+  organization: Building2,
   loading: LoaderCircle,
   sidebar: PanelsTopLeft,
   edit: Pencil,
@@ -45,4 +53,9 @@ export const Icons = {
   caseImportRetry: RotateCw,
   caseImportCancel: X,
   print: Printer,
+  // Feature icons
+  featureCaseManagement: FileText,
+  featureCalendar: Calendar,
+  featureTeam: Users,
+  featureAnalytics: BarChart3,
 };
