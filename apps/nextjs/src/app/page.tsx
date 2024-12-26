@@ -1,61 +1,66 @@
 import React from "react";
-import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import { auth } from "@court-base/auth";
 
-import { api, HydrateClient } from "~/trpc/server";
+import { api } from "~/trpc/server";
 import { getOrgDashboardPath } from "~/utils";
-import { AuthShowcase } from "./_components/auth-showcase";
+import {
+  AuthNav,
+  CTA,
+  Features,
+  Footer,
+  Hero,
+  Nav,
+} from "./_components/landing";
 
 export const runtime = "edge";
 
-export default async function HomePage() {
+export default async function HomePage({
+  searchParams,
+}: {
+  searchParams: { dashboard?: string };
+}) {
   const session = await auth();
 
-  if (!session) {
-    // Redirect to login page if not authenticated
-    return redirect("/login?callbackUrl=/");
-  }
+  // Handle authenticated users
+  if (session) {
+    const orgs = await api.organization.getAllByUser();
 
-  const orgs = await api.organization.getAllByUser();
-  if (orgs.length === 0) {
-    // Redirect to create organization page if no organizations found
-    return redirect("/join");
-  }
+    // Redirect to first org if dashboard param is present and orgs exist
+    if (searchParams.dashboard === "true") {
+      const [firstOrg] = orgs;
+      if (!firstOrg) {
+        // Fresh login
+        return redirect("/join");
+      }
+      return redirect(getOrgDashboardPath(firstOrg.id));
+    }
 
-  if (orgs.length === 1 && orgs[0]) {
-    // Redirect to the single organization
-    return redirect(getOrgDashboardPath(orgs[0].id));
-  }
-
-  if (orgs.length > 1) {
+    // Show landing page with authenticated nav
     return (
-      <div>
-        <h1>Multiple organizations found</h1>
-        <ul>
-          {orgs.map((org) => (
-            <li key={org.id}>
-              <Link href={getOrgDashboardPath(org.id)} className="underline">
-                {org.name}
-              </Link>
-            </li>
-          ))}
-        </ul>
+      <div className="flex min-h-screen flex-col">
+        <AuthNav orgs={orgs} />
+        <main className="flex-1">
+          <Hero />
+          <Features />
+          <CTA />
+        </main>
+        <Footer />
       </div>
     );
   }
 
+  // Show regular landing page for unauthenticated users
   return (
-    <HydrateClient>
-      <main className="container h-screen py-16">
-        <div className="flex flex-col items-center justify-center gap-4">
-          <h1 className="text-5xl font-extrabold tracking-tight sm:text-[5rem]">
-            Create <span className="text-primary">T3</span> Turbo
-          </h1>
-          <AuthShowcase />
-        </div>
+    <div className="flex min-h-screen flex-col">
+      <Nav />
+      <main className="flex-1">
+        <Hero />
+        <Features />
+        <CTA />
       </main>
-    </HydrateClient>
+      <Footer />
+    </div>
   );
 }

@@ -14,7 +14,7 @@ export default function UserAuthForm() {
       <GoogleSignInButton
         onClick={async () => {
           await signIn("google", {
-            callbackUrl: callbackUrl ?? "/",
+            callbackUrl: callbackUrl ?? "/?dashboard=true",
           });
         }}
       />
