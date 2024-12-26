@@ -1,5 +1,6 @@
 import { auth } from "@court-base/auth";
 
+import { routes } from "~/config/routes";
 import { api } from "~/trpc/server";
 import { getOrgDashboardPath } from "~/utils";
 
@@ -13,7 +14,7 @@ export async function getDashboardRedirect(): Promise<DashboardRedirectInfo> {
 
   if (!session) {
     return {
-      url: "/login",
+      url: routes.login,
       isAuthenticated: false,
     };
   }
@@ -22,7 +23,7 @@ export async function getDashboardRedirect(): Promise<DashboardRedirectInfo> {
   const [firstOrg] = orgs;
 
   return {
-    url: firstOrg ? getOrgDashboardPath(firstOrg.id) : "/join",
+    url: firstOrg ? getOrgDashboardPath(firstOrg.id) : routes.join,
     isAuthenticated: true,
   };
 }
