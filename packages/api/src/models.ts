@@ -2,6 +2,10 @@ import { z } from "zod";
 
 import { OrganizationSchema, OrgRoleSchema } from "@court-base/db/models";
 
+const memberNameRule = z
+  .string()
+  .min(1, "Your name is required")
+  .max(255, "Name must be at most 255 characters long");
 export const OrganizationCreateModel = OrganizationSchema.pick({
   name: true,
   id: true,
@@ -14,6 +18,12 @@ export const OrganizationCreateModel = OrganizationSchema.pick({
     .string()
     .min(3, "URL must be at least 3 characters long")
     .max(255, "URL must be at most 255 characters long"),
+  memberName: memberNameRule,
+});
+
+export const OrganizationJoinSchema = z.object({
+  memberName: memberNameRule,
+  inviteCode: z.string(),
 });
 
 export const MemberRole = OrgRoleSchema;

@@ -221,3 +221,23 @@ export const orgProtectedProcedure = protectedProcedure.use(
     });
   },
 );
+
+export const orgPrivilegedProcedure = orgProtectedProcedure.use(
+  ({ ctx, next }) => {
+    if (ctx.userRole !== "OWNER" && ctx.userRole !== "ADMIN") {
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: "Only owners and admins can perform this action",
+      });
+    }
+    return next({
+      ctx: {
+        // infers the `session` as non-nullable
+        session: { ...ctx.session, user: ctx.session.user },
+        userRole: ctx.userRole,
+        orgId: ctx.orgId,
+        memberId: ctx.memberId,
+      },
+    });
+  },
+);

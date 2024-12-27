@@ -17,7 +17,7 @@ const SidebarToggle: React.FC<ButtonProps> = (props) => {
 
   return (
     <Button variant="ghost" onClick={handleToggle} {...props}>
-      <Icons.sidebar size={16} />
+      <Icons.sidebarToggle size={16} />
     </Button>
   );
 };

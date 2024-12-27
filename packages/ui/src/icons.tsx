@@ -1,32 +1,71 @@
 import {
   ArrowRight,
+  ArrowUpRight,
+  BarChart3,
+  Building2,
+  Calendar,
   CalendarIcon,
   CheckCircle,
+  ClipboardCopy,
   Clock,
   Eye,
-  Files,
+  FileText,
   FileTextIcon,
+  FolderInput,
+  FolderTree,
   LibraryIcon,
   Loader2,
   LoaderCircle,
+  MailOpen,
   PanelsTopLeft,
   Pencil,
   Printer,
   RefreshCw,
   RotateCw,
   ScaleIcon,
+  Settings,
+  LucideTrash2 as Trash2,
   UserIcon,
+  LucideUserPlus2 as UserPlus2,
+  Users,
   UsersIcon,
   X,
   XCircle,
 } from "lucide-react";
 
 export const Icons = {
-  cases: Files,
-  rightArrow: ArrowRight,
   loading: LoaderCircle,
-  sidebar: PanelsTopLeft,
+  spinner: Loader2,
+  close: X,
   edit: Pencil,
+  trash: Trash2,
+  settings: Settings,
+
+  // Navigation
+  sidebarToggle: PanelsTopLeft,
+  rightArrow: ArrowRight,
+  externalLink: ArrowUpRight,
+
+  // Cases
+  cases: FileText,
+  caseImports: FolderInput,
+  caseGroups: FolderTree,
+
+  // Organization
+  organization: Building2,
+  team: Users,
+  analytics: BarChart3,
+
+  // Invites
+  createInvite: UserPlus2,
+  copyInviteLink: ClipboardCopy,
+  deleteInvite: Trash2,
+  createUserInvitationPlus: UserPlus2,
+  linkCopy: ClipboardCopy,
+  invitationInbox: MailOpen,
+  deleteInvitation: Trash2,
+
+  // New feature icons
   view: Eye,
   date: CalendarIcon,
   caseNumber: ScaleIcon,
@@ -45,4 +84,10 @@ export const Icons = {
   caseImportRetry: RotateCw,
   caseImportCancel: X,
   print: Printer,
+
+  // Feature icons
+  featureCaseManagement: FileText,
+  featureCalendar: Calendar,
+  featureTeam: Users,
+  featureAnalytics: BarChart3,
 };

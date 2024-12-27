@@ -3,15 +3,21 @@ import { NextResponse } from "next/server";
 import { headerKeys } from "@court-base/api/constants";
 import { auth } from "@court-base/auth";
 
-const protectedPaths = ["/x", "/join"];
+import { routes } from "~/config/routes";
+
+const protectedPaths = ["/x", routes.join];
 
 export default auth((req) => {
   const path = req.nextUrl.pathname;
   if (protectedPaths.some((protectedPath) => path.startsWith(protectedPath))) {
     if (!req.auth) {
       const url = req.nextUrl.clone();
-      url.pathname = "/login";
+      url.pathname = routes.login;
       url.search = "";
+      const inviteCode = req.nextUrl.searchParams.get("inviteCode");
+      if (inviteCode) {
+        url.searchParams.set("inviteCode", inviteCode);
+      }
       const callbackPath = req.nextUrl.toString();
       url.searchParams.set("callbackUrl", callbackPath);
       return NextResponse.redirect(url);

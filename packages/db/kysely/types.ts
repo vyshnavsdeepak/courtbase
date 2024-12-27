@@ -128,10 +128,25 @@ export type Organization = {
   id: string;
   name: string;
 };
+export type OrganizationInvite = {
+  id: Generated<string>;
+  organizationId: string;
+  code: string;
+  createdByOrgId: string;
+  createdByMemberId: string;
+  role: Generated<OrgRole>;
+  designation: OrgDesignation | null;
+  maxUses: number | null;
+  usedCount: Generated<number>;
+  expiresAt: Timestamp | null;
+  createdAt: Generated<Timestamp>;
+  updatedAt: Timestamp | null;
+};
 export type OrganizationMembers = {
   organizationId: string;
   userId: string;
   memberId: string;
+  name: Generated<string>;
   role: Generated<OrgRole>;
   designation: OrgDesignation | null;
 };
@@ -175,6 +190,7 @@ export type DB = {
   DistrictCourt: DistrictCourt;
   ManualCaseImportTask: ManualCaseImportTask;
   Organization: Organization;
+  OrganizationInvite: OrganizationInvite;
   OrganizationMembers: OrganizationMembers;
   Post: Post;
   Session: Session;

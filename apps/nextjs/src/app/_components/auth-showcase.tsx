@@ -1,6 +1,8 @@
 import { auth, signIn, signOut } from "@court-base/auth";
 import { Button } from "@court-base/ui/button";
 
+import { routes } from "~/config/routes";
+
 export async function AuthShowcase() {
   const session = await auth();
 
@@ -31,7 +33,7 @@ export async function AuthShowcase() {
           size="lg"
           formAction={async () => {
             "use server";
-            await signOut();
+            await signOut({ redirectTo: routes.login });
           }}
         >
           Sign out

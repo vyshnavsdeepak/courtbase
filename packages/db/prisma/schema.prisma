@@ -1,7 +1,10 @@
-generator client {
-  provider = "prisma-client-js"
-  output   = "./generated/client"
-}
+// generator client {
+//   provider = "prisma-client-js"
+//   output   = "./generated/client"
+// }
+// Prisma client was generated with models commented out, prisma generate  --allow-no-models
+// The generated client is being used by zod type for some basic types like JSONNull
+// We don't generate it again because we use kysely instead
 
 datasource db {
   provider  = "postgresql"
@@ -95,6 +98,7 @@ model Organization {
   CaseImportTask      CaseImportTask[]
 
   ManualCaseImportTask ManualCaseImportTask[] @relation(map: "manualCaseImportTask_organizationId_organization_id_fk")
+  OrganizationInvite   OrganizationInvite[]
 }
 
 enum OrgDesignation {
@@ -112,6 +116,7 @@ model OrganizationMembers {
   organizationId String
   userId         String          @db.Uuid
   memberId       String          @db.VarChar(255) // human readable slug based on name - unique in organization
+  name           String          @default("") @db.VarChar(255) // Name used within the organization, can be different from User.name
   role           OrgRole         @default(MEMBER)
   designation    OrgDesignation?
 
@@ -121,6 +126,7 @@ model OrganizationMembers {
   AdvocateCase         AdvocateCase[]
   CaseImportTask       CaseImportTask[]
   ManualCaseImportTask ManualCaseImportTask[]
+  OrganizationInvite   OrganizationInvite[]
 
   @@id([organizationId, memberId], map: "organizationMembers_organizationId_memberId_pk")
   @@unique([organizationId, userId], map: "organizationMembers_organizationId_userId_unique")
@@ -319,4 +325,26 @@ model CaseImportTask {
   updatedAt       DateTime?            @db.Timestamptz(6)
   advocate        OrganizationMembers  @relation(fields: [advocateId, organizationId], references: [memberId, organizationId], onDelete: Cascade, onUpdate: Cascade)
   organization    Organization         @relation(fields: [organizationId], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "caseImportTask_organizationId_organization_id_fk")
+}
+
+model OrganizationInvite {
+  id                String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  organizationId    String
+  code              String          @unique // The invite code used in the URL
+  createdByOrgId    String // Organization ID of the creator
+  createdByMemberId String // Member ID of the creator
+  role              OrgRole         @default(MEMBER)
+  designation       OrgDesignation?
+  maxUses           Int? // null means unlimited
+  usedCount         Int             @default(0)
+  expiresAt         DateTime?       @db.Timestamptz(6)
+  createdAt         DateTime        @default(now()) @db.Timestamp(6)
+  updatedAt         DateTime?       @db.Timestamptz(6)
+
+  organization Organization        @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  createdBy    OrganizationMembers @relation(fields: [createdByOrgId, createdByMemberId], references: [organizationId, memberId], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@index([code])
+  @@index([createdByOrgId, createdByMemberId])
 }
