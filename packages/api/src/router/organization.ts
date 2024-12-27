@@ -85,6 +85,21 @@ export const organizationRouter = {
       .execute();
   }),
 
+  getMembers: orgProtectedProcedure.query(async ({ ctx }) => {
+    return ctx.kysely
+      .selectFrom("OrganizationMembers")
+      .where("OrganizationMembers.organizationId", "=", ctx.orgId)
+      .select([
+        "OrganizationMembers.memberId as id",
+        "OrganizationMembers.name as name",
+        "OrganizationMembers.role as role",
+        "OrganizationMembers.designation as designation",
+      ])
+      .leftJoin("User", "User.id", "OrganizationMembers.userId")
+      .select(["User.image as image", "User.email as email"])
+      .execute();
+  }),
+
   updateMemberName: orgProtectedProcedure
     .input(UpdateUserNameInput)
     .mutation(async ({ ctx, input }) => {
