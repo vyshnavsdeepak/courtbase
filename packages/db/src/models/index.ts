@@ -229,6 +229,21 @@ export const CaseImportTaskScalarFieldEnumSchema = z.enum([
   "updatedAt",
 ]);
 
+export const OrganizationInviteScalarFieldEnumSchema = z.enum([
+  "id",
+  "organizationId",
+  "code",
+  "createdByOrgId",
+  "createdByMemberId",
+  "role",
+  "designation",
+  "maxUses",
+  "usedCount",
+  "expiresAt",
+  "createdAt",
+  "updatedAt",
+]);
+
 export const SortOrderSchema = z.enum(["asc", "desc"]);
 
 export const JsonNullValueInputSchema = z
@@ -435,6 +450,7 @@ export type OrganizationRelations = {
   AdvocateCase: AdvocateCaseWithRelations[];
   CaseImportTask: CaseImportTaskWithRelations[];
   ManualCaseImportTask: ManualCaseImportTaskWithRelations[];
+  OrganizationInvite: OrganizationInviteWithRelations[];
 };
 
 export type OrganizationWithRelations = z.infer<typeof OrganizationSchema> &
@@ -451,6 +467,9 @@ export const OrganizationWithRelationsSchema: z.ZodType<OrganizationWithRelation
       CaseImportTask: z.lazy(() => CaseImportTaskWithRelationsSchema).array(),
       ManualCaseImportTask: z
         .lazy(() => ManualCaseImportTaskWithRelationsSchema)
+        .array(),
+      OrganizationInvite: z
+        .lazy(() => OrganizationInviteWithRelationsSchema)
         .array(),
     }),
   );
@@ -477,6 +496,7 @@ export type OrganizationMembersRelations = {
   AdvocateCase: AdvocateCaseWithRelations[];
   CaseImportTask: CaseImportTaskWithRelations[];
   ManualCaseImportTask: ManualCaseImportTaskWithRelations[];
+  OrganizationInvite: OrganizationInviteWithRelations[];
 };
 
 export type OrganizationMembersWithRelations = z.infer<
@@ -492,6 +512,9 @@ export const OrganizationMembersWithRelationsSchema: z.ZodType<OrganizationMembe
       CaseImportTask: z.lazy(() => CaseImportTaskWithRelationsSchema).array(),
       ManualCaseImportTask: z
         .lazy(() => ManualCaseImportTaskWithRelationsSchema)
+        .array(),
+      OrganizationInvite: z
+        .lazy(() => OrganizationInviteWithRelationsSchema)
         .array(),
     }),
   );
@@ -894,5 +917,47 @@ export const CaseImportTaskWithRelationsSchema: z.ZodType<CaseImportTaskWithRela
     z.object({
       advocate: z.lazy(() => OrganizationMembersWithRelationsSchema),
       organization: z.lazy(() => OrganizationWithRelationsSchema),
+    }),
+  );
+
+/////////////////////////////////////////
+// ORGANIZATION INVITE SCHEMA
+/////////////////////////////////////////
+
+export const OrganizationInviteSchema = z.object({
+  role: OrgRoleSchema,
+  designation: OrgDesignationSchema.nullish(),
+  id: z.string(),
+  organizationId: z.string(),
+  code: z.string(),
+  createdByOrgId: z.string(),
+  createdByMemberId: z.string(),
+  maxUses: z.number().nullish(),
+  usedCount: z.number(),
+  expiresAt: z.coerce.date().nullish(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date().nullish(),
+});
+
+export type OrganizationInvite = z.infer<typeof OrganizationInviteSchema>;
+
+// ORGANIZATION INVITE RELATION SCHEMA
+//------------------------------------------------------
+
+export type OrganizationInviteRelations = {
+  organization: OrganizationWithRelations;
+  createdBy: OrganizationMembersWithRelations;
+};
+
+export type OrganizationInviteWithRelations = z.infer<
+  typeof OrganizationInviteSchema
+> &
+  OrganizationInviteRelations;
+
+export const OrganizationInviteWithRelationsSchema: z.ZodType<OrganizationInviteWithRelations> =
+  OrganizationInviteSchema.merge(
+    z.object({
+      organization: z.lazy(() => OrganizationWithRelationsSchema),
+      createdBy: z.lazy(() => OrganizationMembersWithRelationsSchema),
     }),
   );
