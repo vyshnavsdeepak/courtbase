@@ -116,6 +116,7 @@ model OrganizationMembers {
   organizationId String
   userId         String          @db.Uuid
   memberId       String          @db.VarChar(255) // human readable slug based on name - unique in organization
+  name           String          @default("") @db.VarChar(255) // Name used within the organization, can be different from User.name
   role           OrgRole         @default(MEMBER)
   designation    OrgDesignation?
 

@@ -14,6 +14,10 @@ export const OrganizationCreateModel = OrganizationSchema.pick({
     .string()
     .min(3, "URL must be at least 3 characters long")
     .max(255, "URL must be at most 255 characters long"),
+  memberName: z
+    .string()
+    .min(1, "Your name is required")
+    .max(255, "Name must be at most 255 characters long"),
 });
 
 export const MemberRole = OrgRoleSchema;

@@ -126,7 +126,7 @@ export const organizationInviteRouter = {
     }),
 
   accept: protectedProcedure
-    .input(z.object({ code: z.string() }))
+    .input(z.object({ code: z.string(), name: z.string().min(1).max(255) }))
     .mutation(async ({ ctx, input }) => {
       return await ctx.kysely.transaction().execute(async (trx) => {
         // Get invite and check if it's valid
@@ -181,16 +181,18 @@ export const organizationInviteRouter = {
           });
         }
 
+        // Update user's name if not set
         if (!ctx.session.user.name) {
-          throw new TRPCError({
-            code: "BAD_REQUEST",
-            message: "User name is required",
-          });
+          await trx
+            .updateTable("User")
+            .set({ name: input.name })
+            .where("id", "=", ctx.session.user.id)
+            .execute();
         }
 
         const memberId = await generateUniqueSlug(
           invite.organizationId,
-          ctx.session.user.name,
+          input.name,
         );
 
         // Add user to organization
@@ -200,6 +202,7 @@ export const organizationInviteRouter = {
             organizationId: invite.organizationId,
             userId: ctx.session.user.id,
             memberId,
+            name: input.name,
             role: invite.role,
             designation: invite.designation,
           })

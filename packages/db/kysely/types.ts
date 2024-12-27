@@ -146,6 +146,7 @@ export type OrganizationMembers = {
   organizationId: string;
   userId: string;
   memberId: string;
+  name: Generated<string>;
   role: Generated<OrgRole>;
   designation: OrgDesignation | null;
 };

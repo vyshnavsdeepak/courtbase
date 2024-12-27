@@ -3,6 +3,7 @@
 import type { z } from "zod";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 import { OrganizationCreateModel } from "@court-base/api/models";
 import { Button } from "@court-base/ui/button";
@@ -42,13 +43,16 @@ function slugify(text: string) {
 function CardWithForm() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const { data: session, status } = useSession();
   const form = useForm({
     defaultValues: {
       name: "",
       id: "",
+      memberName: session?.user?.name ?? "",
     },
     schema: OrganizationCreateModel,
   });
+
   const utils = api.useUtils();
   const createOrganization = api.organization.create.useMutation({
     onSuccess: async (data) => {
@@ -79,6 +83,13 @@ function CardWithForm() {
     return () => subscription.unsubscribe();
   }, [form]);
 
+  // Update member name when session loads
+  React.useEffect(() => {
+    if (session?.user?.name) {
+      form.setValue("memberName", session.user.name);
+    }
+  }, [session, form]);
+
   const onSubmit = (data: z.infer<typeof OrganizationCreateModel>) => {
     setLoading(true);
     createOrganization.mutate(data);
@@ -98,6 +109,38 @@ function CardWithForm() {
           <CardContent>
             <div className="grid w-full items-center gap-4">
               <div className="flex flex-col space-y-1.5">
+                <Label htmlFor="memberName">Your name</Label>
+                <FormField
+                  control={form.control}
+                  name="memberName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input
+                          id="memberName"
+                          placeholder={
+                            status === "loading"
+                              ? "Loading..."
+                              : "Enter your name"
+                          }
+                          disabled={
+                            status === "loading" || !!session?.user?.name
+                          }
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                {session?.user?.name && (
+                  <p className="text-xs text-muted-foreground">
+                    Your name is already set. You can change it in your profile
+                    settings.
+                  </p>
+                )}
+              </div>
+              <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="workspace_name">Workspace name</Label>
                 <FormField
                   control={form.control}
@@ -105,7 +148,11 @@ function CardWithForm() {
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
-                        <Input id="workspace_name" {...field} />
+                        <Input
+                          id="workspace_name"
+                          placeholder="Enter workspace name"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -113,23 +160,18 @@ function CardWithForm() {
                 />
               </div>
               <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="workspace_slug">Workspace Url</Label>
+                <Label htmlFor="workspace_url">Workspace URL</Label>
                 <FormField
                   control={form.control}
                   name="id"
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
-                        <div className="relative">
-                          <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3 text-sm">
-                            courtbase.app/x/
-                          </div>
-                          <Input
-                            id="workspace_slug"
-                            {...field}
-                            className="block ps-32"
-                          />
-                        </div>
+                        <Input
+                          id="workspace_url"
+                          placeholder="Enter workspace URL"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -138,16 +180,19 @@ function CardWithForm() {
               </div>
             </div>
           </CardContent>
-          <CardFooter className="flex justify-between">
+          <CardFooter>
             <Button
               type="submit"
-              disabled={loading}
-              className="flex items-center justify-center"
+              className="w-full"
+              disabled={loading || status === "loading"}
             >
               {loading ? (
-                <Icons.loading className="h-5 w-5 animate-spin" />
+                <>
+                  <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                  Creating...
+                </>
               ) : (
-                "Create"
+                "Create workspace"
               )}
             </Button>
           </CardFooter>
@@ -159,7 +204,7 @@ function CardWithForm() {
 
 export default function JoinWorkspacePage() {
   return (
-    <div className="flex h-screen items-center justify-center">
+    <div className="container flex min-h-screen items-center justify-center">
       <CardWithForm />
     </div>
   );
