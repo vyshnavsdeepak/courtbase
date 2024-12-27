@@ -1,35 +1,14 @@
-import type { z } from "zod";
 import React, { Suspense } from "react";
 import qs from "qs";
 
-import type { AllCaseResponseSchema } from "@court-base/api/schemas/cases";
 import { AllCaseRequestSchema } from "@court-base/api/schemas/cases";
 
 import type { SearchParams } from "~/app/types";
-import { CasesTableRenderClient } from "~/app/_components/cases/cases-table-render-client";
+import { CasesFetchComponent } from "~/app/_components/cases/cases-fetch-component";
 import CasesTableLoadingShimmer from "~/app/_components/cases/cases-table/cases-table-loading-shimmer";
 import EmptyCases from "~/app/_components/cases/empty-cases";
 import SidebarToggle from "~/app/_components/sidebar-toggle";
 import { api } from "~/trpc/server";
-
-type AllCaseRequestType = z.infer<typeof AllCaseResponseSchema>;
-export function CasesFetchComponent({
-  caseReqParams,
-  promise,
-}: {
-  caseReqParams: z.infer<typeof AllCaseRequestSchema>;
-  promise: Promise<{ data: AllCaseRequestType }>;
-}) {
-  const response = React.use(promise);
-  return (
-    <CasesTableRenderClient
-      caseConditions={caseReqParams}
-      initialData={response}
-    >
-      <SidebarToggle className="lg:hidden" />
-    </CasesTableRenderClient>
-  );
-}
 
 export default async function CasesPage({
   searchParams,

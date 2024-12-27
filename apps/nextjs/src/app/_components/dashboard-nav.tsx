@@ -4,7 +4,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { cn } from "@court-base/ui";
-import { Icons } from "@court-base/ui/icons";
 
 import type { SidebarLink } from "../types";
 import { useOrg } from "~/app/_contexts/org-context";
@@ -43,7 +42,9 @@ export function DashboardNav({ workspaceLinks }: DashboardNavProps) {
                   )}
                   prefetch={false}
                 >
-                  <Icons.cases className="mr-3 h-5 w-5" />
+                  {/* {link.icon && (
+                    createElement(link.icon, { className: "mr-3 h-5 w-5" })
+                  )} */}
                   {link.label}
                 </Link>
                 {link.subLinks && (

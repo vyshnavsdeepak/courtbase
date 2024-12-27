@@ -9,15 +9,17 @@ export default function UserAuthForm() {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl");
 
+  const handleSignIn = async () => {
+    const url = callbackUrl ?? "/?dashboard=true";
+
+    await signIn("google", {
+      callbackUrl: url,
+    });
+  };
+
   return (
     <>
-      <GoogleSignInButton
-        onClick={async () => {
-          await signIn("google", {
-            callbackUrl: callbackUrl ?? "/?dashboard=true",
-          });
-        }}
-      />
+      <GoogleSignInButton onClick={handleSignIn} />
     </>
   );
 }

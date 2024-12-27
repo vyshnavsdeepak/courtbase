@@ -14,6 +14,10 @@ export default auth((req) => {
       const url = req.nextUrl.clone();
       url.pathname = routes.login;
       url.search = "";
+      const inviteCode = req.nextUrl.searchParams.get("inviteCode");
+      if (inviteCode) {
+        url.searchParams.set("inviteCode", inviteCode);
+      }
       const callbackPath = req.nextUrl.toString();
       url.searchParams.set("callbackUrl", callbackPath);
       return NextResponse.redirect(url);

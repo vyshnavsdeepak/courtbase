@@ -6,6 +6,7 @@ import { z } from "zod";
 import { kysely } from "@court-base/db";
 import { OrgDesignationSchema, OrgRoleSchema } from "@court-base/db/models";
 
+import { OrganizationJoinSchema } from "../models";
 import {
   orgPrivilegedProcedure,
   protectedProcedure,
@@ -90,11 +91,9 @@ export const organizationInviteRouter = {
         )
         .select([
           "OrganizationInvite.id",
+          "OrganizationInvite.code",
           "OrganizationInvite.role",
           "OrganizationInvite.designation",
-          "OrganizationInvite.maxUses",
-          "OrganizationInvite.usedCount",
-          "OrganizationInvite.expiresAt",
           "Organization.id as organizationId",
           "Organization.name as organizationName",
         ])
@@ -108,25 +107,11 @@ export const organizationInviteRouter = {
         });
       }
 
-      if (invite.expiresAt && invite.expiresAt < new Date()) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Invite has expired",
-        });
-      }
-
-      if (invite.maxUses && invite.usedCount >= invite.maxUses) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Invite has reached maximum uses",
-        });
-      }
-
       return invite;
     }),
 
   accept: protectedProcedure
-    .input(z.object({ code: z.string(), name: z.string().min(1).max(255) }))
+    .input(OrganizationJoinSchema)
     .mutation(async ({ ctx, input }) => {
       return await ctx.kysely.transaction().execute(async (trx) => {
         // Get invite and check if it's valid
@@ -141,7 +126,7 @@ export const organizationInviteRouter = {
             "usedCount",
             "expiresAt",
           ])
-          .where("code", "=", input.code)
+          .where("code", "=", input.inviteCode)
           .forUpdate() // Lock the row for update
           .executeTakeFirst();
 
@@ -180,19 +165,19 @@ export const organizationInviteRouter = {
             message: "You are already a member of this organization",
           });
         }
-
+        const memberName = input.memberName;
         // Update user's name if not set
         if (!ctx.session.user.name) {
           await trx
             .updateTable("User")
-            .set({ name: input.name })
+            .set({ name: memberName })
             .where("id", "=", ctx.session.user.id)
             .execute();
         }
 
         const memberId = await generateUniqueSlug(
           invite.organizationId,
-          input.name,
+          memberName,
         );
 
         // Add user to organization
@@ -202,7 +187,7 @@ export const organizationInviteRouter = {
             organizationId: invite.organizationId,
             userId: ctx.session.user.id,
             memberId,
-            name: input.name,
+            name: memberName,
             role: invite.role,
             designation: invite.designation,
           })
@@ -215,7 +200,7 @@ export const organizationInviteRouter = {
           .where("id", "=", invite.id)
           .execute();
 
-        return { success: true };
+        return { success: true, organizationId: invite.organizationId };
       });
     }),
 
