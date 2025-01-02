@@ -14,6 +14,7 @@ import "~/app/globals.css";
 
 import { env } from "~/env";
 import PageLoadProgress from "./_contexts/page-load-progress-provider";
+import ServiceWorkerManager from "./_components/ServiceWorkerManager";
 
 export const metadata: Metadata = {
   metadataBase: new URL(
@@ -52,6 +53,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
           GeistMono.variable,
         )}
       >
+        <ServiceWorkerManager />
         <ThemeProvider attribute="class" defaultTheme="dark">
           <SessionProvider>
             <OrgProvider>
